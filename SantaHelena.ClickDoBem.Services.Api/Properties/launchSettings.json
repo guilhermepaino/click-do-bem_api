@@ -13,7 +13,8 @@
       "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SHConnection": "Server=192.168.3.1;Initial Catalog=clickdobem;Persist Security Info=False;User ID=shclickappuser;Password=SH-Cl1ck.D0.B3m;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
       }
     },
     "SantaHelena.ClickDoBem.Services.Api": {
@@ -21,7 +22,8 @@
       "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SHConnection": "Server=192.168.3.1;Initial Catalog=clickdobem;Persist Security Info=False;User ID=shclickappuser;Password=SH-Cl1ck.D0.B3m;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
       },
       "applicationUrl": "http://localhost:31158/"
     }
