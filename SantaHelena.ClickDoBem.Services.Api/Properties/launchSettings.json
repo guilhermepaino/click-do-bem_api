@@ -1,9 +1,10 @@
 ﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false, 
     "anonymousAuthentication": true, 
     "iisExpress": {
-      "applicationUrl": "http://localhost:33430",
+      "applicationUrl": "http://localhost:33484",
       "sslPort": 0
     }
   },
@@ -11,6 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "api/values",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "SHConnection": "Server=192.168.3.1;Initial Catalog=clickdobem;Persist Security Info=False;User ID=shclickappuser;Password=SH-Cl1ck.D0.B3m;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
@@ -19,6 +21,7 @@
     "SantaHelena.ClickDoBem.Services.Api": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "api/values",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
