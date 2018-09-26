@@ -15,7 +15,7 @@ namespace SantaHelena.ClickDoBem.Domain.Core
             _repository = repository;
         }
 
-        public virtual TEntity Add(TEntity entity)
+        public virtual TEntity Adicionar(TEntity entity)
         {
             if (!entity.EstaValido())
                 return entity;
@@ -23,7 +23,7 @@ namespace SantaHelena.ClickDoBem.Domain.Core
             return _repository.Adicionar(entity);
         }
 
-        public virtual TEntity Update(TEntity entity)
+        public virtual TEntity Atualizar(TEntity entity)
         {
             if (!entity.EstaValido())
                 return entity;
@@ -31,7 +31,7 @@ namespace SantaHelena.ClickDoBem.Domain.Core
             return _repository.Atualizar(entity);
         }
 
-        public virtual void Delete(Guid id)
+        public virtual void Excluir(Guid id)
         {
             _repository.Excluir(id);
         }

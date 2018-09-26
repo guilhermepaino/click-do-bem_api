@@ -6,9 +6,9 @@ namespace SantaHelena.ClickDoBem.Domain.Core.Interfaces
 
     public interface IDomainServiceBase<TEntity> : IDisposable where TEntity : EntityBase<TEntity>
     {
-        TEntity Add(TEntity entity);
-        TEntity Update(TEntity entity);
-        void Delete(Guid id);
+        TEntity Adicionar(TEntity entity);
+        TEntity Atualizar(TEntity entity);
+        void Excluir(Guid id);
     }
 
 }
