@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using SantaHelena.ClickDoBem.Data.Mappings;
-using SantaHelena.ClickDoBem.Domain.Entities;
+using SantaHelena.ClickDoBem.Data.Mappings.Credenciais;
+using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 
 namespace SantaHelena.ClickDoBem.Data.Context
 {
@@ -37,7 +35,7 @@ namespace SantaHelena.ClickDoBem.Data.Context
 
             // Mapping das tabelas
             modelBuilder.ApplyConfiguration(new UsuarioMapping());
-
+            modelBuilder.ApplyConfiguration(new UsuarioSenhaMapping());
 
         }
 
@@ -70,6 +68,8 @@ namespace SantaHelena.ClickDoBem.Data.Context
         #region DbSets
 
         public DbSet<Usuario> Usuario { get; set; }
+
+        public DbSet<UsuarioSenha> UsuarioSenha { get; set; }
 
         #endregion
 

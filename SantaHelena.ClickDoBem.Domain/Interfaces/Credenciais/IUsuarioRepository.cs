@@ -1,7 +1,7 @@
 ﻿using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
-using SantaHelena.ClickDoBem.Domain.Entities;
+using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 
-namespace SantaHelena.ClickDoBem.Domain.Interfaces
+namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
 {
     public interface IUsuarioRepository : IMySqlRepositoryBase<Usuario>
     {

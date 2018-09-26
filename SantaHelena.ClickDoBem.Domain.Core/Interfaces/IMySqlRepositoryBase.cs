@@ -9,13 +9,13 @@ namespace SantaHelena.ClickDoBem.Domain.Core.Interfaces
     public interface IMySqlRepositoryBase<TEntity> : IDisposable where TEntity : EntityBase<TEntity>
     {
 
-        TEntity Add(TEntity entity);
-        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
-        TEntity FindById(Guid id);
-        IEnumerable<TEntity> GetAll();
-        void Delete(Guid id);
-        TEntity Update(TEntity entity);
-        int SaveChanges();
+        TEntity Adicionar(TEntity entidade);
+        IEnumerable<TEntity> Obter(Expression<Func<TEntity, bool>> predicado);
+        TEntity ObterPorId(Guid id);
+        IEnumerable<TEntity> ObterTodos();
+        void Excluir(Guid id);
+        TEntity Atualizar(TEntity entity);
+        int SalvarMudancas();
 
     }
 }

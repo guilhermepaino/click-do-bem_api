@@ -26,9 +26,24 @@ CREATE TABLE `Usuario` (
 CREATE TABLE `UsuarioSenha` (
   `UsuarioId` char(36) NOT NULL,
   `Senha` char(34) NOT NULL,
-  KEY `FK_Senha_Usuario_Id` (`UsuarioId`),
+  PRIMARY KEY (`UsuarioId`),
   CONSTRAINT `FK_Senha_Usuario_Id` FOREIGN KEY (`UsuarioId`) REFERENCES `Usuario` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- Tabela de Colaboradores
+CREATE TABLE `Colaborador` (
+  `Id` char(36) NOT NULL,
+  `DataInclusao` datetime NOT NULL,
+  `DataAlteracao` datetime DEFAULT NULL,
+  `Cpf` char(11) NOT NULL,
+  `Ativo` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `UK_Colaborador_Cpf` (`Cpf`),
+  KEY `IX_Colaborador_DtInclusao` (`DataInclusao`),
+  KEY `IX_Colaborador_DtAlteracao` (`DataAlteracao`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- ------------------------------------------------------------------------------------------------------------------------------------
 -- Dados
