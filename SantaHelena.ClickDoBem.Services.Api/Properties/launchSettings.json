@@ -15,7 +15,10 @@
       "launchUrl": "api/values",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "SHConnection": "Server=192.168.3.1;Initial Catalog=clickdobem;Persist Security Info=False;User ID=shclickappuser;Password=SH-Cl1ck.D0.B3m;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
+        "MYSQL_SERVER": "192.168.3.1",
+        "MYSQL_DATABASE": "clickdobem",
+        "MYSQL_USER": "shclickappuser",
+        "MYSQL_PASSWORD": "sh.click"
       }
     },
     "SantaHelena.ClickDoBem.Services.Api": {
@@ -25,7 +28,10 @@
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "SHConnection": "Server=192.168.3.1;Initial Catalog=clickdobem;Persist Security Info=False;User ID=shclickappuser;Password=SH-Cl1ck.D0.B3m;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
+        "MYSQL_SERVER": "192.168.3.1",
+        "MYSQL_DATABASE": "clickdobem",
+        "MYSQL_USER": "shclickappuser",
+        "MYSQL_PASSWORD": "sh.click"
       }
     }
   }

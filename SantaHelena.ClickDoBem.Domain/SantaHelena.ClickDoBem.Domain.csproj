@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Entities\" />
+    <ProjectReference Include="..\SantaHelena.ClickDoBem.Domain.Core\SantaHelena.ClickDoBem.Domain.Core.csproj" />
   </ItemGroup>
 
 </Project>
