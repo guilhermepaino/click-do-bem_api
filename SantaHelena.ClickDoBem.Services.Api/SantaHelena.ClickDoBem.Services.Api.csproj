@@ -26,4 +26,10 @@
     <Folder Include="Configurations\Routes\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ClickDoBemApi.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

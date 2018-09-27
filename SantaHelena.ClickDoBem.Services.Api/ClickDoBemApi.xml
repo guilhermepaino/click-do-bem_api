@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SantaHelena.ClickDoBem.Services.Api</name>
+    </assembly>
+    <members>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.ColaboradorController">
+            <summary>
+            API de Colaborador
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.ColaboradorController.Listar">
+            <summary>
+            Listar todos os Cpfs cadastrados
+            </summary>
+            <returns>Lista dos cpfs cadastrados</returns>
+            <response code="200">Retorna a lista de cpfs cadastrados</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController">
+            <summary>
+            API de Usuario
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Credenciais.IUsuarioAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Autenticar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest)">
+            <summary>
+            Autenticar usuário backoffice
+            </summary>
+            <param name="request">Informações da requisição</param>
+            <response code="200">Sucesso na autenticação</response>
+            <response code="403">Falha na autenticação/Acesso Negado</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest">
+            <summary>
+            Request de Autenticacao
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest.Nome">
+            <summary>
+            Nome do usuário (UserName)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest.Senha">
+            <summary>
+            Senha do usuário (Hash Md5)
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse">
+            <summary>
+            Response de Autenticacao
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.#ctor(System.Boolean,System.String,System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Cria uma nova instâncioa da resposta de autenticação
+            </summary>
+            <param name="sucesso">Status da autenticação</param>
+            <param name="mensagem">Mensagem da autenticação</param>
+            <param name="token">Token gerado</param>
+            <param name="dataValidade">Data de validade do token</param>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Sucesso">
+            <summary>
+            Status da autenticação
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Mensagem">
+            <summary>
+            Mensagem da autenticação
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Token">
+            <summary>
+            Token gerado em caso de sucesso na autenticação
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.DataValidade">
+            <summary>
+            Data de validade do token
+            </summary>
+        </member>
+    </members>
+</doc>
