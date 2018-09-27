@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
+using SantaHelena.ClickDoBem.Services.Api.Identity;
 using SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais;
 
@@ -17,6 +19,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/usuario")]
+    [Authorize]
     public class UsuarioController : CdbApiControllerBase
     {
 
@@ -26,6 +29,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
 
         protected readonly IUsuarioAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly UserManager<ApiAppUser> _userManager;
+        protected readonly JwtTokenOptions _jwtTokenOptions;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -39,12 +44,27 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         public UsuarioController
         (
             IUsuarioAppService appService,
-            IHostingEnvironment hostingEnvironment
+            IHostingEnvironment hostingEnvironment,
+            //UserManager<ApiAppUser> userManager,
+            IOptions<JwtTokenOptions> jwtTokenOptions
         )
         {
+            //TODO: Migrar de IdentityUser para UserCustom
+            //_userManager = userManager;
+            _jwtTokenOptions = jwtTokenOptions.Value;
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
         }
+
+        #endregion
+
+        #region Métodos Locais
+
+        /// <summary>
+        /// Converte data em milisegundos
+        /// </summary>
+        /// <param name="date">Data a ser convertida</param>
+        private static long ToUnixEpochDate(DateTime date) => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
 
         #endregion
 
@@ -59,11 +79,48 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost]
         [Route("autenticar")]
-        public IActionResult Autenticar([FromBody]AutenticacaoRequest request)
+        [AllowAnonymous]
+        public IActionResult Autenticar([FromBody] AutenticacaoRequest request)
         {
-            return Ok(new AutenticacaoResponse(true, "Autenticado com sucesso", Guid.NewGuid().ToString().Replace("-", ""), DateTime.Now.AddHours(8)));
-            //TODO: Implementar - Ainda está Mockado
+
+            string token = null;
+            string mensagem = null;
+            DateTime? validade = null;
+            int statusCode = StatusCodes.Status403Forbidden;
+
+            bool autenticado = _appService.Autenticar(request.Nome, request.Senha, out mensagem);
+
+            //ApiAppUser user = _userManager.FindByNameAsync(request.Nome).Result;
+
+            if (autenticado)
+            {
+                var jwt = new JwtSecurityToken(
+                      issuer: _jwtTokenOptions.Issuer,
+                      audience: _jwtTokenOptions.Audience,
+                      notBefore: _jwtTokenOptions.NotBefore,
+                      expires: _jwtTokenOptions.Expiration,
+                      signingCredentials: _jwtTokenOptions.SigningCredentials);
+
+                var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+                token = encodedJwt;
+                validade = DateTime.Now.AddMilliseconds((int)_jwtTokenOptions.ValidFor.TotalSeconds);
+            }
+            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade));
         }
+
+        /// <summary>
+        /// Listar todos os usuários
+        /// </summary>
+        /// <response code="200">Retorna lista de usuários</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet]
+        [Route("listar")]
+        public IActionResult Listar()
+        {
+            return Ok(_appService.ObterTodos());
+        }
+
 
         #endregion
 

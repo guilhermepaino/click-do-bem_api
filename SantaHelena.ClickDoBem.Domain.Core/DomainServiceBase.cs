@@ -1,6 +1,8 @@
 ﻿using SantaHelena.ClickDoBem.Domain.Core.Entities;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SantaHelena.ClickDoBem.Domain.Core
 {
@@ -35,6 +37,15 @@ namespace SantaHelena.ClickDoBem.Domain.Core
         {
             _repository.Excluir(id);
         }
+        public int SalvarMudancas => _repository.SalvarMudancas();
+
+
+        public IEnumerable<TEntity> ObterTodos() => _repository.ObterTodos();
+
+        public TEntity ObterPorId(Guid id) => _repository.ObterPorId(id);
+
+        public IEnumerable<TEntity> Obter(Expression<Func<TEntity, bool>> predicado) => _repository.Obter(predicado);
+        
 
         public virtual void Dispose()
         {

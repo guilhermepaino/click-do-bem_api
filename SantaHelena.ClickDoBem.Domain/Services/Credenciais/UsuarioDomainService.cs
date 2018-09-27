@@ -28,11 +28,6 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
 
         public Usuario ObterPorUsuarioSenha(string usuario, string senha) => _repository.ObterPorUsuarioSenha(usuario, senha);
 
-        /// <summary>
-        /// Obter todos os registros
-        /// </summary>
-        public IEnumerable<Usuario> ObterTodos() => _repository.ObterTodos();
-
         #endregion
 
     }

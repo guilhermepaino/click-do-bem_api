@@ -78,8 +78,15 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         /// <param name="mensagem">Mensagem de saída do resultado da autenticação</param>
         public bool Autenticar(string usuario, string senha, out string mensagem)
         {
-            //TODO: NotImplementedException
-            throw new NotImplementedException();
+
+            Usuario usr = _dmn.ObterPorUsuarioSenha(usuario, senha);
+            if (usr == null)
+            {
+                mensagem = "Usuário e/ou senha inválido!";
+                return false;
+            }
+            mensagem = "Usuário autenticado";
+            return true;
         }
 
         #endregion
