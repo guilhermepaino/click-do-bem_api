@@ -48,14 +48,15 @@ namespace SantaHelena.ClickDoBem.Services.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Santa Helena - Click do Bem - API", Version = "v1" });
-                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme { In = "header", Description = "Please enter JWT with Bearer into field", Name = "Authorization", Type = "apiKey" });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme { In = "header", Description = "Por favor, digite JWT com Bearer no campo", Name = "Authorization", Type = "apiKey" });
                 c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
                 {
                     {
                         "Bearer", Enumerable.Empty<string>()
                     }
                 });
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlFile = $"ClickDoBemApi.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
