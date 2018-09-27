@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.Options;
 using SantaHelena.ClickDoBem.Data.Context;
 using SantaHelena.ClickDoBem.Infra.CrossCutting.IoC;
 using SantaHelena.ClickDoBem.Services.Api.Configurations.Startup;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SantaHelena.ClickDoBem.Services.Api
 {
@@ -41,7 +44,21 @@ namespace SantaHelena.ClickDoBem.Services.Api
             services.AddResponseCaching();
             //services.AddMvc(Mvc.ConfigureService());
             //services.AddAuthorization(Authorization.ConfigureService());
-            //services.AddSwaggerGen(Swagger.ConfigureService());
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Santa Helena - Click do Bem - API", Version = "v1" });
+                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme { In = "header", Description = "Please enter JWT with Bearer into field", Name = "Authorization", Type = "apiKey" });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {
+                        "Bearer", Enumerable.Empty<string>()
+                    }
+                });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             DependencyInjectionBootStrapper.RegisterServices(services);
 
@@ -61,8 +78,11 @@ namespace SantaHelena.ClickDoBem.Services.Api
             app.UseResponseCaching();
             app.UseMvc();
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(s => s.SwaggerEndpoint("/swagger/v1/swagger.json", "API Click do Bem"));
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Click do Bem - V1");
+            });
 
         }
     }

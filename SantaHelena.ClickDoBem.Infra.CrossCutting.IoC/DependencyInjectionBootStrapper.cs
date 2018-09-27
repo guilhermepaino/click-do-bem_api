@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
+using SantaHelena.ClickDoBem.Application.Services.Credenciais;
 using SantaHelena.ClickDoBem.Data;
 using SantaHelena.ClickDoBem.Data.Context;
 using SantaHelena.ClickDoBem.Data.Repositories.Credenciais;
@@ -24,6 +26,8 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
         {
 
             // Application
+            services.AddScoped<IColaboradorAppService, ColaboradorAppService>();
+            services.AddScoped<IUsuarioAppService, UsuarioAppService>();
 
             // Domain
             services.AddScoped<IUsuarioDomainService, UsuarioDomainService>();

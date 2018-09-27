@@ -20,8 +20,7 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
                 .IsRequired();
 
             builder.Property(c => c.DataAlteracao)
-                .HasColumnType("datetime")
-                .IsRequired();
+                .HasColumnType("datetime");
 
             builder.HasIndex(i => i.DataInclusao).HasName("IX_Usuario_DtInclusao");
             builder.HasIndex(i => i.DataAlteracao).HasName("IX_Usuario_DtAlteracao");

@@ -30,10 +30,12 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
         /// Obter registro pelo Cpf
         /// </summary>
         /// <param name="cpf">Cpf a ser localizado</param>
-        public Colaborador ObterPorCpf(string cpf)
-        {
-            return _repository.ObterPorCpf(cpf);
-        }
+        public Colaborador ObterPorCpf(string cpf) => _repository.ObterPorCpf(cpf);
+
+        /// <summary>
+        /// Obter todos os registros
+        /// </summary>
+        public IEnumerable<Colaborador> ObterTodos() => _repository.ObterTodos();
 
         #endregion
 

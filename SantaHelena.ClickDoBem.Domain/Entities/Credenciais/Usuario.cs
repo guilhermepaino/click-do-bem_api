@@ -38,7 +38,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// <summary>
         /// Data da última alteração do registro
         /// </summary>
-        public DateTime DataAlteracao { get; set; }
+        public DateTime? DataAlteracao { get; set; }
 
         /// <summary>
         /// Nome do usuário

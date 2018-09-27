@@ -1,5 +1,6 @@
 ﻿using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
+using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
 {
@@ -8,6 +9,7 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
     {
 
         Colaborador ObterPorCpf(string cpf);
+        IEnumerable<Colaborador> ObterTodos();
 
     }
 

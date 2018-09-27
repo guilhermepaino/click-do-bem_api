@@ -54,6 +54,29 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
             return _ctx.Database.GetDbConnection().Query<Usuario>(sql).ToList();
         }
 
+        /// <summary>
+        /// Buscar usuário
+        /// </summary>
+        /// <param name="usuario">Nome do usuário</param>
+        /// <param name="senha">Senha (Hash Md5) do usuário</param>
+        public Usuario ObterPorUsuarioSenha(string usuario, string senha)
+        {
+            
+            string sql = $@"SELECT u.*
+                            FROM Usuario u
+                            INNER JOIN UsuarioSenha us ON u.Id = us.UsuarioId
+                            WHERE u.Nome = @pusuario AND us.Senha = @psenha";
+
+            return _ctx.Database
+                .GetDbConnection()
+                .Query<Usuario>
+                (
+                    sql, 
+                    new { pusuario = usuario, psenha = senha }
+                ).FirstOrDefault();
+
+        }
+
         #endregion
 
     }
