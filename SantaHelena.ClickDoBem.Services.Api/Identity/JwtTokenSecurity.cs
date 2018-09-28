@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Identity
 {
-    /// <summary>
-    /// Objeto de TokenSecurity do Jwt
-    /// </summary>
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
     public class JwtTokenSecurity
     {
 
@@ -15,4 +15,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Identity
 
 
     }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

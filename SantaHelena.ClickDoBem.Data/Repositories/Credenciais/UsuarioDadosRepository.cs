@@ -11,9 +11,9 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
 {
 
     /// <summary>
-    /// Repositório da entidade UsuarioSenha
+    /// Repositório da entidade Colaborador
     /// </summary>
-    public class UsuarioSenhaRepository : RepositorioBase<UsuarioSenha>, IUsuarioSenhaRepository
+    public class UsuarioDadosRepository : RepositorioBase<UsuarioDados>, IUsuarioDadosRepository
     {
 
         #region Construtores
@@ -22,7 +22,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         /// Cria uma nova instância do repositório
         /// </summary>
         /// <param name="ctx">Contexto de banco de dados</param>
-        public UsuarioSenhaRepository(CdbContext ctx) : base(ctx) { }
+        public UsuarioDadosRepository(CdbContext ctx) : base(ctx) { }
 
 
         #endregion
@@ -33,11 +33,11 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         /// Obter registro pelo Id
         /// </summary>
         /// <param name="id">Id do registro</param>
-        public override UsuarioSenha ObterPorId(Guid id)
+        public override UsuarioDados ObterPorId(Guid id)
         {
 
-            string sql = @"SELECT * FROM UsuarioSenha WHERE UsuarioId = @pid";
-            return _ctx.Database.GetDbConnection().Query<UsuarioSenha>
+            string sql = @"SELECT * FROM UsuarioDados WHERE Id = @pid";
+            return _ctx.Database.GetDbConnection().Query<UsuarioDados>
             (
                 sql,
                 new { pid = id }
@@ -48,10 +48,10 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         /// <summary>
         /// Obter todos os registros
         /// </summary>
-        public override IEnumerable<UsuarioSenha> ObterTodos()
+        public override IEnumerable<UsuarioDados> ObterTodos()
         {
-            string sql = @"SELECT * FROM UsuarioSenha";
-            return _ctx.Database.GetDbConnection().Query<UsuarioSenha>(sql).ToList();
+            string sql = @"SELECT * FROM UsuarioDados";
+            return _ctx.Database.GetDbConnection().Query<UsuarioDados>(sql).ToList();
         }
 
         #endregion

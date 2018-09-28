@@ -57,14 +57,14 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         /// <summary>
         /// Buscar usuário
         /// </summary>
-        /// <param name="usuario">Nome do usuário</param>
+        /// <param name="login">Nome do usuário</param>
         /// <param name="senha">Senha (Hash Md5) do usuário</param>
-        public Usuario ObterPorUsuarioSenha(string usuario, string senha)
+        public Usuario ObterPorLogin(string login, string senha)
         {
             
             string sql = $@"SELECT u.*
                             FROM Usuario u
-                            INNER JOIN UsuarioSenha us ON u.Id = us.UsuarioId
+                            INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId
                             WHERE u.Nome = @pusuario AND us.Senha = @psenha";
 
             return _ctx.Database
@@ -72,7 +72,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
                 .Query<Usuario>
                 (
                     sql, 
-                    new { pusuario = usuario, psenha = senha }
+                    new { pusuario = login, psenha = senha }
                 ).FirstOrDefault();
 
         }

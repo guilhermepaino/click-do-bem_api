@@ -79,7 +79,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         public bool Autenticar(string usuario, string senha, out string mensagem)
         {
 
-            Usuario usr = _dmn.ObterPorUsuarioSenha(usuario, senha);
+            Usuario usr = _dmn.ObterPorLogin(usuario, senha);
             if (usr == null)
             {
                 mensagem = "Usuário e/ou senha inválido!";

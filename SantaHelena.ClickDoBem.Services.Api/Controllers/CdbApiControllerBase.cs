@@ -7,9 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers
 {
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
     [Produces("application/json")]
+    [Authorize]
+    [ApiController]
     public abstract class CdbApiControllerBase : ControllerBase
     {
+
         protected new IActionResult Response(object res)
         {
             return Ok(new
@@ -56,5 +61,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers
             });
         }
     }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 }

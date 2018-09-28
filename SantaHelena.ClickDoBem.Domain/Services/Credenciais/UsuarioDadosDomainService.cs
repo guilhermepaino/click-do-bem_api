@@ -9,9 +9,9 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
 {
 
     /// <summary>
-    /// Objeto de domínio da entidade UsuarioSenha
+    /// Objeto de domínio da entidade UsuarioDados
     /// </summary>
-    public class UsuarioSenhaDomainService : DomainServiceBase<UsuarioSenha, IUsuarioSenhaRepository>, IUsuarioSenhaDomainService
+    public class UsuarioDadosDomainService : DomainServiceBase<UsuarioDados, IUsuarioDadosRepository>, IUsuarioDadosDomainService
     {
 
         #region Construtores
@@ -20,7 +20,12 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
         /// Cria uma nova instância do domínio
         /// </summary>
         /// <param name="repository">Contexto de banco de dados</param>
-        public UsuarioSenhaDomainService(IUsuarioSenhaRepository repository) : base(repository) { }
+        public UsuarioDadosDomainService(IUsuarioDadosRepository repository) : base(repository) { }
+
+        #endregion
+
+        #region Métodos públicos
+
 
         #endregion
 

@@ -8,7 +8,7 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
     public interface IUsuarioDomainService : IDomainServiceBase<Usuario>
     {
 
-        Usuario ObterPorUsuarioSenha(string usuario, string senha);
+        Usuario ObterPorLogin(string login, string senha);
         IEnumerable<Usuario> ObterTodos();
 
     }

@@ -26,21 +26,20 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
         {
 
             // Application
-            services.AddScoped<IColaboradorAppService, ColaboradorAppService>();
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
 
             // Domain
             services.AddScoped<IUsuarioDomainService, UsuarioDomainService>();
-            services.AddScoped<IUsuarioSenhaDomainService, UsuarioSenhaDomainService>();
-            services.AddScoped<IColaboradorDomainService, ColaboradorDomainService>();
+            services.AddScoped<IUsuarioLoginDomainService, UsuarioLoginDomainService>();
+            services.AddScoped<IUsuarioDadosDomainService, UsuarioDadosDomainService>();
 
             // Infra.Data
             services.AddScoped<CdbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            services.AddScoped<IUsuarioSenhaRepository, UsuarioSenhaRepository>();
-            services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
+            services.AddScoped<IUsuarioLoginRepository, UsuarioLoginRepository>();
+            services.AddScoped<IUsuarioDadosRepository, UsuarioDadosRepository>();
 
             // Infra.CrossCutting.Common
             services.AddScoped<IAppUser, AppUser>();

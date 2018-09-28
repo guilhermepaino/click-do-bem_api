@@ -15,6 +15,7 @@ CREATE TABLE `Usuario` (
   `Id` char(36) NOT NULL,
   `DataInclusao` datetime NOT NULL,
   `DataAlteracao` datetime DEFAULT NULL,
+  `CpfCnpj` varchar(14) NOT NULL,
   `Nome` varchar(150) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `IX_Usuario_DtInclusao` (`DataInclusao`),
@@ -22,28 +23,54 @@ CREATE TABLE `Usuario` (
   KEY `IX_Usuario_Nome` (`Nome`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Tabela UsuarioSenha
-CREATE TABLE `UsuarioSenha` (
+-- Tabela UsuarioLogin
+CREATE TABLE `UsuarioLogin` (
   `UsuarioId` char(36) NOT NULL,
+  `Login` varchar(150) NOT NULL,
   `Senha` char(34) NOT NULL,
   PRIMARY KEY (`UsuarioId`),
-  CONSTRAINT `FK_Senha_Usuario_Id` FOREIGN KEY (`UsuarioId`) REFERENCES `Usuario` (`Id`)
+  UNIQUE KEY `UK_Login_Login` (`Login`),
+  CONSTRAINT `FK_Login_Usuario_Id` FOREIGN KEY (`UsuarioId`) REFERENCES `Usuario` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- Tabela de Colaboradores
-CREATE TABLE `Colaborador` (
+-- Tabela de UsuarioDados
+CREATE TABLE `UsuarioDados` (
   `Id` char(36) NOT NULL,
   `DataInclusao` datetime NOT NULL,
   `DataAlteracao` datetime DEFAULT NULL,
-  `Cpf` char(11) NOT NULL,
-  `Ativo` bit(1) NOT NULL DEFAULT b'0',
+  `UsuarioId` char(36) NOT NULL,
+  `DataNascimento` date DEFAULT NULL,
+  `Logradouro` varchar(100) DEFAULT NULL,
+  `Numero` varchar(30) DEFAULT NULL,
+  `Complemento` varchar(50) DEFAULT NULL,
+  `Bairro` varchar(80) DEFAULT NULL,
+  `Cidade` varchar(100) DEFAULT NULL,
+  `UF` char(2) DEFAULT NULL,
+  `CEP` char(8) DEFAULT NULL,
+  `TelefoneCelular` varchar(20) DEFAULT NULL,
+  `TelefoneFixo` varchar(20) DEFAULT NULL,
+  `Email` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_Colaborador_Cpf` (`Cpf`),
-  KEY `IX_Colaborador_DtInclusao` (`DataInclusao`),
-  KEY `IX_Colaborador_DtAlteracao` (`DataAlteracao`)
+  KEY `IX_Usuario_DtInclusao` (`DataInclusao`),
+  KEY `IX_Usuario_DtAlteracao` (`DataAlteracao`),
+  KEY `FK_UsuarioDados_Usuario_Id` (`UsuarioId`),
+  CONSTRAINT `FK_UsuarioDados_Usuario_Id` FOREIGN KEY (`UsuarioId`) REFERENCES `Usuario` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Tabela de Categoria
+CREATE TABLE `Categoria` (
+  `Id` char(36) NOT NULL,
+  `DataInclusao` datetime NOT NULL,
+  `DataAlteracao` datetime DEFAULT NULL,
+  `Descricao` varchar(150) NOT NULL,
+  `Pontuacao` int(5) NOT NULL,
+  `GerenciadaRh` bit NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Id`),
+  KEY `IX_Categoria_DtInclusao` (`DataInclusao`),
+  KEY `IX_Categoria_DtAlteracao` (`DataAlteracao`),
+  KEY `IX_Categoria_Descricao` (`Descricao`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ------------------------------------------------------------------------------------------------------------------------------------
 -- Dados
@@ -53,5 +80,10 @@ CREATE TABLE `Colaborador` (
 INSERT INTO `__ControleVersaoUpgradeDB` VALUES (1, now(), 'Criação inicial do banco. Criação da tabela de usuários.');
 
 -- Tabelas de Usuario
-INSERT INTO Usuario (Id, DataInclusao, Nome) VALUES (UUID(), NOW(), 'admin');
-INSERT INTO UsuarioSenha (UsuarioId, Senha) SELECT Id, MD5('SHelena') FROM Usuario;	
+INSERT INTO Usuario (Id, DataInclusao, CpfCnpj, Nome) VALUES (UUID(), NOW(), '11111111111', 'admin');
+INSERT INTO UsuarioLogin (UsuarioId, Login, Senha) SELECT Id, 'admin', MD5('SHelena') FROM Usuario WHERE Nome = 'admin';
+
+-- Tabela de Categoria
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES (UUID(), NOW(), 'Higiene e limpeza', 10, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES (UUID(), NOW(), 'Bebê', 100, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES (UUID(), NOW(), 'Telefonia e acessórios', 10, 1);

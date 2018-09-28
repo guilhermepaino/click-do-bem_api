@@ -19,6 +19,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SantaHelena.ClickDoBem.Services.Api
 {
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -121,6 +124,8 @@ namespace SantaHelena.ClickDoBem.Services.Api
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+            else
+                app.UseHsts();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -145,4 +150,7 @@ namespace SantaHelena.ClickDoBem.Services.Api
 
         }
     }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

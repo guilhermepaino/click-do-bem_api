@@ -8,4 +8,9 @@
     <ProjectReference Include="..\SantaHelena.ClickDoBem.Domain.Core\SantaHelena.ClickDoBem.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Cadastros\" />
+    <Folder Include="Services\Cadastros\" />
+  </ItemGroup>
+
 </Project>

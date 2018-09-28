@@ -45,7 +45,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Identity
         /// <summary>
         /// Set the timespan the token will be valid for (default is 120 min)
         /// </summary>
-        public TimeSpan ValidFor { get; set; } = TimeSpan.FromHours(12);
+        public TimeSpan ValidFor { get; set; } = TimeSpan.FromDays(3000);
 
         /// <summary>
         /// "jti" (JWT ID) Claim (default ID is a GUID)

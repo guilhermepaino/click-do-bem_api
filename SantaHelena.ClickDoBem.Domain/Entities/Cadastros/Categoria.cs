@@ -7,29 +7,17 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 {
 
     /// <summary>
-    /// 
+    /// Entidade de categoria
     /// </summary>
-    public class Colaborador : Core.Entities.EntityIdBase<Colaborador>
+    public class Categoria : Core.Entities.EntityIdBase<Categoria>
     {
 
         #region Construtores
 
         /// <summary>
-        /// Cria uma nova instância de Colaborador
+        /// Cria uma nova instância de Categoria
         /// </summary>
-        public Colaborador() { }
-
-        /// <summary>
-        /// Cria uma nova instância de Colaborador
-        /// </summary>
-        /// <param name="cpf">Cpf do colaborador</param>
-        /// <param name="ativo">Status do colaborador</param>
-        public Colaborador(string cpf, bool ativo)
-        {
-            Cpf = cpf;
-            Ativo = ativo;
-        }
-
+        public Categoria() { }
 
         #endregion
 
@@ -39,9 +27,11 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 
         public DateTime DataAlteracao { get; set; }
 
-        public string Cpf { get; set; }
+        public string Descricao { get; set; }
 
-        public bool Ativo { get; set; }
+        public int Pontuacao { get; set; }
+
+        public bool GerenciadaRh { get; set; }
 
         #endregion
 
@@ -52,10 +42,15 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// </summary>
         protected void ValidarRegistro()
         {
-            RuleFor(c => c.Cpf)
-                .NotEmpty().WithMessage("O cpf deve ser informado")
-                .Length(11).WithMessage("O cpf deve conter 11 dígitos");
-            //TODO: Verificar como implementar aqui a validação de CPF
+
+            RuleFor(c => c.Descricao)
+                .NotEmpty().WithMessage("A descrição não pdoe ser vazia")
+                .MinimumLength(3).WithMessage("A descrição deve conter entre 3 e 150 caracteres")
+                .MaximumLength(150).WithMessage("A descrição deve conter entre 3 e 150 caracteres");
+
+            RuleFor(c => c.Pontuacao)
+                .GreaterThan(0).WithMessage("A pontuação deve ser maior do que 0");
+
         }
 
         #endregion

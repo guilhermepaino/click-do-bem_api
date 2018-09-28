@@ -3,9 +3,7 @@ using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 
 namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
 {
-    public interface IColaboradorRepository : IMySqlRepositoryBase<Colaborador>
+    public interface IUsuarioLoginRepository : IMySqlRepositoryBase<UsuarioLogin>
     {
-        Colaborador ObterPorCpf(string cpf);
-
     }
 }

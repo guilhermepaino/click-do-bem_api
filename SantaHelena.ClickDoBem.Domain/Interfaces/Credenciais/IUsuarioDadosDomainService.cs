@@ -5,11 +5,8 @@ using System.Collections.Generic;
 namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
 {
 
-    public interface IColaboradorDomainService : IDomainServiceBase<Colaborador>
+    public interface IUsuarioDadosDomainService : IDomainServiceBase<UsuarioDados>
     {
-
-        Colaborador ObterPorCpf(string cpf);
-        IEnumerable<Colaborador> ObterTodos();
 
     }
 

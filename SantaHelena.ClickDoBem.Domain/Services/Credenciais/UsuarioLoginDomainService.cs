@@ -9,9 +9,9 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
 {
 
     /// <summary>
-    /// Objeto de domínio da entidade UsuarioSenha
+    /// Objeto de domínio da entidade UsuarioLogin
     /// </summary>
-    public class ColaboradorDomainService : DomainServiceBase<Colaborador, IColaboradorRepository>, IColaboradorDomainService
+    public class UsuarioLoginDomainService : DomainServiceBase<UsuarioLogin, IUsuarioLoginRepository>, IUsuarioLoginDomainService
     {
 
         #region Construtores
@@ -20,18 +20,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
         /// Cria uma nova instância do domínio
         /// </summary>
         /// <param name="repository">Contexto de banco de dados</param>
-        public ColaboradorDomainService(IColaboradorRepository repository) : base(repository) { }
-
-        #endregion
-
-        #region Métodos públicos
-
-        /// <summary>
-        /// Obter registro pelo Cpf
-        /// </summary>
-        /// <param name="cpf">Cpf a ser localizado</param>
-        public Colaborador ObterPorCpf(string cpf) => _repository.ObterPorCpf(cpf);
-
+        public UsuarioLoginDomainService(IUsuarioLoginRepository repository) : base(repository) { }
 
         #endregion
 

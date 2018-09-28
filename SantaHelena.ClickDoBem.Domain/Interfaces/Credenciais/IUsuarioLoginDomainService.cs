@@ -3,7 +3,9 @@ using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 
 namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
 {
-    public interface IUsuarioSenhaRepository : IMySqlRepositoryBase<UsuarioSenha>
+
+    public interface IUsuarioLoginDomainService : IDomainServiceBase<UsuarioLogin>
     {
     }
+
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +20,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/usuario")]
-    [Authorize]
     public class UsuarioController : CdbApiControllerBase
     {
 
@@ -29,7 +29,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
 
         protected readonly IUsuarioAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
-        protected readonly UserManager<ApiAppUser> _userManager;
         protected readonly JwtTokenOptions _jwtTokenOptions;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
@@ -45,26 +44,13 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         (
             IUsuarioAppService appService,
             IHostingEnvironment hostingEnvironment,
-            //UserManager<ApiAppUser> userManager,
             IOptions<JwtTokenOptions> jwtTokenOptions
         )
         {
-            //TODO: Migrar de IdentityUser para UserCustom
-            //_userManager = userManager;
             _jwtTokenOptions = jwtTokenOptions.Value;
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
         }
-
-        #endregion
-
-        #region Métodos Locais
-
-        /// <summary>
-        /// Converte data em milisegundos
-        /// </summary>
-        /// <param name="date">Data a ser convertida</param>
-        private static long ToUnixEpochDate(DateTime date) => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
 
         #endregion
 
@@ -77,20 +63,16 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// <response code="200">Sucesso na autenticação</response>
         /// <response code="403">Falha na autenticação/Acesso Negado</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpPost]
-        [Route("autenticar")]
+        [HttpPost("autenticar")]
         [AllowAnonymous]
         public IActionResult Autenticar([FromBody] AutenticacaoRequest request)
         {
 
             string token = null;
-            string mensagem = null;
             DateTime? validade = null;
             int statusCode = StatusCodes.Status403Forbidden;
 
-            bool autenticado = _appService.Autenticar(request.Nome, request.Senha, out mensagem);
-
-            //ApiAppUser user = _userManager.FindByNameAsync(request.Nome).Result;
+            bool autenticado = _appService.Autenticar(request.Nome, request.Senha, out string mensagem);
 
             if (autenticado)
             {
@@ -101,26 +83,61 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
                       expires: _jwtTokenOptions.Expiration,
                       signingCredentials: _jwtTokenOptions.SigningCredentials);
 
-                var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-                token = encodedJwt;
+                token = new JwtSecurityTokenHandler().WriteToken(jwt);
                 validade = DateTime.Now.AddMilliseconds((int)_jwtTokenOptions.ValidFor.TotalSeconds);
             }
             return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade));
         }
 
         /// <summary>
-        /// Listar todos os usuários
+        /// Listar todos os registros
         /// </summary>
-        /// <response code="200">Retorna lista de usuários</response>
+        /// <returns>Lista dos registros cadastrados</returns>
+        /// <response code="200">Retorna a lista de registros cadastrados</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpGet]
-        [Route("listar")]
+        [HttpGet("listar")]
         public IActionResult Listar()
         {
             return Ok(_appService.ObterTodos());
         }
 
+        /// <summary>
+        /// Recepciona arquivo de carga de colaboradores
+        /// </summary>
+        /// <response code="200">Processamento do arquivo realizado com sucesso</response>
+        /// <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Ocorreu alguma falha no processamento da request</response>
+        [HttpPost("upload"), DisableRequestSizeLimit]
+        [AllowAnonymous]
+        public IActionResult Upload()
+        {
+            //TODO: AllowAnonymous
+
+            IFormFile file = null;
+
+            file = Request.Form.Files.FirstOrDefault();
+
+            //try { file = Request.Form.Files.FirstOrDefault(); }
+            //catch { return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" }); }
+
+            //if (file.Length.Equals(0))
+            //    return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
+
+            return Ok();
+
+            //string protocolo = Request.IsHttps ? "https" : "http";
+            //string urlApp = $"{protocolo}://{Request.Host.Value}";
+            //string token = Request.Headers.ToList().Where(x => x.Key.Equals("Authorization")).SingleOrDefault().Value.ToString();
+
+            //bool sucess = _importacaoMetaAppService.Upload(file, urlApp, token, _caminho, ano, mes, out int statusCode, out string message);
+
+            //if (sucess)
+            //    return Ok(new { sucess = true, data = $"Arquivo '{file.FileName} ({file.Length.ToString("N0")} bytes)' adicionado a fila com sucesso!" });
+            //else
+            //    return StatusCode(statusCode, new { sucess = false, data = $"Falha no envio do arquivo: {message}" });
+        }
 
         #endregion
 

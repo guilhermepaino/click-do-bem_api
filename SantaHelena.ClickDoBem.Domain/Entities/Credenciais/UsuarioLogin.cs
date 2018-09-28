@@ -5,9 +5,9 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 {
 
     /// <summary>
-    /// Entidade de UsuarioSenha
+    /// Entidade de Login de Usuário
     /// </summary>
-    public class UsuarioSenha : Core.Entities.EntityBase<UsuarioSenha>
+    public class UsuarioLogin : Core.Entities.EntityBase<UsuarioLogin>
     {
 
         #region Construtores
@@ -17,7 +17,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// </summary>
         /// <param name="usuarioId">Id do usuário</param>
         /// <param name="senha">Senha do usuário (criptografada Md5)</param>
-        public UsuarioSenha(Guid usuarioId, string senha)
+        public UsuarioLogin(Guid usuarioId, string senha)
         {
             UsuarioId = usuarioId;
             Senha = senha;

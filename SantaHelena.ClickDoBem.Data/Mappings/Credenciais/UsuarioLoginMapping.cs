@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
 {
-    public class UsuarioSenhaMapping : IEntityTypeConfiguration<UsuarioSenha>
+    public class UsuarioLoginMapping : IEntityTypeConfiguration<UsuarioLogin>
     {
 
-        public void Configure(EntityTypeBuilder<UsuarioSenha> builder)
+        public void Configure(EntityTypeBuilder<UsuarioLogin> builder)
         {
 
             builder.Property(c => c.UsuarioId)
@@ -23,7 +23,7 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
             builder.Ignore(c => c.ValidationResult);
             builder.Ignore(c => c.CascadeMode);
 
-            builder.ToTable("UsuarioSenha");
+            builder.ToTable("UsuarioLogin");
 
         }
 
