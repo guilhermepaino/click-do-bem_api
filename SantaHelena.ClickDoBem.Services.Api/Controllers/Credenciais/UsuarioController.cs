@@ -59,6 +59,24 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// <summary>
         /// Autenticar usuário backoffice
         /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     {
+        ///        "nome": "admin",
+        ///        "senha": "202cb962ac59075b964b07152d234b70",
+        ///     }
+        ///     
+        ///     Resposta
+        ///     { 
+        ///         "sucesso" = "true",
+        ///         "mensagem" = "mensagem do resultado da operação",
+        ///         "token" = "hash informado se sucesso, caso contrário será nulo",
+        ///         "dataValidade = "data de validade do token quando sucesso, em caso de falha será informado nulo"
+        ///     }
+        ///     
+        /// </remarks>
         /// <param name="request">Informações da requisição</param>
         /// <response code="200">Sucesso na autenticação</response>
         /// <response code="403">Falha na autenticação/Acesso Negado</response>
@@ -92,6 +110,44 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// <summary>
         /// Listar todos os registros
         /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     Nenhum parâmetro
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "80f763b0-c327-11e8-bbe3-0242ac110006",
+        ///             "dataInclusao": "2018-09-28T14:05:06",
+        ///             "dataAlteracao": null,
+        ///             "cpfCnpj": "11111111111",
+        ///             "nome": "admin",
+        ///             "usuarioLogin": {
+        ///                 "login": "admin",
+        ///                 "senha": "*ENCRYPTED*"
+        ///             },
+        ///             "usuarioDados": {
+        ///                 "id": "f381eaf4-c37e-11e8-8987-0242ac110006",
+        ///                 "dataInclusao": "2018-09-28T00:31:04",
+        ///                 "dataAlteracao": null,
+        ///                 "dataNascimento": "1976-11-13T00:00:00",
+        ///                 "logradouro": "string",
+        ///                 "numero": "string",
+        ///                 "complemento": "string",
+        ///                 "bairro": "string",
+        ///                 "cidade": "string",
+        ///                 "uf": "string",
+        ///                 "cep": "00000000",
+        ///                 "telefoneCelular": "(00)00000-0000",
+        ///                 "telefoneFixo": ""(00)0000-0000",
+        ///                 "email": "email@provedor"
+        ///             }
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
         /// <returns>Lista dos registros cadastrados</returns>
         /// <response code="200">Retorna a lista de registros cadastrados</response>
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
@@ -105,6 +161,31 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// <summary>
         /// Recepciona arquivo de carga de colaboradores
         /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     Content-Type: multipart/form-data
+        ///     Enviar arquivo através de FormFile
+        ///     
+        ///     Resposta
+        ///     {
+        ///         "sucesso" : "boolean",
+        ///         "mensagem" : "mensagem do resultado do processamento",
+        ///         "resultado" : 
+        ///         [
+        ///             { 
+        ///                 "linha": "1",
+        ///                 "situacao": "Ok"
+        ///             },
+        ///             { 
+        ///                "linha": "2",
+        ///               "situacao": "Cpf/Cnpj inválido"
+        ///             }
+        ///         ]
+        ///     }
+        /// 
+        /// </remarks>
         /// <response code="200">Processamento do arquivo realizado com sucesso</response>
         /// <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>

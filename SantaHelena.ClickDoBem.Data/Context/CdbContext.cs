@@ -70,13 +70,13 @@ namespace SantaHelena.ClickDoBem.Data.Context
 
         #region DbSets
 
-        public DbSet<Usuario> Usuario { get; set; }
+        public virtual DbSet<Usuario> Usuario { get; set; }
 
-        public DbSet<UsuarioLogin> UsuarioLogin { get; set; }
+        public virtual DbSet<UsuarioLogin> UsuarioLogin { get; set; }
 
-        public DbSet<UsuarioDados> UsuarioDados { get; set; }
+        public virtual DbSet<UsuarioDados> UsuarioDados { get; set; }
 
-        public DbSet<Categoria> Categoria { get; set; }
+        public virtual DbSet<Categoria> Categoria { get; set; }
 
         #endregion
 

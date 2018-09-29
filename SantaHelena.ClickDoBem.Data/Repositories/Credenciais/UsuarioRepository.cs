@@ -5,6 +5,7 @@ using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
@@ -27,6 +28,35 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
 
         #endregion
 
+        #region Métodos Locais
+
+        protected void CarregarRelacoesUsuario(IList<Usuario> usuarios)
+        {
+            foreach (Usuario u in usuarios)
+            {
+                CarregarRelacoesUsuario(u);
+            }
+        }
+
+        protected void CarregarRelacoesUsuario(Usuario usuario)
+        {
+            if (usuario != null)
+            {
+                string sql;
+
+                // UsuarioLogin
+                sql = @"SELECT * FROM UsuarioLogin WHERE UsuarioId = @pid";
+                usuario.UsuarioLogin = _ctx.Database.GetDbConnection().Query<UsuarioLogin>(sql, new { pid = usuario.Id }).SingleOrDefault();
+
+                // UsuarioDados
+                sql = @"SELECT * FROM UsuarioDados WHERE UsuarioId = @pid";
+                usuario.UsuarioDados = _ctx.Database.GetDbConnection().Query<UsuarioDados>(sql, new { pid = usuario.Id }).SingleOrDefault();
+
+            }
+        }
+
+        #endregion
+
         #region Métodos Públicos
 
         /// <summary>
@@ -36,12 +66,13 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         public override Usuario ObterPorId(Guid id)
         {
 
-            string sql = @"SELECT * FROM Usuario WHERE Id = @pid";
-            return _ctx.Database.GetDbConnection().Query<Usuario>
-            (
-                sql,
-                new { pid = id }
-            ).SingleOrDefault();
+            string sql = null;
+
+            // Usuario
+            sql = @"SELECT * FROM Usuario WHERE Id = @pid";
+            Usuario usuario = _ctx.Database.GetDbConnection().Query<Usuario>(sql, new { pid = id }).SingleOrDefault();
+            CarregarRelacoesUsuario(usuario);
+            return usuario;
 
         }
 
@@ -51,7 +82,11 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         public override IEnumerable<Usuario> ObterTodos()
         {
             string sql = @"SELECT * FROM Usuario";
-            return _ctx.Database.GetDbConnection().Query<Usuario>(sql).ToList();
+            List<Usuario> usuarios = _ctx.Database.GetDbConnection().Query<Usuario>(sql).ToList();
+
+            CarregarRelacoesUsuario(usuarios);
+
+            return usuarios;
         }
 
         /// <summary>
@@ -61,19 +96,14 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         /// <param name="senha">Senha (Hash Md5) do usuário</param>
         public Usuario ObterPorLogin(string login, string senha)
         {
-            
-            string sql = $@"SELECT u.*
-                            FROM Usuario u
-                            INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId
-                            WHERE u.Nome = @pusuario AND us.Senha = @psenha";
 
-            return _ctx.Database
-                .GetDbConnection()
-                .Query<Usuario>
-                (
-                    sql, 
-                    new { pusuario = login, psenha = senha }
-                ).FirstOrDefault();
+            string sql = null;
+
+            // Usuario
+            sql = $@"SELECT u.* FROM Usuario u INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId WHERE u.Nome = @pusuario AND us.Senha = @psenha";
+            Usuario usuario = _ctx.Database.GetDbConnection().Query<Usuario>(sql,  new { pusuario = login, psenha = senha }).FirstOrDefault();
+            CarregarRelacoesUsuario(usuario);
+            return usuario;
 
         }
 

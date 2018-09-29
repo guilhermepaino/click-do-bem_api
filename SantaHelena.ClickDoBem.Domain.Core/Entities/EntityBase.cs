@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using System;
 
 namespace SantaHelena.ClickDoBem.Domain.Core.Entities
@@ -9,7 +10,8 @@ namespace SantaHelena.ClickDoBem.Domain.Core.Entities
     /// Classe abstrata de entidade
     /// </summary>
     /// <typeparam name="T">Tipo de objeto</typeparam>
-    public abstract class EntityBase<T> : AbstractValidator<T> where T : EntityBase<T>
+    public abstract class EntityBase<T> : AbstractValidator<T>, IEntity
+        where T : EntityBase<T>
     {
 
         /// <summary>

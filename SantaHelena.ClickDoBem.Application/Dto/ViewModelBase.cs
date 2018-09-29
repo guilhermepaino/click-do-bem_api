@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
-namespace SantaHelena.ClickDoBem.Application.AppViewModels
+namespace SantaHelena.ClickDoBem.Application.Dto
 {
     public class ViewModelBase
     {

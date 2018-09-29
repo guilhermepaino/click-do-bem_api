@@ -15,7 +15,14 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// <summary>
         ///  Cria uma nova instância de usuário
         /// </summary>
-        public Usuario() { }
+        public Usuario()
+        {
+        }
+
+        /// <summary>
+        /// Número do documento
+        /// </summary>
+        public string CpfCnpj { get; set; }
 
         /// <summary>
         /// Cria uma nova instância de usuário
@@ -44,6 +51,14 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// Nome do usuário
         /// </summary>
         public string Nome { get; set; }
+
+        #endregion
+
+        #region Navigation (Lazy)
+
+        public UsuarioLogin UsuarioLogin { get; set; }
+
+        public UsuarioDados UsuarioDados { get; set; }
 
         #endregion
 

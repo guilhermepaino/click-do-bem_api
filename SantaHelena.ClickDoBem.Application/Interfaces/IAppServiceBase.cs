@@ -6,7 +6,5 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces
 {
     public interface IAppServiceBase
     {
-
-
     }
 }

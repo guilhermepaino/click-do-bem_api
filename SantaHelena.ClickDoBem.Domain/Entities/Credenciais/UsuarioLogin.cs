@@ -12,6 +12,9 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 
         #region Construtores
 
+        public UsuarioLogin()
+        { }
+
         /// <summary>
         ///  Cria uma nova instância da entidade
         /// </summary>
@@ -29,7 +32,15 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 
         public Guid UsuarioId { get; set; }
 
+        public string Login { get; set; }
+
         public string Senha { get; set; }
+
+        #endregion
+
+        #region Navigation (Lazy)
+
+        public Usuario Usuario { get; set; }
 
         #endregion
 
@@ -40,9 +51,12 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// </summary>
         protected void ValidarRegistro()
         {
+
+            RuleFor(c => c.Login)
+                .NotNull().WithMessage("O Login deve ser informado");
+
             RuleFor(c => c.Senha)
-                .MinimumLength(32).WithMessage("A senha deve conter 32 caracteres (hash MD5)")
-                .MaximumLength(32).WithMessage("A senha deve conter 32 caracteres (hash MD5)");
+                .Length(32).WithMessage("A senha deve conter 32 caracteres (hash MD5)");
         }
 
         #endregion

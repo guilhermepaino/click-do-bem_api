@@ -35,7 +35,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 
         public DateTime DataInclusao { get; set; }
 
-        public DateTime DataAlteracao { get; set; }
+        public DateTime? DataAlteracao { get; set; }
 
         public Guid? UsuarioId { get; set; }
 
@@ -60,6 +60,12 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         public string TelefoneFixo { get; set; }
 
         public string Email { get; set; }
+
+        #endregion
+
+        #region Navigation (Lazy)
+
+        public Usuario Usuario { get; set; }
 
         #endregion
 

@@ -1,5 +1,5 @@
 ﻿using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
-using SantaHelena.ClickDoBem.Application.ViewModels.Credenciais;
+using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
@@ -14,7 +14,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
     /// <summary>
     /// Objeto de serviço de Usuario
     /// </summary>
-    public class UsuarioAppService : IUsuarioAppService
+    public class UsuarioAppService : AppServiceBase<UsuarioDto, Usuario>, IUsuarioAppService
     {
 
         #region Objetos/Variáveis Locais
@@ -41,14 +41,69 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
         #endregion
 
+        #region Overrides
+
+        protected override UsuarioDto ConverterEntidadeEmDto(Usuario usuario)
+        {
+
+            UsuarioDto uDto = new UsuarioDto()
+            {
+                Id = usuario.Id,
+                DataInclusao = usuario.DataInclusao,
+                DataAlteracao = usuario.DataAlteracao,
+                CpfCnpj = usuario.CpfCnpj,
+                Nome = usuario.Nome
+            };
+
+            if (usuario.UsuarioLogin != null)
+                uDto.UsuarioLogin = new UsuarioLoginDto()
+                {
+                    Login = usuario.UsuarioLogin.Login,
+                    Senha = "*ENCRYPTED*"
+                };
+            
+            if (usuario.UsuarioDados != null)
+                uDto.UsuarioDados = new UsuarioDadosDto()
+                {
+                    Id = usuario.UsuarioDados.Id,
+                    DataInclusao = usuario.UsuarioDados.DataInclusao,
+                    DataAlteracao = usuario.UsuarioDados.DataAlteracao,
+                    DataNascimento = usuario.UsuarioDados.DataNascimento,
+                    Logradouro = usuario.UsuarioDados.Logradouro,
+                    Numero = usuario.UsuarioDados.Numero,
+                    Complemento = usuario.UsuarioDados.Complemento,
+                    Bairro = usuario.UsuarioDados.Bairro,
+                    Cidade = usuario.UsuarioDados.Cidade,
+                    UF = usuario.UsuarioDados.UF,
+                    CEP = usuario.UsuarioDados.CEP,
+                    TelefoneCelular = usuario.UsuarioDados.TelefoneCelular,
+                    TelefoneFixo = usuario.UsuarioDados.TelefoneFixo,
+                    Email = usuario.UsuarioDados.Email
+                };
+
+            return uDto;
+
+        }
+
+        #endregion
 
         #region Métodos Públicos
-        
+
+        public UsuarioDto ObterPorId(Guid id)
+        {
+
+            Usuario usuario = _dmn.ObterPorId(id);
+            if (usuario == null)
+                return null;
+
+            return ConverterEntidadeEmDto(usuario);
+
+        }
 
         /// <summary>
         /// Obter todos os registros
         /// </summary>
-        public IEnumerable<UsuarioAppViewModel> ObterTodos()
+        public IEnumerable<UsuarioDto> ObterTodos()
         {
 
             IEnumerable<Usuario> result = _dmn.ObterTodos();
@@ -58,13 +113,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             return
                 (
                     from r in result
-                    select new UsuarioAppViewModel()
-                    {
-                        Id = r.Id,
-                        DataInclusao = r.DataInclusao,
-                        DataAlteracao = r.DataAlteracao,
-                        Nome = r.Nome
-                    }
+                    select ConverterEntidadeEmDto(r)
 
                 ).ToList();
 

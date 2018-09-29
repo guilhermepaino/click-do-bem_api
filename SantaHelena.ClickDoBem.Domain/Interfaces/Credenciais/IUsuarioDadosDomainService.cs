@@ -7,7 +7,6 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
 
     public interface IUsuarioDadosDomainService : IDomainServiceBase<UsuarioDados>
     {
-
     }
 
 }

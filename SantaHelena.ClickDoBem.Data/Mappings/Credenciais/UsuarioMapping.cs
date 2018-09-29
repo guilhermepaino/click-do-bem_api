@@ -11,16 +11,20 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Nome)
-               .HasColumnType("varchar(150)")
-               .IsRequired();
-
             builder.Property(c => c.DataInclusao)
                 .HasColumnType("datetime")
                 .IsRequired();
 
             builder.Property(c => c.DataAlteracao)
                 .HasColumnType("datetime");
+
+            builder.Property(c => c.CpfCnpj)
+               .HasColumnType("varchar(14)")
+               .IsRequired();
+
+            builder.Property(c => c.Nome)
+               .HasColumnType("varchar(150)")
+               .IsRequired();
 
             builder.HasIndex(i => i.DataInclusao).HasName("IX_Usuario_DtInclusao");
             builder.HasIndex(i => i.DataAlteracao).HasName("IX_Usuario_DtAlteracao");

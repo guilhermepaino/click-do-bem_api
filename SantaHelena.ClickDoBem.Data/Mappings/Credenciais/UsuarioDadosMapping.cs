@@ -57,6 +57,15 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
             builder.Property(c => c.Email)
                 .HasColumnType("varchar(1000)");
 
+            builder.HasOne(d => d.Usuario)
+                    .WithOne(p => p.UsuarioDados)
+                    .HasForeignKey<UsuarioDados>(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_UsuarioDados_Usuario_Id");
+
+            builder.HasIndex(i => i.DataInclusao).HasName("IX_Usuario_DtInclusao");
+            builder.HasIndex(i => i.DataAlteracao).HasName("IX_Usuario_DtAlteracao");
+
             builder.Ignore(c => c.ValidationResult);
             builder.Ignore(c => c.CascadeMode);
 

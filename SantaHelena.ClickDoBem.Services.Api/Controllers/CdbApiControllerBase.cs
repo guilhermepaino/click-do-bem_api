@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using SantaHelena.ClickDoBem.Application.AppViewModels;
+using SantaHelena.ClickDoBem.Application.Dto;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers
