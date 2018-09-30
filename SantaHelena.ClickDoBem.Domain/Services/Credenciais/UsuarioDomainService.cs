@@ -27,6 +27,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
         #region Métodos públicos
 
         public Usuario ObterPorLogin(string login, string senha) => _repository.ObterPorLogin(login, senha);
+        public IEnumerable<Usuario> ObterPorPerfil(string perfil) => _repository.ObterPorPerfil(perfil);
 
         #endregion
 

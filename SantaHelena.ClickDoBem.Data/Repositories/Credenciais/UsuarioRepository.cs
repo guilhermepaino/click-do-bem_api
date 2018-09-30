@@ -30,7 +30,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
 
         #region Métodos Locais
 
-        protected void CarregarRelacoesUsuario(IList<Usuario> usuarios)
+        protected void CarregarRelacoesUsuario(IEnumerable<Usuario> usuarios)
         {
             foreach (Usuario u in usuarios)
             {
@@ -51,6 +51,10 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
                 // UsuarioDados
                 sql = @"SELECT * FROM UsuarioDados WHERE UsuarioId = @pid";
                 usuario.UsuarioDados = _ctx.Database.GetDbConnection().Query<UsuarioDados>(sql, new { pid = usuario.Id }).SingleOrDefault();
+
+                // UsuariosPerfil
+                sql = @"SELECT * FROM UsuarioPerfil WHERE UsuarioId = @pid";
+                usuario.UsuarioPerfil = _ctx.Database.GetDbConnection().Query<UsuarioPerfil>(sql, new { pid = usuario.Id }).ToList();
 
             }
         }
@@ -97,14 +101,26 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         public Usuario ObterPorLogin(string login, string senha)
         {
 
-            string sql = null;
-
-            // Usuario
-            sql = $@"SELECT u.* FROM Usuario u INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId WHERE u.Nome = @pusuario AND us.Senha = @psenha";
+            string sql = $@"SELECT u.* FROM Usuario u INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId WHERE u.Nome = @pusuario AND us.Senha = @psenha";
             Usuario usuario = _ctx.Database.GetDbConnection().Query<Usuario>(sql,  new { pusuario = login, psenha = senha }).FirstOrDefault();
             CarregarRelacoesUsuario(usuario);
             return usuario;
 
+        }
+
+        /// <summary>
+        /// Buscar usuário
+        /// </summary>
+        /// <param name="perfil">Perfil de filtro</param>
+        public IEnumerable<Usuario> ObterPorPerfil(string perfil)
+        {
+            string sql = $@"SELECT u.*
+                            FROM Usuario u 
+                            INNER JOIN UsuarioPerfil up ON u.Id = up.UsuarioId
+                            WHERE up.Perfil = @pperfil";
+            IEnumerable<Usuario> usuarios = _ctx.Database.GetDbConnection().Query<Usuario>(sql, new { pperfil = perfil }).ToList();
+            CarregarRelacoesUsuario(usuarios);
+            return usuarios;
         }
 
         #endregion

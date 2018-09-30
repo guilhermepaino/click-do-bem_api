@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentValidation;
 
 namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
@@ -15,22 +16,20 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// <summary>
         ///  Cria uma nova instância de usuário
         /// </summary>
-        public Usuario()
+        public Usuario() : this(null, null)
         {
         }
-
-        /// <summary>
-        /// Número do documento
-        /// </summary>
-        public string CpfCnpj { get; set; }
 
         /// <summary>
         /// Cria uma nova instância de usuário
         /// </summary>
         /// <param name="nome">Nome do usuário</param>
-        public Usuario(string nome)
+        /// <param name="cpfCnpj">Cpf/Cnpj do usuário</param>
+        public Usuario(string nome, string cpfCnpj)
         {
             Nome = nome;
+            CpfCnpj = cpfCnpj;
+            UsuarioPerfil = new HashSet<UsuarioPerfil>();
         }
 
         #endregion
@@ -48,6 +47,11 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         public DateTime? DataAlteracao { get; set; }
 
         /// <summary>
+        /// Número do documento
+        /// </summary>
+        public string CpfCnpj { get; set; }
+
+        /// <summary>
         /// Nome do usuário
         /// </summary>
         public string Nome { get; set; }
@@ -60,6 +64,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 
         public UsuarioDados UsuarioDados { get; set; }
 
+        public ICollection<UsuarioPerfil> UsuarioPerfil { get; set; }
+
         #endregion
 
         #region Métodos Locais
@@ -71,8 +77,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         {
             RuleFor(c => c.Nome)
                 .NotEmpty().WithMessage("O nome deve ser informado")
-                .MinimumLength(3).WithMessage("O nome deve conter no mínimo 3 caracteres")
-                .MaximumLength(150).WithMessage("O nome deve conter no máximo 150 caracteres");
+                .Length(3, 150).WithMessage("O nome deve conter entre 3 e 150 caracteres");
         }
 
         #endregion

@@ -38,6 +38,7 @@ namespace SantaHelena.ClickDoBem.Data.Context
             modelBuilder.ApplyConfiguration(new UsuarioMapping());
             modelBuilder.ApplyConfiguration(new UsuarioLoginMapping());
             modelBuilder.ApplyConfiguration(new UsuarioDadosMapping());
+            modelBuilder.ApplyConfiguration(new UsuarioPerfilMapping());
             modelBuilder.ApplyConfiguration(new CategoriaMapping());
 
         }
@@ -75,6 +76,8 @@ namespace SantaHelena.ClickDoBem.Data.Context
         public virtual DbSet<UsuarioLogin> UsuarioLogin { get; set; }
 
         public virtual DbSet<UsuarioDados> UsuarioDados { get; set; }
+
+        public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
 
         public virtual DbSet<Categoria> Categoria { get; set; }
 

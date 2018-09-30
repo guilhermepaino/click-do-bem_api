@@ -29,6 +29,8 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Login_Usuario_Id");
 
+            builder.HasIndex(i => i.Login).HasName("UK_Login_Login").IsUnique();
+
             builder.Ignore(c => c.ValidationResult);
             builder.Ignore(c => c.CascadeMode);
 

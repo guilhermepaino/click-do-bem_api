@@ -45,8 +45,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 
             RuleFor(c => c.Descricao)
                 .NotEmpty().WithMessage("A descrição não pdoe ser vazia")
-                .MinimumLength(3).WithMessage("A descrição deve conter entre 3 e 150 caracteres")
-                .MaximumLength(150).WithMessage("A descrição deve conter entre 3 e 150 caracteres");
+                .Length(3, 150).WithMessage("A descrição deve conter entre 3 e 150 caracteres");
 
             RuleFor(c => c.Pontuacao)
                 .GreaterThan(0).WithMessage("A pontuação deve ser maior do que 0");

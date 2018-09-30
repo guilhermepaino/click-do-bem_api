@@ -7,9 +7,10 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Credenciais
 
     public interface IUsuarioAppService : IAppServiceBase
     {
-        bool Autenticar(string usuario, string senha, out string mensagem);
+        bool Autenticar(string usuario, string senha, out string mensagem, out UsuarioDto usuarioDto);
         UsuarioDto ObterPorId(Guid id);
         IEnumerable<UsuarioDto> ObterTodos();
+        IEnumerable<UsuarioDto> ObterPorPerfil(string perfil);
     }
 
 }

@@ -7,5 +7,6 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
     public interface IUsuarioRepository : IMySqlRepositoryBase<Usuario>
     {
         Usuario ObterPorLogin(string login, string senha);
+        IEnumerable<Usuario> ObterPorPerfil(string perfil);
     }
 }

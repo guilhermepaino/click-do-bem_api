@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
+using SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Auth;
 using SantaHelena.ClickDoBem.Services.Api.Identity;
 using SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais;
@@ -90,16 +94,23 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
             DateTime? validade = null;
             int statusCode = StatusCodes.Status403Forbidden;
 
-            bool autenticado = _appService.Autenticar(request.Nome, request.Senha, out string mensagem);
+            bool autenticado = _appService.Autenticar(request.Nome, request.Senha, out string mensagem, out UsuarioDto usuarioDto);
 
             if (autenticado)
             {
-                var jwt = new JwtSecurityToken(
-                      issuer: _jwtTokenOptions.Issuer,
-                      audience: _jwtTokenOptions.Audience,
-                      notBefore: _jwtTokenOptions.NotBefore,
-                      expires: _jwtTokenOptions.Expiration,
-                      signingCredentials: _jwtTokenOptions.SigningCredentials);
+
+                IList<Claim> claimnsUsuario = new List<Claim>();
+                claimnsUsuario.Add(new Claim(ClaimTypes.Name, usuarioDto.Nome));
+                foreach (UsuarioPerfilDto p in usuarioDto.UsuarioPerfil)
+                    claimnsUsuario.Add(new Claim(ClaimTypes.Role, p.Perfil));
+
+                JwtSecurityToken jwt = new JwtSecurityToken(
+                     issuer: _jwtTokenOptions.Issuer,
+                     audience: _jwtTokenOptions.Audience,
+                     claims: claimnsUsuario,
+                     notBefore: _jwtTokenOptions.NotBefore,
+                     expires: _jwtTokenOptions.Expiration,
+                     signingCredentials: _jwtTokenOptions.SigningCredentials);
 
                 token = new JwtSecurityTokenHandler().WriteToken(jwt);
                 validade = DateTime.Now.AddMilliseconds((int)_jwtTokenOptions.ValidFor.TotalSeconds);
@@ -114,7 +125,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// Contrato
         ///
         ///     Requisição
-        ///     Nenhum parâmetro
+        ///     Parâmetro: Perfil -> Filtra somente usuários do perfil informado (opcional)
         ///     
         ///     Resposta (array)
         ///     [
@@ -143,7 +154,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         ///                 "telefoneCelular": "(00)00000-0000",
         ///                 "telefoneFixo": ""(00)0000-0000",
         ///                 "email": "email@provedor"
-        ///             }
+        ///             },
+        ///             "usuarioPerfil": [
+        ///                 {
+        ///                     "perfil": "Admin"
+        ///                 }
+        ///             ]
         ///         }
         ///     ]
         ///     
@@ -153,9 +169,14 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet("listar")]
-        public IActionResult Listar()
+        public IActionResult Listar([FromQuery]string perfil)
         {
-            return Ok(_appService.ObterTodos());
+            IEnumerable<UsuarioDto> result;
+            if (string.IsNullOrWhiteSpace(perfil))
+                result = _appService.ObterTodos();
+            else
+                result = _appService.ObterPorPerfil(perfil);
+            return Ok(result);
         }
 
         /// <summary>

@@ -18,6 +18,7 @@ CREATE TABLE `Usuario` (
   `CpfCnpj` varchar(14) NOT NULL,
   `Nome` varchar(150) NOT NULL,
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `UK_Usuario_CpfCnpj` (`CpfCnpj`),
   KEY `IX_Usuario_DtInclusao` (`DataInclusao`),
   KEY `IX_Usuario_DtAlteracao` (`DataAlteracao`),
   KEY `IX_Usuario_Nome` (`Nome`)
@@ -58,6 +59,14 @@ CREATE TABLE `UsuarioDados` (
   CONSTRAINT `FK_UsuarioDados_Usuario_Id` FOREIGN KEY (`UsuarioId`) REFERENCES `Usuario` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Tabela de UsuarioPerfil
+CREATE TABLE `UsuarioPerfil` (
+  `UsuarioId` char(36) NOT NULL,
+  `Perfil` varchar(50) NOT NULL,
+  PRIMARY KEY (`UsuarioId`, `Perfil`),
+  CONSTRAINT `FK_UP_Usuario` FOREIGN KEY (`UsuarioId`) REFERENCES `Usuario` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- Tabela de Categoria
 CREATE TABLE `Categoria` (
   `Id` char(36) NOT NULL,
@@ -77,13 +86,16 @@ CREATE TABLE `Categoria` (
 -- ------------------------------------------------------------------------------------------------------------------------------------
 
 -- Tabela __ControleVersaoUpgradeDB
-INSERT INTO `__ControleVersaoUpgradeDB` VALUES (1, now(), 'Criação inicial do banco. Criação da tabela de usuários.');
+INSERT INTO `__ControleVersaoUpgradeDB` VALUES (1, now(), 'Criação inicial do banco.');
 
 -- Tabelas de Usuario
-INSERT INTO Usuario (Id, DataInclusao, CpfCnpj, Nome) VALUES (UUID(), NOW(), '11111111111', 'admin');
-INSERT INTO UsuarioLogin (UsuarioId, Login, Senha) SELECT Id, 'admin', MD5('SHelena') FROM Usuario WHERE Nome = 'admin';
+INSERT INTO Usuario (Id, DataInclusao, CpfCnpj, Nome) VALUES ('f763727d-c426-11e8-a7a4-0242ac110006', NOW(), '11111111111', 'admin');
+INSERT INTO UsuarioLogin (UsuarioId, Login, Senha) VALUES ('f763727d-c426-11e8-a7a4-0242ac110006', 'admin', MD5('SHelena'));
+
+-- Tabela de UsuarioPerfil
+INSERT INTO UsuarioPerfil (`UsuarioId`, `Perfil`) VALUES ('f763727d-c426-11e8-a7a4-0242ac110006', 'Admin');
 
 -- Tabela de Categoria
-INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES (UUID(), NOW(), 'Higiene e limpeza', 10, 0);
-INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES (UUID(), NOW(), 'Bebê', 100, 0);
-INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES (UUID(), NOW(), 'Telefonia e acessórios', 10, 1);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('2ef307a6-c4a5-11e8-8776-0242ac110006', NOW(), 'Higiene e limpeza', 10, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('340c1a33-c4a5-11e8-8776-0242ac110006', NOW(), 'Bebê', 100, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('38f292cc-c4a5-11e8-8776-0242ac110006', NOW(), 'Telefonia e acessórios', 10, 1);

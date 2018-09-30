@@ -28,6 +28,7 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
 
             builder.HasIndex(i => i.DataInclusao).HasName("IX_Usuario_DtInclusao");
             builder.HasIndex(i => i.DataAlteracao).HasName("IX_Usuario_DtAlteracao");
+            builder.HasIndex(i => i.CpfCnpj).HasName("UK_Usuario_CpfCnpj").IsUnique();
             builder.HasIndex(i => i.Nome).HasName("IX_Usuario_Nome");
 
             builder.Ignore(c => c.ValidationResult);

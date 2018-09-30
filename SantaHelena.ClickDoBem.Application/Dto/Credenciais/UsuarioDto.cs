@@ -1,5 +1,6 @@
 ﻿using SantaHelena.ClickDoBem.Application.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Application.Dto.Credenciais
 {
@@ -23,6 +24,7 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Credenciais
 
         public UsuarioLoginDto UsuarioLogin { get; set; }
         public UsuarioDadosDto UsuarioDados { get; set; }
+        public IEnumerable<UsuarioPerfilDto> UsuarioPerfil { get; set; }
 
         #endregion
 

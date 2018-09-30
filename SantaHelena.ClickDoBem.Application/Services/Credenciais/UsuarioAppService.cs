@@ -46,6 +46,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         protected override UsuarioDto ConverterEntidadeEmDto(Usuario usuario)
         {
 
+            if (usuario == null)
+                return null;
+
             UsuarioDto uDto = new UsuarioDto()
             {
                 Id = usuario.Id,
@@ -80,6 +83,18 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                     TelefoneFixo = usuario.UsuarioDados.TelefoneFixo,
                     Email = usuario.UsuarioDados.Email
                 };
+
+            if (usuario.UsuarioPerfil != null)
+            {
+                uDto.UsuarioPerfil =
+                (
+                    from p in usuario.UsuarioPerfil
+                    select new UsuarioPerfilDto()
+                    {
+                        Perfil = p.Perfil
+                    }
+                ).ToList();
+            }
 
             return uDto;
 
@@ -125,10 +140,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         /// <param name="usuario">Nome do usuário</param>
         /// <param name="senha">Senha do usuário (Hash Md5)</param>
         /// <param name="mensagem">Mensagem de saída do resultado da autenticação</param>
-        public bool Autenticar(string usuario, string senha, out string mensagem)
+        /// <param name="usuarioDto">Objeto Dto para saida do usuário</param>
+        public bool Autenticar(string usuario, string senha, out string mensagem, out UsuarioDto usuarioDto)
         {
 
             Usuario usr = _dmn.ObterPorLogin(usuario, senha);
+            usuarioDto = ConverterEntidadeEmDto(usr);
             if (usr == null)
             {
                 mensagem = "Usuário e/ou senha inválido!";
@@ -136,6 +153,18 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             }
             mensagem = "Usuário autenticado";
             return true;
+        }
+
+        public IEnumerable<UsuarioDto> ObterPorPerfil(string perfil)
+        {
+            IList<UsuarioDto> result = new List<UsuarioDto>();
+            _dmn.ObterPorPerfil(perfil)
+                .ToList()
+                .ForEach(ud =>
+                {
+                    result.Add(ConverterEntidadeEmDto(ud));
+                });
+            return result;
         }
 
         #endregion

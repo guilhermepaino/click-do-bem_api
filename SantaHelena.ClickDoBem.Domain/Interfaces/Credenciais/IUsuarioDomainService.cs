@@ -9,7 +9,7 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
     {
 
         Usuario ObterPorLogin(string login, string senha);
-        IEnumerable<Usuario> ObterTodos();
+        IEnumerable<Usuario> ObterPorPerfil(string perfil);
 
     }
 
