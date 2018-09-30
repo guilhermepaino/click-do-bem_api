@@ -155,6 +155,10 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             return true;
         }
 
+        /// <summary>
+        /// Obter registros pelo perfil
+        /// </summary>
+        /// <param name="perfil">Perfil de filtro</param>
         public IEnumerable<UsuarioDto> ObterPorPerfil(string perfil)
         {
             IList<UsuarioDto> result = new List<UsuarioDto>();

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
+using SantaHelena.ClickDoBem.Application.Services.Cadastros;
 using SantaHelena.ClickDoBem.Application.Services.Credenciais;
 using SantaHelena.ClickDoBem.Data;
 using SantaHelena.ClickDoBem.Data.Context;
@@ -10,7 +12,6 @@ using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Services.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Services.Credenciais;
-using SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Auth;
 
 namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
 {
@@ -30,6 +31,7 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
 
             // Application
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
+            services.AddScoped<ICategoriaAppService, CategoriaAppService>();
 
             // Domain
             services.AddScoped<IUsuarioDomainService, UsuarioDomainService>();
@@ -49,7 +51,6 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
             // Infra.CrossCutting.Common
-            services.AddScoped<IAppUser, AppUser>();
 
         }
 

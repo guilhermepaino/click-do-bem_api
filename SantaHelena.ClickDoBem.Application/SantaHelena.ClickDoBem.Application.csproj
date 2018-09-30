@@ -10,8 +10,4 @@
     <ProjectReference Include="..\SantaHelena.ClickDoBem.Infra.CrossCutting.Common\SantaHelena.ClickDoBem.Infra.CrossCutting.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dto\Cadastros\" />
-  </ItemGroup>
-
 </Project>

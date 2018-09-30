@@ -9,7 +9,7 @@ namespace SantaHelena.ClickDoBem.Application.Services
         where TEntity : IEntity
     {
 
-        protected abstract TDto ConverterEntidadeEmDto(TEntity usuario);
+        protected abstract TDto ConverterEntidadeEmDto(TEntity entidade);
 
     }
 
