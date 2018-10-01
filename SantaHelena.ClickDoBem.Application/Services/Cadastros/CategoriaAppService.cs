@@ -1,7 +1,7 @@
 ﻿using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
-using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
+using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
+﻿namespace SantaHelena.ClickDoBem.Domain.Core.Tools
 {
 
     /// <summary>
@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="cpf">Número do cpf a ser analisado (apenas números)</param>
         /// <returns>Um booleando com o resultado do teste</returns>
-        public static bool CheckCpf(string cpf)
+        public static bool VerificarCpf(string cpf)
         {
 
             // Invalidar pelo tamanho
@@ -56,7 +56,7 @@
         /// </summary>
         /// <param name="cnpj">Número do cnpj a ser analisado (apenas números)</param>
         /// <returns>Um booleando com o resultado do teste</returns>
-        public static bool CheckCnpj(string cnpj)
+        public static bool VerificarCnpj(string cnpj)
         {
 
             // Invalidar pelo tamanho
@@ -99,13 +99,13 @@
         /// </summary>
         /// <param name="cpfCnpj">Número do documento, Cpf ou Cnpj (apenas números), a ser analisado</param>
         /// <returns>Um booleando com o resultado do teste</returns>
-        public static bool CheckDocumento(string cpfCnpj)
+        public static bool VerificarDocumento(string cpfCnpj)
         {
 
             if (cpfCnpj.Length == 11)
-                return CheckCpf(cpfCnpj);
+                return VerificarCpf(cpfCnpj);
             else if (cpfCnpj.Length == 14)
-                return CheckCnpj(cpfCnpj);
+                return VerificarCnpj(cpfCnpj);
             else
                 return false;
 

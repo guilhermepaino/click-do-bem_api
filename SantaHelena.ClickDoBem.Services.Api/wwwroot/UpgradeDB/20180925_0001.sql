@@ -81,6 +81,71 @@ CREATE TABLE `Categoria` (
   KEY `IX_Categoria_Descricao` (`Descricao`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Tabela de DocumentoHabilitado
+CREATE TABLE `DocumentoHabilitado` (
+  `Id` char(36) NOT NULL,
+  `DataInclusao` datetime NOT NULL,
+  `DataAlteracao` datetime DEFAULT NULL,
+  `CpfCnpj` varchar(14) NOT NULL,
+  `Ativo` bit NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `UK_DH_CpfCnpj` (`CpfCnpj`),
+  KEY `IX_DH_DtInclusao` (`DataInclusao`),
+  KEY `IX_DH_DtAlteracao` (`DataAlteracao`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Tabela TipoItem
+CREATE TABLE `TipoItem` (
+  `Id` char(36) NOT NULL,
+  `DataInclusao` datetime NOT NULL,
+  `DataAlteracao` datetime DEFAULT NULL,
+  `Descricao` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `UK_TipoItem_Descricao` (`Descricao`),
+  KEY `IX_TipoItem_DtInclusao` (`DataInclusao`),
+  KEY `IX_TipoItem_DtAlteracao` (`DataAlteracao`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Tabela Item
+CREATE TABLE `Item` (
+  `Id` char(36) NOT NULL,
+  `DataInclusao` datetime NOT NULL,
+  `DataAlteracao` datetime DEFAULT NULL,
+  `Sku` int(11) NOT NULL AUTO_INCREMENT,
+  `Titulo` varchar(50) NOT NULL,
+  `Descricao` varchar(1000) DEFAULT NULL,
+  `TipoItemId` char(36) NOT NULL,
+  `CategoriaId` char(36) NOT NULL,
+  `UsuarioId` char(36) NOT NULL,
+  `Anonimo` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `UK_Item_Sku` (`Sku`),
+  KEY `IX_Item_DtInclusao` (`DataInclusao`),
+  KEY `IX_Item_DtAlteracao` (`DataAlteracao`),
+  KEY `IX_Item_Descricao` (`Descricao`),
+  KEY `IX_Item_TipoItemId` (`TipoItemId`),
+  KEY `IX_Item_CategoriaId` (`CategoriaId`),
+  KEY `IX_Item_UsuarioId` (`UsuarioId`),
+  CONSTRAINT `FK_Item_Categoria` FOREIGN KEY (`CategoriaId`) REFERENCES `Categoria` (`Id`),
+  CONSTRAINT `FK_Item_TipoItem` FOREIGN KEY (`TipoItemId`) REFERENCES `TipoItem` (`Id`),
+  CONSTRAINT `FK_Item_Usuario` FOREIGN KEY (`UsuarioId`) REFERENCES `Usuario` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- Tabela ItemImagem
+CREATE TABLE `ItemImagem` (
+  `Id` char(36) NOT NULL,
+  `DataInclusao` datetime NOT NULL,
+  `DataAlteracao` datetime DEFAULT NULL,
+  `ItemId` char(36) NOT NULL,
+  `NomeOriginal` varchar(50) NOT NULL,
+  `Caminho` varchar(2000) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `IX_ItemImagem_DtInclusao` (`DataInclusao`),
+  KEY `IX_ItemImagem_DtAlteracao` (`DataAlteracao`),
+  KEY `IX_ItemImagem_ItemId` (`ItemId`),
+  CONSTRAINT `FK_ItemImagem_Item` FOREIGN KEY (`ItemId`) REFERENCES `Item` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- ------------------------------------------------------------------------------------------------------------------------------------
 -- Dados
 -- ------------------------------------------------------------------------------------------------------------------------------------
@@ -99,3 +164,7 @@ INSERT INTO UsuarioPerfil (`UsuarioId`, `Perfil`) VALUES ('f763727d-c426-11e8-a7
 INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('2ef307a6-c4a5-11e8-8776-0242ac110006', NOW(), 'Higiene e limpeza', 10, 0);
 INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('340c1a33-c4a5-11e8-8776-0242ac110006', NOW(), 'Bebê', 100, 0);
 INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('38f292cc-c4a5-11e8-8776-0242ac110006', NOW(), 'Telefonia e acessórios', 10, 1);
+
+-- Tabela de TipoItem
+INSERT INTO TipoItem (`Id`, `DataInclusao`, `Descricao`) VALUES ('0acd2b81-c5a5-11e8-ab80-0242ac110006', NOW(), 'Necessidade');
+INSERT INTO TipoItem (`Id`, `DataInclusao`, `Descricao`) VALUES ('0acd2bb5-c5a5-11e8-ab80-0242ac110006', NOW(), 'Doação');

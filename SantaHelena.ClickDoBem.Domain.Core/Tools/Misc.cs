@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
+namespace SantaHelena.ClickDoBem.Domain.Core.Tools
 {
 
     /// <summary>
@@ -15,24 +15,24 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
         /// <summary>
         /// Remove o caminho da expressão deixando apenas o nome do arquivo
         /// </summary>
-        /// <param name="path">Expressão contendo o caminho e o nome do arquivo</param>
+        /// <param name="caminho">Expressão contendo o caminho e o nome do arquivo</param>
         /// <returns>Um System.String contendo apenas o nome do arquivo</returns>
-        public static string RemovePath(string path)
+        public static string RemoverCaminho(string caminho)
         {
-            if (path.Contains('\\'))
-                return path.Split('\\').Last<string>();
+            if (caminho.Contains('\\'))
+                return caminho.Split('\\').Last<string>();
             else
-                return path;
+                return caminho;
         }
 
         /// <summary>
         /// Retorna a base do caminho de rede
         /// </summary>
-        /// <param name="fullPath">Caminho completo de rede</param>
+        /// <param name="caminhoCompleto">Caminho completo de rede</param>
         /// <returns>Uma string contendo a base do caminho de rede</returns>
-        public static string NetworkPath(string fullPath)
+        public static string CaminhoDeRede(string caminhoCompleto)
         {
-            List<string> lCaminho = fullPath.Split('\\').ToList<string>();
+            List<string> lCaminho = caminhoCompleto.Split('\\').ToList<string>();
 
             if (lCaminho.Count >= 4)
                 return @"\\" + lCaminho[2] + "\\" + lCaminho[3];
@@ -45,7 +45,7 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
         /// </summary>
         /// <param name="expressao">Expressão a ser limpa</param>
         /// <returns>Uma expressão contendo o resultado da limpeza de caracteres efetuada</returns>
-        public static string ClearNumber(string expressao)
+        public static string LimparNumero(string expressao)
         {
 
             StringBuilder ret = new StringBuilder();
@@ -64,37 +64,37 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
         /// <summary>
         /// Limpar a expressão fornecida deixando apenas letras
         /// </summary>
-        /// <param name="expression">Expressão a ser limpa</param>
+        /// <param name="expressao">Expressão a ser limpa</param>
         /// <returns>Uma expressão contendo o resultado da limpeza de caracteres efetuada</returns>
-        public static string ClearText(string expression)
+        public static string LimparTexto(string expressao)
         {
-            return ClearText(expression, false);
+            return LimparTexto(expressao, false);
         }
 
         /// <summary>
         /// Limpar a expressão fornecida deixando apenas letras
         /// </summary>
-        /// <param name="expression">Expressão a ser limpa</param>
-        /// <param name="keepSpace">Booleando indicando se o espaço deve também ser mantido</param>
+        /// <param name="expressao">Expressão a ser limpa</param>
+        /// <param name="manterEspaco">Booleando indicando se o espaço deve também ser mantido</param>
         /// <returns>Uma expressão contendo o resultado da limpeza de caracteres efetuada</returns>
-        public static string ClearText(string expression, bool keepSpace)
+        public static string LimparTexto(string expressao, bool manterEspaco)
         {
-            return ClearText(expression, (keepSpace ? " " : string.Empty));
+            return LimparTexto(expressao, (manterEspaco ? " " : string.Empty));
         }
 
         /// <summary>
         /// Limpar a expressão fornecida deixando apenas letras
         /// </summary>
-        /// <param name="expression">Expressão a ser limpa</param>
-        /// <param name="charsToKeep">Lista de characteres a serem mantidos</param>
+        /// <param name="expressao">Expressão a ser limpa</param>
+        /// <param name="caracteresParaManter">Lista de characteres a serem mantidos</param>
         /// <returns>Uma expressão contendo o resultado da limpeza de caracteres efetuada</returns>
-        public static string ClearText(string expression, string charsToKeep)
+        public static string LimparTexto(string expressao, string caracteresParaManter)
         {
 
             StringBuilder ret = new StringBuilder();
 
-            string validos = string.Format("ABCDEFGHIJKLMNOPQRSTUVWXYZ{0}", charsToKeep);
-            foreach (char c in expression.ToUpper().ToCharArray())
+            string validos = string.Format("ABCDEFGHIJKLMNOPQRSTUVWXYZ{0}", caracteresParaManter);
+            foreach (char c in expressao.ToUpper().ToCharArray())
             {
                 if (validos.Contains<char>(c))
                     ret.Append(c);
@@ -111,7 +111,7 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
         /// <param name="obj">Objeto de entrada</param>
         /// <param name="result">objeto de saída</param>
         /// <returns>Uma objeto com o resultado da conversão</returns>
-        public static bool TryCast<T>(object obj, out T result)
+        public static bool TentarConverter<T>(object obj, out T result)
         {
 
             try

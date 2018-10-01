@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Security
+namespace SantaHelena.ClickDoBem.Domain.Core.Security
 {
 
     /// <summary>

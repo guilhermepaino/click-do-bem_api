@@ -84,11 +84,11 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                     Email = usuario.UsuarioDados.Email
                 };
 
-            if (usuario.UsuarioPerfil != null)
+            if (usuario.Perfis != null)
             {
                 uDto.UsuarioPerfil =
                 (
-                    from p in usuario.UsuarioPerfil
+                    from p in usuario.Perfis
                     select new UsuarioPerfilDto()
                     {
                         Perfil = p.Perfil

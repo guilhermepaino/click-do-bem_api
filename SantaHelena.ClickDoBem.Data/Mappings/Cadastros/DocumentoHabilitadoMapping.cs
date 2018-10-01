@@ -4,10 +4,10 @@ using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 
 namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
 {
-    public class CategoriaMapping : IEntityTypeConfiguration<Categoria>
+    public class DocumentoHabilitadoMapping : IEntityTypeConfiguration<DocumentoHabilitado>
     {
 
-        public void Configure(EntityTypeBuilder<Categoria> builder)
+        public void Configure(EntityTypeBuilder<DocumentoHabilitado> builder)
         {
 
             builder.HasKey(c => c.Id);
@@ -20,25 +20,21 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
                 .HasColumnType("datetime")
                 .IsRequired();
 
-            builder.Property(c => c.Descricao)
-               .HasColumnType("varchar(150)")
+            builder.Property(c => c.CpfCnpj)
+               .HasColumnType("varchar(14)")
                .IsRequired();
 
-            builder.Property(c => c.Pontuacao)
-               .HasColumnType("int(5)")
-               .IsRequired();
-
-            builder.Property(c => c.GerenciadaRh)
+            builder.Property(c => c.Ativo)
                 .HasColumnType("bit");
 
-            builder.HasIndex(i => i.DataInclusao).HasName("IX_Categoria_DtInclusao");
-            builder.HasIndex(i => i.DataAlteracao).HasName("IX_Categoria_DtAlteracao");
-            builder.HasIndex(i => i.Descricao).HasName("UK_Categoria_Descricao").IsUnique();
+            builder.HasIndex(i => i.DataInclusao).HasName("IX_DH_DtInclusao");
+            builder.HasIndex(i => i.DataAlteracao).HasName("IX_DH_DtAlteracao");
+            builder.HasIndex(i => i.CpfCnpj).HasName("UK_DH_CpfCnpj").IsUnique();
 
             builder.Ignore(c => c.ValidationResult);
             builder.Ignore(c => c.CascadeMode);
 
-            builder.ToTable("Categoria");
+            builder.ToTable("DocumentoHabilitado");
 
         }
 

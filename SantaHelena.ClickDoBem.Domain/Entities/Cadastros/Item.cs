@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 using System;
 using System.Collections.Generic;
 
@@ -6,19 +7,19 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 {
 
     /// <summary>
-    /// Entidade de categoria
+    /// Entidade de Item
     /// </summary>
-    public class Categoria : Core.Entities.EntityIdBase<Categoria>
+    public class Item : Core.Entities.EntityIdBase<Item>
     {
 
         #region Construtores
 
         /// <summary>
-        /// Cria uma nova instância de Categoria
+        /// Cria uma nova instância de Item
         /// </summary>
-        public Categoria()
+        public Item()
         {
-            Itens = new HashSet<Item>();
+            Imagens = new HashSet<ItemImagem>();
         }
 
         #endregion
@@ -29,17 +30,29 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public DateTime? DataAlteracao { get; set; }
 
+        public string Titulo { get; set; }
+
         public string Descricao { get; set; }
 
-        public int Pontuacao { get; set; }
+        public Guid? TipoItemId { get; set; }
 
-        public bool GerenciadaRh { get; set; }
+        public Guid? CategoriaId { get; set; }
+
+        public Guid? UsuarioId { get; set; }
+
+        public bool Anonimo { get; set; }
 
         #endregion
 
         #region Navigation (Lazy)
 
-        public ICollection<Item> Itens { get; set; }
+        public TipoItem TipoItem { get; set; }
+
+        public Categoria Categoria { get; set; }
+
+        public Usuario Usuario { get; set; }
+
+        public ICollection<ItemImagem> Imagens { get; set; }
 
         #endregion
 
@@ -51,11 +64,11 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
         protected void ValidarRegistro()
         {
 
-            RuleFor(c => c.Descricao)
-                .Length(3, 150).WithMessage("A descrição deve conter entre 3 e 150 caracteres");
+            RuleFor(c => c.Titulo)
+                .Length(3, 50).WithMessage("O título deve conter entre 3 e 50 caracteres");
 
-            RuleFor(c => c.Pontuacao)
-                .GreaterThan(0).WithMessage("A pontuação deve ser maior do que 0");
+            RuleFor(c => c.Descricao)
+                .MaximumLength(1000).WithMessage("A descrição deve conter no máximo 1000 caracteres");
 
         }
 

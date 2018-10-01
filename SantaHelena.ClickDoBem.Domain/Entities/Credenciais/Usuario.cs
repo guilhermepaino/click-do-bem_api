@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentValidation;
+using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 
 namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 {
@@ -18,6 +19,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         /// </summary>
         public Usuario() : this(null, null)
         {
+            Perfis = new HashSet<UsuarioPerfil>();
+            Itens = new HashSet<Item>();
         }
 
         /// <summary>
@@ -29,7 +32,6 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         {
             Nome = nome;
             CpfCnpj = cpfCnpj;
-            UsuarioPerfil = new HashSet<UsuarioPerfil>();
         }
 
         #endregion
@@ -64,7 +66,9 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
 
         public UsuarioDados UsuarioDados { get; set; }
 
-        public ICollection<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public ICollection<UsuarioPerfil> Perfis { get; set; }
+        
+        public ICollection<Item> Itens { get; set; }
 
         #endregion
 

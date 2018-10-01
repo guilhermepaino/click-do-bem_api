@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SantaHelena.ClickDoBem.Data.Mappings.Cadastros;
 using SantaHelena.ClickDoBem.Data.Mappings.Credenciais;
+using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 
 namespace SantaHelena.ClickDoBem.Data.Context
@@ -40,6 +41,10 @@ namespace SantaHelena.ClickDoBem.Data.Context
             modelBuilder.ApplyConfiguration(new UsuarioDadosMapping());
             modelBuilder.ApplyConfiguration(new UsuarioPerfilMapping());
             modelBuilder.ApplyConfiguration(new CategoriaMapping());
+            modelBuilder.ApplyConfiguration(new DocumentoHabilitadoMapping());
+            modelBuilder.ApplyConfiguration(new TipoItemMapping());
+            modelBuilder.ApplyConfiguration(new ItemMapping());
+            modelBuilder.ApplyConfiguration(new ItemImagemMapping());
 
         }
 
@@ -80,6 +85,14 @@ namespace SantaHelena.ClickDoBem.Data.Context
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
 
         public virtual DbSet<Categoria> Categoria { get; set; }
+
+        public virtual DbSet<DocumentoHabilitado> DocumentoHabilitado { get; set; }
+
+        public virtual DbSet<TipoItem> TipoItem { get; set; }
+
+        public virtual DbSet<Item> Item { get; set; }
+
+        public virtual DbSet<ItemImagem> ItemImagem { get; set; }
 
         #endregion
 

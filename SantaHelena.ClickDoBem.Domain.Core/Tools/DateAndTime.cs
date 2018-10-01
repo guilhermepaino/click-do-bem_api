@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
+namespace SantaHelena.ClickDoBem.Domain.Core.Tools
 {
 
     /// <summary>
@@ -15,7 +15,7 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
         /// </summary>
         /// <param name="data">Data a ser analisada</param>
         /// <returns>Retorna o número correspondente ao último dia do mês da data informada</returns>
-        public static int LastDayMonth(DateTime data)
+        public static int UltimoDiaDoMes(DateTime data)
         {
             return DateTime.DaysInMonth(data.Year, data.Month);
         }
@@ -25,7 +25,7 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Tools
         /// </summary>
         /// <param name="nascimento">Data de nascimento para cálculo de idade</param>
         /// <returns>Uma expressão indicando a idade por extenso (ex: 11 anos, 3 meses e 4 dias) </returns>
-        public static string Age(DateTime nascimento)
+        public static string Idade(DateTime nascimento)
         {
 
             StringBuilder retorno = new StringBuilder();

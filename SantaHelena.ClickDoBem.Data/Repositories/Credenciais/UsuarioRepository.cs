@@ -54,7 +54,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
 
                 // UsuariosPerfil
                 sql = @"SELECT * FROM UsuarioPerfil WHERE UsuarioId = @pid";
-                usuario.UsuarioPerfil = _ctx.Database.GetDbConnection().Query<UsuarioPerfil>(sql, new { pid = usuario.Id }).ToList();
+                usuario.Perfis = _ctx.Database.GetDbConnection().Query<UsuarioPerfil>(sql, new { pid = usuario.Id }).ToList();
 
             }
         }

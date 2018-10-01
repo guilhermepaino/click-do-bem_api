@@ -21,7 +21,7 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
                .IsRequired();
 
             builder.HasOne(d => d.Usuario)
-                .WithMany(p => p.UsuarioPerfil)
+                .WithMany(p => p.Perfis)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_UP_Usuario");

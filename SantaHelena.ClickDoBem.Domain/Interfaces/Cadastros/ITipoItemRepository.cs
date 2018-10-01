@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
 {
-    public interface ICategoriaDomainService : IDomainServiceBase<Categoria>
+    public interface ITipoItemRepository : IMySqlRepositoryBase<TipoItem>
     {
-        Categoria ObterPorDescricao(string descricao);
-        IEnumerable<Categoria> ObterPorSemelhanca(string descricao);
+        TipoItem ObterPorDescricao(string descricao);
+        IEnumerable<TipoItem> ObterPorSemelhanca(string descricao);
+
     }
 }

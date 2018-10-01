@@ -12,6 +12,7 @@ using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Services.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Services.Credenciais;
+using SantaHelena.ClickDoBem.Infra.CrossCutting.Common.Auth;
 
 namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
 {
@@ -29,9 +30,20 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
         public static void RegisterServices(IServiceCollection services)
         {
 
-            // Application
-            services.AddScoped<IUsuarioAppService, UsuarioAppService>();
-            services.AddScoped<ICategoriaAppService, CategoriaAppService>();
+            // Infra.Data
+            services.AddScoped<CdbContext>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Reposity
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IUsuarioLoginRepository, UsuarioLoginRepository>();
+            services.AddScoped<IUsuarioDadosRepository, UsuarioDadosRepository>();
+            services.AddScoped<IUsuarioPerfilRepository, UsuarioPerfilRepository>();
+            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            services.AddScoped<IDocumentoHabilitadoRepository, DocumentoHabilitadoRepository>();
+            services.AddScoped<ITipoItemRepository, TipoItemRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IItemImagemRepository, ItemImagemRepository>();
 
             // Domain
             services.AddScoped<IUsuarioDomainService, UsuarioDomainService>();
@@ -39,18 +51,18 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
             services.AddScoped<IUsuarioLoginDomainService, UsuarioLoginDomainService>();
             services.AddScoped<IUsuarioPerfilDomainService, UsuarioPerfilDomainService>();
             services.AddScoped<ICategoriaDomainService, CategoriaDomainService>();
+            services.AddScoped<IDocumentoHabilitadoDomainService, DocumentoHabilitadoDomainService>();
+            services.AddScoped<ITipoItemDomainService, TipoItemDomainService>();
+            services.AddScoped<IItemDomainService, ItemDomainService>();
+            services.AddScoped<IItemImagemDomainService, ItemImagemDomainService>();
 
-            // Infra.Data
-            services.AddScoped<CdbContext>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            services.AddScoped<IUsuarioLoginRepository, UsuarioLoginRepository>();
-            services.AddScoped<IUsuarioDadosRepository, UsuarioDadosRepository>();
-            services.AddScoped<IUsuarioPerfilRepository, UsuarioPerfilRepository>();
-            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            // Application
+            services.AddScoped<IUsuarioAppService, UsuarioAppService>();
+            services.AddScoped<ICategoriaAppService, CategoriaAppService>();
+            services.AddScoped<IItemAppService, ItemAppService>();
 
             // Infra.CrossCutting.Common
+            services.AddScoped<IAppUser, AppUser>();
 
         }
 

@@ -28,4 +28,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\Response\Cadastros\" />
+  </ItemGroup>
+
 </Project>

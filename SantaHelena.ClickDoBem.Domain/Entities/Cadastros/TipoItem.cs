@@ -6,17 +6,17 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 {
 
     /// <summary>
-    /// Entidade de categoria
+    /// Entidade de TipoItem
     /// </summary>
-    public class Categoria : Core.Entities.EntityIdBase<Categoria>
+    public class TipoItem : Core.Entities.EntityIdBase<TipoItem>
     {
 
         #region Construtores
 
         /// <summary>
-        /// Cria uma nova instância de Categoria
+        /// Cria uma nova instância de TipoItem
         /// </summary>
-        public Categoria()
+        public TipoItem()
         {
             Itens = new HashSet<Item>();
         }
@@ -30,10 +30,6 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
         public DateTime? DataAlteracao { get; set; }
 
         public string Descricao { get; set; }
-
-        public int Pontuacao { get; set; }
-
-        public bool GerenciadaRh { get; set; }
 
         #endregion
 
@@ -52,10 +48,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
         {
 
             RuleFor(c => c.Descricao)
+                .NotEmpty().WithMessage("A descrição não pode ser vazia")
                 .Length(3, 150).WithMessage("A descrição deve conter entre 3 e 150 caracteres");
-
-            RuleFor(c => c.Pontuacao)
-                .GreaterThan(0).WithMessage("A pontuação deve ser maior do que 0");
 
         }
 

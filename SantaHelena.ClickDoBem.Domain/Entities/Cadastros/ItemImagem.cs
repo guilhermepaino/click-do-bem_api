@@ -1,25 +1,21 @@
 ﻿using FluentValidation;
 using System;
-using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 {
 
     /// <summary>
-    /// Entidade de categoria
+    /// Entidade de ItemImagem
     /// </summary>
-    public class Categoria : Core.Entities.EntityIdBase<Categoria>
+    public class ItemImagem : Core.Entities.EntityIdBase<ItemImagem>
     {
 
         #region Construtores
 
         /// <summary>
-        /// Cria uma nova instância de Categoria
+        /// Cria uma nova instância de ItemImagem
         /// </summary>
-        public Categoria()
-        {
-            Itens = new HashSet<Item>();
-        }
+        public ItemImagem() { }
 
         #endregion
 
@@ -29,17 +25,17 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public DateTime? DataAlteracao { get; set; }
 
-        public string Descricao { get; set; }
+        public Guid? ItemId { get; set; }
 
-        public int Pontuacao { get; set; }
+        public string NomeOriginal { get; set; }
 
-        public bool GerenciadaRh { get; set; }
+        public string Caminho { get; set; }
 
         #endregion
 
         #region Navigation (Lazy)
 
-        public ICollection<Item> Itens { get; set; }
+        public Item Item { get; set; }
 
         #endregion
 
@@ -51,11 +47,13 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
         protected void ValidarRegistro()
         {
 
-            RuleFor(c => c.Descricao)
-                .Length(3, 150).WithMessage("A descrição deve conter entre 3 e 150 caracteres");
+            RuleFor(c => c.NomeOriginal)
+                .NotEmpty().WithMessage("O nome original do arquivo deve ser informado")
+                .MaximumLength(50).WithMessage("O nome original do arquivo deve conter no máximo 50 caracteres");
 
-            RuleFor(c => c.Pontuacao)
-                .GreaterThan(0).WithMessage("A pontuação deve ser maior do que 0");
+            RuleFor(c => c.Caminho)
+                .NotEmpty().WithMessage("O caminho deve ser informado")
+                .MaximumLength(2000).WithMessage("O caminho informado ultrapassou o limite de 2000 caracteres");
 
         }
 

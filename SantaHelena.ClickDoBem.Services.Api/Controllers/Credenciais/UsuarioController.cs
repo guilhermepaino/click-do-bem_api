@@ -98,7 +98,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
             {
 
                 IList<Claim> claimnsUsuario = new List<Claim>();
+
+                claimnsUsuario.Add(new Claim(ClaimTypes.Hash, usuarioDto.Id.ToString()));
+                claimnsUsuario.Add(new Claim(ClaimTypes.Surname, usuarioDto.UsuarioLogin.Login));
                 claimnsUsuario.Add(new Claim(ClaimTypes.Name, usuarioDto.Nome));
+
                 foreach (UsuarioPerfilDto p in usuarioDto.UsuarioPerfil)
                     claimnsUsuario.Add(new Claim(ClaimTypes.Role, p.Perfil));
 
