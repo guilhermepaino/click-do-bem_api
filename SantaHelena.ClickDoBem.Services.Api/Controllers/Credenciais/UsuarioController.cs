@@ -97,7 +97,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
             if (autenticado)
             {
 
-                IList<Claim> claimnsUsuario = new List<Claim>();
+                statusCode = StatusCodes.Status200OK;
+		    
+		IList<Claim> claimnsUsuario = new List<Claim>();
 
                 claimnsUsuario.Add(new Claim(ClaimTypes.Hash, usuarioDto.Id.ToString()));
                 claimnsUsuario.Add(new Claim(ClaimTypes.Surname, usuarioDto.UsuarioLogin.Login));
