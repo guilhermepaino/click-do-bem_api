@@ -21,7 +21,7 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Credenciais
                 .IsRequired();
 
             builder.Property(c => c.UsuarioId)
-                .HasColumnName("char(36)")
+                .HasColumnType("char(36)")
                 .IsRequired();
 
             builder.Property(c => c.DataNascimento)

@@ -109,6 +109,18 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         }
 
         /// <summary>
+        /// Buscar pelo número do documento (cpf/cnpj)
+        /// </summary>
+        /// <param name="documento">Número do documento cpf/cnpj</param>
+        public Usuario ObterPorDocumento(string documento)
+        {
+            string sql = $@"SELECT * FROM Usuario u WHERE u.CpfCnpj = @pdocumento";
+            Usuario usuario = _ctx.Database.GetDbConnection().Query<Usuario>(sql, new { pdocumento = documento }).FirstOrDefault();
+            CarregarRelacoesUsuario(usuario);
+            return usuario;
+        }
+
+        /// <summary>
         /// Buscar usuário
         /// </summary>
         /// <param name="perfil">Perfil de filtro</param>

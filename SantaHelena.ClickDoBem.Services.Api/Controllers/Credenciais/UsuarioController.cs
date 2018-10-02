@@ -181,68 +181,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
             return Ok(result);
         }
 
-        /// <summary>
-        /// Recepciona arquivo de carga de colaboradores
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        /// 
-        ///     Requisição
-        ///     Content-Type: multipart/form-data
-        ///     Enviar arquivo através de FormFile
-        ///     
-        ///     Resposta
-        ///     {
-        ///         "sucesso" : "boolean",
-        ///         "mensagem" : "mensagem do resultado do processamento",
-        ///         "resultado" : 
-        ///         [
-        ///             { 
-        ///                 "linha": "1",
-        ///                 "situacao": "Ok"
-        ///             },
-        ///             { 
-        ///                "linha": "2",
-        ///               "situacao": "Cpf/Cnpj inválido"
-        ///             }
-        ///         ]
-        ///     }
-        /// 
-        /// </remarks>
-        /// <response code="200">Processamento do arquivo realizado com sucesso</response>
-        /// <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Ocorreu alguma falha no processamento da request</response>
-        [HttpPost("upload"), DisableRequestSizeLimit]
-        [AllowAnonymous]
-        public IActionResult Upload()
-        {
-            //TODO: AllowAnonymous
-
-            IFormFile file = null;
-
-            file = Request.Form.Files.FirstOrDefault();
-
-            //try { file = Request.Form.Files.FirstOrDefault(); }
-            //catch { return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" }); }
-
-            //if (file.Length.Equals(0))
-            //    return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
-
-            return Ok();
-
-            //string protocolo = Request.IsHttps ? "https" : "http";
-            //string urlApp = $"{protocolo}://{Request.Host.Value}";
-            //string token = Request.Headers.ToList().Where(x => x.Key.Equals("Authorization")).SingleOrDefault().Value.ToString();
-
-            //bool sucess = _importacaoMetaAppService.Upload(file, urlApp, token, _caminho, ano, mes, out int statusCode, out string message);
-
-            //if (sucess)
-            //    return Ok(new { sucess = true, data = $"Arquivo '{file.FileName} ({file.Length.ToString("N0")} bytes)' adicionado a fila com sucesso!" });
-            //else
-            //    return StatusCode(statusCode, new { sucess = false, data = $"Falha no envio do arquivo: {message}" });
-        }
-
         #endregion
 
     }

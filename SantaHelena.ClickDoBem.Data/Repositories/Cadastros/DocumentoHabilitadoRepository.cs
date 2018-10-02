@@ -41,7 +41,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
         /// <param name="doc">Número do documento cpf ou cnpj</param>
         public DocumentoHabilitado ObterPorDocumento(string doc)
         {
-            string sql = @"SELECT * FROM DocumentoHabilitado WHERE CpfCnpj = @doc";
+            string sql = @"SELECT * FROM DocumentoHabilitado WHERE CpfCnpj = @pdoc";
             return _ctx.Database.GetDbConnection().Query<DocumentoHabilitado>(sql, new { pdoc = doc }).SingleOrDefault();
         }
 

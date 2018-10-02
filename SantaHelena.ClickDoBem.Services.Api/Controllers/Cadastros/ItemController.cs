@@ -93,7 +93,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemInsertRequest>(req);
 
-            var dto = new ItemDto()
+            ItemDto dto = new ItemDto()
             {
                 Titulo = req.Titulo,
                 Descricao = req.Descricao,
@@ -145,6 +145,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpPut]
         public IActionResult Atualizar([FromBody]ItemUpdateRequest req)
         {
+
+            if (!ModelState.IsValid)
+                return Response<ItemInsertRequest>(req);
 
             var dto = new ItemDto()
             {

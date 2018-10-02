@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SantaHelena.ClickDoBem.Infra.CrossCutting.Common\SantaHelena.ClickDoBem.Infra.CrossCutting.Common.csproj" />
+    <ProjectReference Include="..\SantaHelena.ClickDoBem.Domain.Core\SantaHelena.ClickDoBem.Domain.Core.csproj" />
     <ProjectReference Include="..\SantaHelena.ClickDoBem.Infra.CrossCutting.IoC\SantaHelena.ClickDoBem.Infra.CrossCutting.IoC.csproj" />
   </ItemGroup>
 

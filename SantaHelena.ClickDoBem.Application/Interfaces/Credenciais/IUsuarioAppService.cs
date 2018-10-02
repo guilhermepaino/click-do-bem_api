@@ -11,6 +11,8 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Credenciais
         UsuarioDto ObterPorId(Guid id);
         IEnumerable<UsuarioDto> ObterTodos();
         IEnumerable<UsuarioDto> ObterPorPerfil(string perfil);
+        void CadastrarColaborador(UsuarioDto dto, out int statusCode, out object dados);
+
     }
 
 }
