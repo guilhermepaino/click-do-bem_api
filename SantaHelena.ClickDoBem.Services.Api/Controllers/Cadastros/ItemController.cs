@@ -57,7 +57,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <remarks>
         /// Contrato
         /// 
-        ///     Requisição: ItemRequest
+        ///     Requisição: ItemInsertRequest
         ///     {
         ///         "titulo": "Fralda Descartável",
         ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
@@ -73,19 +73,31 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///             "id": "fe9b1395-3753-4cb1-9b4e-23c246c04282"
         ///         }
         ///     }
+        ///     
+        ///     Validações apresentadas em array, exemplo:
+        ///     {
+        ///         "Titulo": [ "Critica1, "Critica2" ],
+        ///         "TipoItem": [ "Critica1, "Critica2" ],
+        ///         "Categoria": [ "Critica1, "Critica2" ]
+        ///     }
+        /// 
         /// </remarks>
         /// <response code="200">Sucesso na gravação - retornará o Id do registro no campo mensagem</response>
+        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost]
         public IActionResult Inserir([FromBody]ItemInsertRequest req)
         {
 
+            if (!ModelState.IsValid)
+                return Response<ItemInsertRequest>(req);
+
             var dto = new ItemDto()
             {
                 Titulo = req.Titulo,
                 Descricao = req.Descricao,
-                TipoItem = new TipoItemDto() { Descricao = req.TipoItem },
+                TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
                 Categoria = new CategoriaDto() { Descricao = req.Categoria },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
                 Anonimo = req.Anonimo
@@ -117,8 +129,17 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///         "sucesso": true,
         ///         "mensagem": "Registro alterado com sucesso"
         ///     }
+        ///     
+        ///     Validações apresentadas em array, exemplo:
+        ///     {
+        ///         "Titulo": [ "Critica1, "Critica2" ],
+        ///         "TipoItem": [ "Critica1, "Critica2" ],
+        ///         "Categoria": [ "Critica1, "Critica2" ]
+        ///     }
+        ///     
         /// </remarks>
         /// <response code="200">Sucesso na gravação</response>
+        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPut]
@@ -130,7 +151,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Id = req.Id,
                 Titulo = req.Titulo,
                 Descricao = req.Descricao,
-                TipoItem = new TipoItemDto() { Descricao = req.TipoItem },
+                TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
                 Categoria = new CategoriaDto() { Descricao = req.Categoria },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
                 Anonimo = req.Anonimo
@@ -140,6 +161,33 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             return StatusCode(statusCode, dados);
 
+        }
+
+        /// <summary>
+        /// Excluir o registro
+        /// </summary>
+        /// <param name="id">Id do registro</param>
+        /// <remarks>
+        /// 
+        ///     Requisição: DELETE
+        ///     url: [URI]/api/versao/2ef307a6-c4a5-11e8-8776-0242ac110006
+        /// 
+        ///     Resposta:
+        ///     {
+        ///         "sucesso": true,
+        ///         "mensagem": "Item excluído com sucesso"
+        ///     }
+        ///     
+        /// </remarks>
+        /// <response code="200">Sucesso na exclusão</response>
+        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpDelete("{id:guid}")]
+        public IActionResult Excluir(Guid id)
+        {
+            _appService.Excluir(id, out int statusCode, out object dados);
+            return StatusCode(statusCode, dados);
         }
 
         /// <summary>

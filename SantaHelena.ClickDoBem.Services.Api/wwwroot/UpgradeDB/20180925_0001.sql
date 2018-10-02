@@ -117,7 +117,7 @@ CREATE TABLE `Item` (
   `TipoItemId` char(36) NOT NULL,
   `CategoriaId` char(36) NOT NULL,
   `UsuarioId` char(36) NOT NULL,
-  `Anonimo` bit(1) NOT NULL DEFAULT b'0',
+  `Anonimo` bit NOT NULL DEFAULT 0,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `UK_Item_Sku` (`Sku`),
   KEY `IX_Item_DtInclusao` (`DataInclusao`),

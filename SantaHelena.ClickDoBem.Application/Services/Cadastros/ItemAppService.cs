@@ -7,6 +7,7 @@ using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         protected readonly IItemDomainService _dmn;
         protected readonly ICategoriaDomainService _categoriaDomain;
         protected readonly ITipoItemDomainService _tipoItemDomain;
+        protected readonly IItemImagemDomainService _imagemDomain;
         protected readonly IAppUser _usuario;
 
         #endregion
@@ -37,7 +39,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             IItemDomainService dmn,
             ICategoriaDomainService categoriaDomain,
             ITipoItemDomainService tipoItemDomain,
-            IAppUser usuario
+            IAppUser usuario,
+            IItemImagemDomainService imagemDomain
         )
         {
             _uow = uow;
@@ -45,6 +48,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             _categoriaDomain = categoriaDomain;
             _tipoItemDomain = tipoItemDomain;
             _usuario = usuario;
+            _imagemDomain = imagemDomain;
         }
 
         #endregion
@@ -140,14 +144,13 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <summary>
         /// Inserir registro na base
         /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="statusCode"></param>
-        /// <param name="dados"></param>
-        public bool Inserir(ItemDto dto, out int statusCode, out object dados)
+        /// <param name="dto">Objeto de transporte de dados de item</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="dados">Objeto de saída de dados (mensagem)</param>
+        public void Inserir(ItemDto dto, out int statusCode, out object dados)
         {
 
             StringBuilder criticas = new StringBuilder();
-            statusCode = StatusCodes.Status200OK;
 
             // Verificando TipoItem
             TipoItem tipoItem = _tipoItemDomain.ObterPorDescricao(dto.TipoItem.Descricao);
@@ -164,48 +167,51 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             {
                 dados = new { sucesso = false, mensagem = criticas.ToString().Substring(0, (criticas.Length - 1)).Replace("|", "\r\n") };
                 statusCode = StatusCodes.Status400BadRequest;
-                return false;
             }
-
-            Item entidade = new Item()
+            else
             {
-                Titulo = dto.Titulo,
-                Descricao = dto.Descricao,
-                TipoItemId = tipoItem.Id,
-                CategoriaId = categoria.Id,
-                UsuarioId = _usuario.Id,
-                Anonimo = dto.Anonimo
-            };
 
-            if (!entidade.EstaValido())
-            {
-                dados = new { sucesso = false, mensagem = entidade.ValidationResult.ToString() };
-                statusCode = StatusCodes.Status400BadRequest;
-                return false;
+                Item entidade = new Item()
+                {
+                    Titulo = dto.Titulo,
+                    Descricao = dto.Descricao,
+                    TipoItemId = tipoItem.Id,
+                    CategoriaId = categoria.Id,
+                    UsuarioId = _usuario.Id,
+                    Anonimo = dto.Anonimo
+                };
+
+                if (!entidade.EstaValido())
+                {
+                    dados = new { sucesso = false, mensagem = entidade.ValidationResult.ToString() };
+                    statusCode = StatusCodes.Status400BadRequest;
+                }
+                else
+                {
+
+                    _dmn.Adicionar(entidade);
+                    _uow.Efetivar();
+
+                    dados = new { sucesso = true, mensagem = new { Id = entidade.Id } };
+                    statusCode = StatusCodes.Status200OK;
+
+                }
+
             }
-
-            _dmn.Adicionar(entidade);
-            _uow.Efetivar();
-
-            dados = new { sucesso = true, mensagem = new { Id = entidade.Id } };
-            statusCode = StatusCodes.Status200OK;
-            return true;
-
 
         }
 
         /// <summary>
         /// Inserir registro na base
         /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="statusCode"></param>
-        /// <param name="dados"></param>
-        public bool Atualizar(ItemDto dto, out int statusCode, out object dados)
+        /// <param name="dto">Objeto de transporte de dados de item</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="dados">Objeto de saída de dados (mensagem)</param>
+        public void Atualizar(ItemDto dto, out int statusCode, out object dados)
         {
 
 
             StringBuilder criticas = new StringBuilder();
-            statusCode = StatusCodes.Status200OK;
 
             // Verificando Item
             Item entidade = _dmn.ObterPorId(dto.Id);
@@ -213,47 +219,96 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             {
                 dados = new { sucesso = false, mensagem = "Item não encontrado" };
                 statusCode = StatusCodes.Status400BadRequest;
-                return false;
             }
+            else
+            {
+
+                // Verificando TipoItem
+                TipoItem tipoItem = _tipoItemDomain.ObterPorDescricao(dto.TipoItem.Descricao);
+                if (tipoItem == null)
+                    criticas.Append("Tipo de Item inválido|");
+
+
+                // Verificando Categoria
+                Categoria categoria = _categoriaDomain.ObterPorDescricao(dto.Categoria.Descricao);
+                if (categoria == null)
+                    criticas.Append("Categoria inválida|");
+
+                if (criticas.Length > 0)
+                {
+                    dados = new { sucesso = false, mensagem = criticas.ToString().Substring(0, (criticas.Length - 1)).Replace("|", "\r\n") };
+                    statusCode = StatusCodes.Status400BadRequest;
+                }
+                else
+                {
+
+                    entidade.Titulo = dto.Titulo;
+                    entidade.Descricao = dto.Descricao;
+                    entidade.TipoItemId = tipoItem.Id;
+                    entidade.CategoriaId = categoria.Id;
+                    entidade.UsuarioId = _usuario.Id;
+                    entidade.Anonimo = dto.Anonimo;
+
+                    if (!entidade.EstaValido())
+                    {
+                        dados = new { sucesso = false, mensagem = entidade.ValidationResult.ToString() };
+                        statusCode = StatusCodes.Status400BadRequest;
+                    }
+                    else
+                    {
+
+                        _dmn.Atualizar(entidade);
+                        _uow.Efetivar();
+
+                        dados = new { sucesso = true, mensagem = "Registro alterado com sucesso" };
+                        statusCode = StatusCodes.Status200OK;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        /// <summary>
+        /// Excluir registro
+        /// </summary>
+        /// <param name="id">Id do registro a ser excluído</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="dados">Objeto de saída de dados (mensagem)</param>
+        public void Excluir(Guid id, out int statusCode, out object dados)
+        {
 
             // Verificando TipoItem
-            TipoItem tipoItem = _tipoItemDomain.ObterPorDescricao(dto.TipoItem.Descricao);
-            if (tipoItem == null)
-                criticas.Append("Tipo de Item inválido|");
-
-
-            // Verificando Categoria
-            Categoria categoria = _categoriaDomain.ObterPorDescricao(dto.Categoria.Descricao);
-            if (categoria == null)
-                criticas.Append("Categoria inválida|");
-
-            if (criticas.Length > 0)
+            // Verificando Item
+            Item entidade = _dmn.ObterPorId(id);
+            if (entidade == null)
             {
-                dados = new { sucesso = false, mensagem = criticas.ToString().Substring(0, (criticas.Length - 1)).Replace("|", "\r\n") };
+                dados = new { sucesso = false, mensagem = "Item não encontrado" };
                 statusCode = StatusCodes.Status400BadRequest;
-                return false;
+            }
+            else
+            {
+
+                IList<string> arquivosRemover = new List<string>();
+
+                entidade.Imagens
+                    .ToList()
+                    .ForEach(i =>
+                    {
+                        arquivosRemover.Add(i.Caminho);
+                        _imagemDomain.Excluir(i.Id);
+                    });
+
+                _dmn.Excluir(id);
+                _uow.Efetivar();
+                //TODO: Remover arquivo físico
+
+                dados = new { sucesso = true, mensagem = "Item éxcluído com sucesso" };
+                statusCode = StatusCodes.Status200OK;
             }
 
-            entidade.Titulo = dto.Titulo;
-            entidade.Descricao = dto.Descricao;
-            entidade.TipoItemId = tipoItem.Id;
-            entidade.CategoriaId = categoria.Id;
-            entidade.UsuarioId = _usuario.Id;
-            entidade.Anonimo = dto.Anonimo;
-
-            if (!entidade.EstaValido())
-            {
-                dados = new { sucesso = false, mensagem = entidade.ValidationResult.ToString() };
-                statusCode = StatusCodes.Status400BadRequest;
-                return false;
-            }
-
-            _dmn.Atualizar(entidade);
-            _uow.Efetivar();
-
-            dados = new { sucesso = true, mensagem = "Registro alterado com sucesso" };
-            statusCode = StatusCodes.Status200OK;
-            return true;
 
         }
 
