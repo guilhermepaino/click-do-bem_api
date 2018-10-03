@@ -4,7 +4,7 @@ using SantaHelena.ClickDoBem.Services.Api.Validations;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais
+namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
 {
 
     /// <summary>

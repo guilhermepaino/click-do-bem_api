@@ -7,7 +7,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais
     /// <summary>
     /// Request de Autenticacao
     /// </summary>
-    public class AutenticacaoRequest : ViewModelBase
+    public class AutenticacaoRequest
     {
 
         /// <summary>

@@ -3,9 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
-using SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Core.Security;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
+using SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros;
+using System.IO;
+using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
+using SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 {
@@ -24,6 +29,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         protected readonly IUsuarioAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        private readonly string _caminho;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -42,6 +48,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         {
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
+            _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("tmp")).SingleOrDefault();
         }
 
         #endregion
@@ -125,8 +132,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         }
 
-        /*
-
         /// <summary>
         /// Recepciona arquivo de carga de colaboradores
         /// </summary>
@@ -162,34 +167,35 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpPost("upload"), DisableRequestSizeLimit]
         [AllowAnonymous]
         public IActionResult Upload()
-        {
-            //TODO: AllowAnonymous
+        { 
 
             IFormFile file = null;
 
-            file = Request.Form.Files.FirstOrDefault();
+            try { file = Request.Form.Files.FirstOrDefault(); }
+            catch { return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" }); }
 
-            //try { file = Request.Form.Files.FirstOrDefault(); }
-            //catch { return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" }); }
+            if (file.Length.Equals(0))
+                return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
 
-            //if (file.Length.Equals(0))
-            //    return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
+            
+            ArquivoDocumentoDto adt = _appService.ImportarArquivoColaborador(file, _caminho, out int statusCode);
+            ArquivoDocumentoResponse result = new ArquivoDocumentoResponse()
+            {
+                NomeArquivo = adt.NomeArquivo,
+                Detalhe = adt.Detalhe,
+                Sucesso = adt.Sucesso
+            };
+            if(adt.Linhas != null)
+                adt.Linhas
+                    .ToList()
+                    .ForEach(l =>
+                    {
+                        result.Linhas.Add(new LinhaArquivoDocumentoResponse() { Linha = l.Linha, Sucesso = l.Sucesso, Detalhe = l.Detalhe });
+                    });
 
-            return Ok();
+            return StatusCode(statusCode, result);
 
-            //string protocolo = Request.IsHttps ? "https" : "http";
-            //string urlApp = $"{protocolo}://{Request.Host.Value}";
-            //string token = Request.Headers.ToList().Where(x => x.Key.Equals("Authorization")).SingleOrDefault().Value.ToString();
-
-            //bool sucess = _importacaoMetaAppService.Upload(file, urlApp, token, _caminho, ano, mes, out int statusCode, out string message);
-
-            //if (sucess)
-            //    return Ok(new { sucess = true, data = $"Arquivo '{file.FileName} ({file.Length.ToString("N0")} bytes)' adicionado a fila com sucesso!" });
-            //else
-            //    return StatusCode(statusCode, new { sucess = false, data = $"Falha no envio do arquivo: {message}" });
         }
-
-        */
 
         #endregion
 

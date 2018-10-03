@@ -10,6 +10,11 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
+using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
+using System.Net.Http.Headers;
+using System.IO;
+using SantaHelena.ClickDoBem.Domain.Core.Tools;
+using SantaHelena.ClickDoBem.Domain.Core.Enums;
 
 namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 {
@@ -283,6 +288,169 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                 }
 
             }
+
+        }
+
+        /// <summary>
+        /// Processar arquivo de colaboradores
+        /// </summary>
+        /// <param name="arquivo"></param>
+        /// <param name="caminho"></param>
+        /// <param name="statusCode"></param>
+        /// <returns></returns>
+        public ArquivoDocumentoDto ImportarArquivoColaborador(IFormFile arquivo, string caminho, out int statusCode)
+        {
+
+            // Preparando nome e caminho de arquivo
+            ArquivoDocumentoDto adt = new ArquivoDocumentoDto() { NomeArquivo = arquivo.FileName };
+            string nomeArquivoBase = ContentDispositionHeaderValue.Parse(arquivo.ContentDisposition).FileName.Trim('"');
+            string nomeCompleto = Path.Combine(caminho, nomeArquivoBase);
+            statusCode = StatusCodes.Status200OK;
+
+            // Validando arquivo
+            if (!arquivo.ContentType.ToLower().Contains("application/vnd.ms-excel") || !arquivo.FileName.ToLower().EndsWith(".csv"))
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                adt.Sucesso = false;
+                adt.Detalhe = "Arquivo inválido";
+            }
+            else
+            {
+
+                // Ler arquivo
+                bool documentoValido = true;
+                try
+                {
+
+                    // Salvar arquivo
+                    using (FileStream fs = new FileStream(nomeCompleto, FileMode.Create))
+                    {
+                        arquivo.CopyTo(fs);
+                    }
+
+                    int numLinha = 0;
+                    using (StreamReader sr = new StreamReader(nomeCompleto))
+                    {
+
+                        IList<string> docsProcessados = new List<string>();
+                        string linha;
+                        while ((linha = sr.ReadLine()) != null)
+                        {
+
+                            numLinha++;
+                            if (numLinha > 1)
+                            {
+
+                                LinhaArquivoDocumentoDto dadosLinha = new LinhaArquivoDocumentoDto
+                                {
+                                    Linha = numLinha
+                                };
+
+                                string[] campos = linha.Split(',');
+                                if (campos.Length.Equals(2))
+                                {
+
+                                    string documento = Misc.LimparNumero(campos[0]);
+                                    string situacao = campos[1].ToUpper();
+
+                                    if (docsProcessados.Any(x => x.Equals(documento)))
+                                    {
+
+                                        dadosLinha.Sucesso = false;
+                                        documentoValido = false;
+                                        dadosLinha.Acao = AcaoDocumento.DocumentoDuplicado;
+                                        dadosLinha.Detalhe = EnumHelper.GetEnumDescription(AcaoDocumento.DocumentoDuplicado);
+
+                                    }
+                                    else
+                                    {
+
+                                        if (!Check.VerificarDocumento(documento))
+                                            dadosLinha.Detalhe = "Documento inválido";
+
+                                        if (!(situacao.Equals("S") || situacao.Equals("N")))
+                                            dadosLinha.Detalhe = $"{(dadosLinha.Detalhe.Length.Equals(0) ? string.Empty : $"{dadosLinha.Detalhe} / ")}Situação inválida";
+
+                                        if (!string.IsNullOrEmpty(dadosLinha.Detalhe))
+                                        {
+                                            dadosLinha.Acao = AcaoDocumento.DocumentoInvalido;
+                                            dadosLinha.Detalhe = EnumHelper.GetEnumDescription(AcaoDocumento.DocumentoInvalido);
+                                            dadosLinha.Sucesso = false;
+                                            documentoValido = false;
+                                        }
+                                        else
+                                        {
+                                            // Persistir na base
+                                            dadosLinha.Sucesso = true;
+                                            dadosLinha.Acao = AcaoDocumento.Alteracao;
+                                            dadosLinha.Detalhe = EnumHelper.GetEnumDescription(AcaoDocumento.Alteracao);
+                                            DocumentoHabilitado doc = _docHabDomain.ObterPorDocumento(documento);
+                                            if (doc == null)
+                                            {
+                                                dadosLinha.Acao = AcaoDocumento.Inclusao;
+                                                dadosLinha.Detalhe = EnumHelper.GetEnumDescription(AcaoDocumento.Inclusao);
+                                                doc = new DocumentoHabilitado()
+                                                {
+                                                    CpfCnpj = documento
+                                                };
+
+                                            }
+                                            doc.Ativo = situacao.Equals("S");
+                                            if (dadosLinha.Acao == AcaoDocumento.Inclusao)
+                                                _docHabDomain.Adicionar(doc);
+                                            else
+                                                _docHabDomain.Atualizar(doc);
+
+                                            docsProcessados.Add(documento);
+
+                                        }
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    dadosLinha.Sucesso = false;
+                                    documentoValido = false;
+                                    dadosLinha.Detalhe = "Layout da linha inválido";
+                                }
+
+
+                                adt.Linhas.Add(dadosLinha);
+
+                            }
+
+                        }
+                    }
+
+                    // Commit
+                    if (documentoValido)
+                    {
+                        _uow.Efetivar();
+                        adt.Sucesso = true;
+                        adt.Detalhe = "Arquivo processado com sucesso";
+                    }
+                    else
+                    {
+                        adt.Sucesso = false;
+                        statusCode = StatusCodes.Status400BadRequest;
+                        adt.Detalhe = "Arquivo processado e criticado, veja detalhes das linhas;";
+                    }
+
+
+                    adt.Sucesso = documentoValido;
+                    adt.Detalhe = "Arquivo processado com sucesso";
+
+                }
+                catch (Exception ex)
+                {
+                    adt.Sucesso = false;
+                    adt.Detalhe = $"Falha no processamento do arquivo: {ex.Message}-{ex.StackTrace}";
+                }
+
+            }
+
+            return adt;
 
         }
 

@@ -1,4 +1,6 @@
-﻿using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
+﻿using Microsoft.AspNetCore.Http;
+using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
+using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +14,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Credenciais
         IEnumerable<UsuarioDto> ObterTodos();
         IEnumerable<UsuarioDto> ObterPorPerfil(string perfil);
         void CadastrarColaborador(UsuarioDto dto, out int statusCode, out object dados);
-
+        ArquivoDocumentoDto ImportarArquivoColaborador(IFormFile arquivo, string caminho, out int statusCode);
     }
 
 }
