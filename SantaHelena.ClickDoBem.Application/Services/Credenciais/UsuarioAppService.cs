@@ -6,7 +6,6 @@ using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;

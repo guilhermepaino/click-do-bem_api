@@ -68,7 +68,7 @@
             Cria uma nova instância da API
             </summary>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Cadastrar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest)">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Cadastrar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest)">
             <summary>
             Cadastrar um novo colaborador
             </summary>
@@ -106,6 +106,40 @@
             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
             <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Upload">
+            <summary>
+            Recepciona arquivo de carga de colaboradores
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                Content-Type: multipart/form-data
+                Enviar arquivo através de FormFile
+                
+                Resposta
+                {
+                    "sucesso" : "boolean",
+                    "mensagem" : "mensagem do resultado do processamento",
+                    "resultado" : 
+                    [
+                        { 
+                            "linha": "1",
+                            "situacao": "Ok"
+                        },
+                        { 
+                           "linha": "2",
+                          "situacao": "Cpf/Cnpj inválido"
+                        }
+                    ]
+                }
+            
+            </remarks>
+            <response code="200">Processamento do arquivo realizado com sucesso</response>
+            <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Ocorreu alguma falha no processamento da request</response>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController">
             <summary>
@@ -434,6 +468,51 @@
             CEP do endereço (apenas números)
             </summary>
         </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest">
+            <summary>
+            Modelo de requisição de inserção de Colaborador
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Documento">
+            <summary>
+            Número do documento (Cpf/Cnpj)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Nome">
+            <summary>
+            Nome do colaborador
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.DataNascimento">
+            <summary>
+            Data de nascimento (formato YYYY-MM-AA)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Endereco">
+            <summary>
+            Endereço do colaborador
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.TelefoneFixo">
+            <summary>
+            Número do telefone fixo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.TelefoneCelular">
+            <summary>
+            Número do telefone fixo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Email">
+            <summary>
+            E-mail do colaborador/usuário
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Senha">
+            <summary>
+            Senha do usuário (puro texto)
+            </summary>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest">
             <summary>
             Request de INSERT de item
@@ -489,49 +568,54 @@
             Senha do usuário (Hash Md5)
             </summary>
         </member>
-        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest">
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse">
             <summary>
-            Modelo de requisição de inserção de Colaborador
+            Modelo de resposta do processamento de arquivo de documento
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.Documento">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.#ctor">
             <summary>
-            Número do documento (Cpf/Cnpj)
+            Cria uma nova instância da response
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.Nome">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.NomeArquivo">
             <summary>
-            Nome do colaborador
+            Nome do arquivo
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.DataNascimento">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.Sucesso">
             <summary>
-            Data de nascimento (formato YYYY-MM-AA)
+            Flag indicando o resultado do processamento do arquivo
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.Endereco">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.Detalhe">
             <summary>
-            Endereço do colaborador
+            Detalhe geral do arquivo
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.TelefoneFixo">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.Linhas">
             <summary>
-            Número do telefone fixo
+            Detalhes das linhas processadas
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.TelefoneCelular">
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse">
             <summary>
-            Número do telefone fixo
+            Modelo de resposta da linha de arquivo de upload de documento
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.Email">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Linha">
             <summary>
-            E-mail do colaborador/usuário
+            Número da linha
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.ColaboradorInsertRequest.Senha">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Sucesso">
             <summary>
-            Senha do usuário (puro texto)
+            Flag indicando o resultado do processamento
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Detalhe">
+            <summary>
+            Detalhe do processamento
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse">
