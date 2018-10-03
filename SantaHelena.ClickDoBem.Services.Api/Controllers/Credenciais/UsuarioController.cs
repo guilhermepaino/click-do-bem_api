@@ -183,6 +183,38 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
             return Ok(result);
         }
 
+        /// <summary>
+        /// Verifica o status de um documento
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/verificadocumento/11111111111
+        ///     
+        ///     Resposta (array)
+        ///     {
+        ///         "situacao": "ativo"
+        ///     }
+        ///     
+        ///     situações possíveis: 
+        ///     
+        ///         ativo           = cadastrado e habilitado para fazer cadastro
+        ///         inativo         = cadastrado e INABILITADO para fazer cdastro
+        ///         inexistente     = não cadastrado
+        ///     
+        /// </remarks>
+        /// <returns>Situação de cadastro do documento</returns>
+        /// <response code="200">Sucesso na busca</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("verificadocumento/{documento}")]
+        [AllowAnonymous]
+        public IActionResult VerificarDocumentoHabilitado(string documento)
+        {
+            return Ok(new { situacao = _appService.VerificarSituacaoDocumento(documento) });
+        }
+
         #endregion
 
     }

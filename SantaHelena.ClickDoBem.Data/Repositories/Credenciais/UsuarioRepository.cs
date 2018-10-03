@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.EntityFrameworkCore;
 using SantaHelena.ClickDoBem.Data.Context;
+using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
 using System;
@@ -133,6 +134,19 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
             IEnumerable<Usuario> usuarios = _ctx.Database.GetDbConnection().Query<Usuario>(sql, new { pperfil = perfil }).ToList();
             CarregarRelacoesUsuario(usuarios);
             return usuarios;
+        }
+
+        /// <summary>
+        /// Verifica a situação do documento
+        /// </summary>
+        /// <param name="documento">Documento a ser verificado</param>
+        public string VerificarSituacaoDocumento(string documento)
+        {
+            string sql = "SELECT * FROM DocumentoHabilitado WHERE CpfCnpj = @pdoc";
+            DocumentoHabilitado doc = _ctx.Database.GetDbConnection().Query<DocumentoHabilitado>(sql, new { pdoc = documento }).FirstOrDefault();
+            if (doc == null)
+                return "inexistente";
+            return doc.Ativo ? "ativo" : "inativo";
         }
 
         #endregion

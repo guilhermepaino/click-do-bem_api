@@ -11,7 +11,7 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais
         Usuario ObterPorLogin(string login, string senha);
         Usuario ObterPorDocumento(string documento);
         IEnumerable<Usuario> ObterPorPerfil(string perfil);
-
+        string VerificarSituacaoDocumento(string documento);
     }
 
 }

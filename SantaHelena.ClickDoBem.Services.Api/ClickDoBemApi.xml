@@ -378,6 +378,33 @@
              <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.VerificarDocumentoHabilitado(System.String)">
+             <summary>
+             Verifica o status de um documento
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/verificadocumento/11111111111
+                 
+                 Resposta (array)
+                 {
+                     "situacao": "ativo"
+                 }
+                 
+                 situações possíveis: 
+                 
+                     ativo           = cadastrado e habilitado para fazer cadastro
+                     inativo         = cadastrado e INABILITADO para fazer cdastro
+                     inexistente     = não cadastrado
+                 
+             </remarks>
+             <returns>Situação de cadastro do documento</returns>
+             <response code="200">Sucesso na busca</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions">
             <summary>
             Objeto de Opções de Jwt
