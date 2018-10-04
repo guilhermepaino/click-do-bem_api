@@ -59,7 +59,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         #region Métodos/EndPoints Api
 
         /// <summary>
-        /// Autenticar usuário backoffice
+        /// Autenticar usuário no sistema / gera chave (token) de acesso
         /// </summary>
         /// <remarks>
         /// Contrato
@@ -190,7 +190,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// Contrato
         ///
         ///     Requisição
-        ///     url: [URI]/api/versao/verificadocumento/11111111111
+        ///     url: [URI]/api/versao/usuario/verificadocumento/11111111111
         ///     
         ///     Resposta (array)
         ///     {
