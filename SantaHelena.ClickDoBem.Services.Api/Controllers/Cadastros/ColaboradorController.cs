@@ -174,6 +174,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             try { file = Request.Form.Files.FirstOrDefault(); }
             catch { return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" }); }
 
+            if (file == null)
+                return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" });
+
             if (file.Length.Equals(0))
                 return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
 
@@ -190,7 +193,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                     .ToList()
                     .ForEach(l =>
                     {
-                        result.Linhas.Add(new LinhaArquivoDocumentoResponse() { Linha = l.Linha, Sucesso = l.Sucesso, Detalhe = l.Detalhe });
+                        result.Linhas.Add(new LinhaArquivoDocumentoResponse() { Linha = l.Linha, Conteudo = l.Conteudo, Sucesso = l.Sucesso, Detalhe = l.Detalhe });
                     });
 
             return StatusCode(statusCode, result);

@@ -13,6 +13,11 @@
         public int Linha { get; set; }
 
         /// <summary>
+        /// Conteudo da Linha
+        /// </summary>
+        public string Conteudo { get; set; }
+
+        /// <summary>
         /// Flag indicando o resultado do processamento
         /// </summary>
         public bool Sucesso { get; set; }

@@ -14,7 +14,7 @@ namespace SantaHelena.ClickDoBem.Domain.Core.Enums
         [Description("Documento inválido")]
         DocumentoInvalido = 3,
 
-        [Description("Documento duplicaod")]
+        [Description("Documento duplicado")]
         DocumentoDuplicado = 4
 
     }

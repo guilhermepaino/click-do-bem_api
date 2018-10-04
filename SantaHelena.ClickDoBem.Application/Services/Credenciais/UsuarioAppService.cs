@@ -307,7 +307,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             statusCode = StatusCodes.Status200OK;
 
             // Validando arquivo
-            if (!arquivo.ContentType.ToLower().Contains("application/vnd.ms-excel") || !arquivo.FileName.ToLower().EndsWith(".csv"))
+            //if (!arquivo.ContentType.ToLower().Contains("application/vnd.ms-excel") || !arquivo.FileName.ToLower().EndsWith(".csv"))
+            if (!arquivo.FileName.ToLower().EndsWith(".csv"))
             {
                 statusCode = StatusCodes.Status400BadRequest;
                 adt.Sucesso = false;
@@ -342,7 +343,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
                                 LinhaArquivoDocumentoDto dadosLinha = new LinhaArquivoDocumentoDto
                                 {
-                                    Linha = numLinha
+                                    Linha = numLinha,
+                                    Conteudo = linha
                                 };
 
                                 string[] campos = linha.Split(',');
@@ -436,16 +438,15 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                         adt.Detalhe = "Arquivo processado e criticado, veja detalhes das linhas;";
                     }
 
-
-                    adt.Sucesso = documentoValido;
-                    adt.Detalhe = "Arquivo processado com sucesso";
-
                 }
                 catch (Exception ex)
                 {
                     adt.Sucesso = false;
                     adt.Detalhe = $"Falha no processamento do arquivo: {ex.Message}-{ex.StackTrace}";
                 }
+
+                try { File.Delete(nomeCompleto); }
+                finally { /* Nada a fazer, segue o jogo */ }
 
             }
 
