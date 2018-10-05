@@ -72,10 +72,14 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         ///     
         ///     Resposta
         ///     { 
-        ///         "sucesso" = "true",
-        ///         "mensagem" = "mensagem do resultado da operação",
-        ///         "token" = "hash informado se sucesso, caso contrário será nulo",
-        ///         "dataValidade = "data de validade do token quando sucesso, em caso de falha será informado nulo"
+        ///         "sucesso" : "true",
+        ///         "mensagem" : "mensagem do resultado da operação",
+        ///         "token" : "hash informado se sucesso, caso contrário será nulo",
+        ///         "dataValidade : "data de validade do token quando sucesso, em caso de falha será informado nulo",
+        ///         "perfis" : [
+        ///             "Admin",
+        ///             "Colaborador"
+        ///         ]
         ///     }
         ///     
         /// </remarks>
@@ -91,6 +95,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
             string token = null;
             DateTime? validade = null;
             int statusCode = StatusCodes.Status403Forbidden;
+            IList<string> perfis = new List<string>();
 
             bool autenticado = _appService.Autenticar(request.Nome, request.Senha, out string mensagem, out UsuarioDto usuarioDto);
 
@@ -98,15 +103,18 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
             {
 
                 statusCode = StatusCodes.Status200OK;
-		    
-		IList<Claim> claimnsUsuario = new List<Claim>();
+
+                IList<Claim> claimnsUsuario = new List<Claim>();
 
                 claimnsUsuario.Add(new Claim(ClaimTypes.Hash, usuarioDto.Id.ToString()));
                 claimnsUsuario.Add(new Claim(ClaimTypes.Surname, usuarioDto.UsuarioLogin.Login));
                 claimnsUsuario.Add(new Claim(ClaimTypes.Name, usuarioDto.Nome));
 
                 foreach (UsuarioPerfilDto p in usuarioDto.UsuarioPerfil)
+                {
                     claimnsUsuario.Add(new Claim(ClaimTypes.Role, p.Perfil));
+                    perfis.Add(p.Perfil);
+                }
 
                 JwtSecurityToken jwt = new JwtSecurityToken(
                      issuer: _jwtTokenOptions.Issuer,
@@ -119,7 +127,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
                 token = new JwtSecurityTokenHandler().WriteToken(jwt);
                 validade = DateTime.Now.AddMilliseconds((int)_jwtTokenOptions.ValidFor.TotalSeconds);
             }
-            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade));
+            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade, perfis));
         }
 
         /// <summary>

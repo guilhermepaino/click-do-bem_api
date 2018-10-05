@@ -314,10 +314,14 @@
                  
                  Resposta
                  { 
-                     "sucesso" = "true",
-                     "mensagem" = "mensagem do resultado da operação",
-                     "token" = "hash informado se sucesso, caso contrário será nulo",
-                     "dataValidade = "data de validade do token quando sucesso, em caso de falha será informado nulo"
+                     "sucesso" : "true",
+                     "mensagem" : "mensagem do resultado da operação",
+                     "token" : "hash informado se sucesso, caso contrário será nulo",
+                     "dataValidade : "data de validade do token quando sucesso, em caso de falha será informado nulo",
+                     "perfis" : [
+                         "Admin",
+                         "Colaborador"
+                     ]
                  }
                  
              </remarks>
@@ -656,7 +660,7 @@
             Response de Autenticacao
             </summary>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.#ctor(System.Boolean,System.String,System.String,System.Nullable{System.DateTime})">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.#ctor(System.Boolean,System.String,System.String,System.Nullable{System.DateTime},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Cria uma nova instâncioa da resposta de autenticação
             </summary>
@@ -664,6 +668,7 @@
             <param name="mensagem">Mensagem da autenticação</param>
             <param name="token">Token gerado</param>
             <param name="dataValidade">Data de validade do token</param>
+            <param name="perfis">Lista de perfis</param>
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Sucesso">
             <summary>
@@ -683,6 +688,11 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.DataValidade">
             <summary>
             Data de validade do token
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Perfis">
+            <summary>
+            Lista de perfis
             </summary>
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">

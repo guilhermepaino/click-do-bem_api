@@ -102,7 +102,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         public Usuario ObterPorLogin(string login, string senha)
         {
 
-            string sql = $@"SELECT u.* FROM Usuario u INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId WHERE u.Nome = @pusuario AND us.Senha = @psenha";
+            string sql = $@"SELECT u.* FROM Usuario u INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId WHERE us.Login = @pusuario AND us.Senha = @psenha";
             Usuario usuario = _ctx.Database.GetDbConnection().Query<Usuario>(sql,  new { pusuario = login, psenha = senha }).FirstOrDefault();
             CarregarRelacoesUsuario(usuario);
             return usuario;
