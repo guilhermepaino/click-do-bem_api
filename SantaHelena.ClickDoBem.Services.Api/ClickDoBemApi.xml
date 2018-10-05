@@ -301,7 +301,7 @@
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Autenticar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest)">
              <summary>
-             Autenticar usuário backoffice
+             Autenticar usuário no sistema / gera chave (token) de acesso
              </summary>
              <remarks>
              Contrato
@@ -386,11 +386,12 @@
              Contrato
             
                  Requisição
-                 url: [URI]/api/versao/verificadocumento/11111111111
+                 url: [URI]/api/versao/usuario/verificadocumento/11111111111
                  
                  Resposta (array)
                  {
-                     "situacao": "ativo"
+                     "situacao": "ativo",
+                     "cadastroCompleto": true
                  }
                  
                  situações possíveis: 
@@ -633,6 +634,11 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Linha">
             <summary>
             Número da linha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Conteudo">
+            <summary>
+            Conteudo da Linha
             </summary>
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Sucesso">
