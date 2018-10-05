@@ -29,7 +29,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Credenciais
         public Usuario ObterPorLogin(string login, string senha) => _repository.ObterPorLogin(login, senha);
         public Usuario ObterPorDocumento(string documento) => _repository.ObterPorDocumento(documento);
         public IEnumerable<Usuario> ObterPorPerfil(string perfil) => _repository.ObterPorPerfil(perfil);
-        public string VerificarSituacaoDocumento(string documento) => _repository.VerificarSituacaoDocumento(documento);
+        public void VerificarSituacaoDocumento(string documento, out string situacao, out bool cadastrado) => _repository.VerificarSituacaoDocumento(documento, out situacao, out cadastrado);
 
         #endregion
 

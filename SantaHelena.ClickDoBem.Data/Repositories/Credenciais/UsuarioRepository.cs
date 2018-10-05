@@ -140,13 +140,22 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         /// Verifica a situação do documento
         /// </summary>
         /// <param name="documento">Documento a ser verificado</param>
-        public string VerificarSituacaoDocumento(string documento)
+        /// <param name="situacao">Varíavel de saída de situação do documento</param>
+        /// <param name="cadastrado">Varíavel de saída de flag de situaçaõ de cadastro completo</param>
+        public void VerificarSituacaoDocumento(string documento, out string situacao, out bool cadastrado)
         {
+            situacao = "inexistente";
+            cadastrado = false;
+
             string sql = "SELECT * FROM DocumentoHabilitado WHERE CpfCnpj = @pdoc";
             DocumentoHabilitado doc = _ctx.Database.GetDbConnection().Query<DocumentoHabilitado>(sql, new { pdoc = documento }).FirstOrDefault();
-            if (doc == null)
-                return "inexistente";
-            return doc.Ativo ? "ativo" : "inativo";
+            if (doc != null)
+            { 
+                situacao = doc.Ativo ? "ativo" : "inativo";
+                sql = "SELECT * FROM Usuario u INNER JOIN UsuarioDados ud ON u.Id = ud.UsuarioId WHERE u.CpfCnpj = @pdoc";
+                Usuario usuario = _ctx.Database.GetDbConnection().Query<Usuario>(sql, new { pdoc = documento }).FirstOrDefault();
+                cadastrado = (usuario != null);
+            }
         }
 
         #endregion

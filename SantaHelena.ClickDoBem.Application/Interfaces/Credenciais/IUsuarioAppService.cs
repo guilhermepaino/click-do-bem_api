@@ -15,7 +15,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Credenciais
         IEnumerable<UsuarioDto> ObterPorPerfil(string perfil);
         void CadastrarColaborador(UsuarioDto dto, out int statusCode, out object dados);
         ArquivoDocumentoDto ImportarArquivoColaborador(IFormFile arquivo, string caminho, out int statusCode);
-        string VerificarSituacaoDocumento(string documento);
+        void VerificarSituacaoDocumento(string documento, out string situacao, out bool cadastrado);
     }
 
 }

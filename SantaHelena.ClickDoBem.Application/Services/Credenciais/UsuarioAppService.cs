@@ -458,9 +458,11 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         /// Retorna o status de um documento
         /// </summary>
         /// <param name="documento">Documento a ser verificado</param>
-        public string VerificarSituacaoDocumento(string documento)
+        /// <param name="situacao">Variável de saída e situação</param>
+        /// <param name="cadastrado">Variável de saída de flag de situação de cadastro completo</param>
+        public void VerificarSituacaoDocumento(string documento, out string situacao, out bool cadastrado)
         {
-            return _dmn.VerificarSituacaoDocumento(documento);
+            _dmn.VerificarSituacaoDocumento(documento, out situacao, out cadastrado);
         }
 
         #endregion

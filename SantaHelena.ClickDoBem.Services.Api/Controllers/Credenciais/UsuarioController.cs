@@ -194,7 +194,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         ///     
         ///     Resposta (array)
         ///     {
-        ///         "situacao": "ativo"
+        ///         "situacao": "ativo",
+        ///         "cadastroCompleto": true
         ///     }
         ///     
         ///     situações possíveis: 
@@ -212,7 +213,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         [AllowAnonymous]
         public IActionResult VerificarDocumentoHabilitado(string documento)
         {
-            return Ok(new { situacao = _appService.VerificarSituacaoDocumento(documento) });
+            _appService.VerificarSituacaoDocumento(documento, out string situacao, out bool cadastrado);
+            return Ok(new { situacao, cadastrado });
         }
 
         #endregion
