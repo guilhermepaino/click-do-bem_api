@@ -56,8 +56,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers
 
             return BadRequest(new
             {
-                success = false,
-                errors = errorMessages.Distinct().ToList()
+                sucesso = false,
+                mensagem = errorMessages.Distinct().ToList()
             });
         }
     }

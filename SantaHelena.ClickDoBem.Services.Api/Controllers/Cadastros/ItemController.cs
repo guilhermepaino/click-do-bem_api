@@ -173,7 +173,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <remarks>
         /// 
         ///     Requisição: DELETE
-        ///     url: [URI]/api/versao/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
         /// 
         ///     Resposta:
         ///     {
@@ -239,6 +239,36 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public IActionResult Listar()
         {
             return Ok(_appService.ObterTodos());
+        }
+
+        /// <summary>
+        /// Buscar registro de item pelo Id (guid)
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     
+        ///     Resposta
+        ///         {
+        ///             "id": "2ef307a6-c4a5-11e8-8776-0242ac110006",
+        ///             "dataInclusao": "2018-09-30T19:04:19",
+        ///             "dataAlteracao": "0001-01-01T00:00:00",
+        ///             "descricao": "Higiene e limpeza",
+        ///             "pontuacao": 10,
+        ///             "gerenciadaRh": false
+        ///         }
+        ///     
+        /// </remarks>
+        /// <returns>Dados do registro localizado ou null se não encontrado</returns>
+        /// <response code="200">Sucesso na operação de busca</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("{id:guid}")]
+        public IActionResult BuscarPorId(Guid id)
+        {
+            return Ok(_appService.ObterPorId(id));
         }
 
         #endregion

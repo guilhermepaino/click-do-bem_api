@@ -44,6 +44,10 @@ namespace SantaHelena.ClickDoBem.Services.Api
 
             services.AddCors();
             services.AddResponseCaching();
+            services.Configure<ApiBehaviorOptions>(opt =>
+            {
+                opt.SuppressModelStateInvalidFilter = true;
+            });
 
             #region Jwt
 

@@ -125,6 +125,19 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         #region Métodos Públicos
 
         /// <summary>
+        /// Obter registro pelo id
+        /// </summary>
+        /// <param name="id">Id do registro</param>
+        public ItemDto ObterPorId(Guid id)
+        {
+            Item item = _dmn.ObterPorId(id);
+            if (item == null)
+                return null;
+            return ConverterEntidadeEmDto(item);
+
+        }
+
+        /// <summary>
         /// Obter registros pelo perfil
         /// </summary>
         public IEnumerable<ItemDto> ObterTodos()

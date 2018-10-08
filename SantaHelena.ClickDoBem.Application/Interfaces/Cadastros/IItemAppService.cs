@@ -10,5 +10,6 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         void Inserir(ItemDto dto, out int statusCode, out object dados);
         void Atualizar(ItemDto dto, out int statusCode, out object dados);
         void Excluir(Guid id, out int statusCode, out object dados);
+        ItemDto ObterPorId(Guid id);
     }
 }
