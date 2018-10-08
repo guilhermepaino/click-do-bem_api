@@ -263,7 +263,52 @@
             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
             <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(System.Nullable{System.Int32})" -->
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(System.Nullable{System.Int32})">
+             <summary>
+             Listar todos os registros
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição (parâmetro tipoItem = opcional)
+                 [ tipoItem=N ]
+                 
+                 onde N pode ser:
+                 
+                     1 = Necessidade
+                     2 = Doação
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros cadastrados</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.BuscarPorId(System.Guid)">
              <summary>
              Buscar registro de item pelo Id (guid)
@@ -789,6 +834,16 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse.Id">
             <summary>
             Id do usuário
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse.Nome">
+            <summary>
+            Nome do usuário
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse.CpfCnpj">
+            <summary>
+            Documento do usuário
             </summary>
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">

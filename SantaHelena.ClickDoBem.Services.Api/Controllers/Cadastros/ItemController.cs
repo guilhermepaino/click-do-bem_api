@@ -258,7 +258,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// Contrato
         ///
         ///     Requisição (parâmetro tipoItem = opcional)
-        ///     <?tipoItem=N>
+        ///     [ tipoItem=N ]
         ///     
         ///     onde N pode ser:
         ///     
