@@ -569,9 +569,7 @@
                              "email": "email@provedor"
                          },
                          "usuarioPerfil": [
-                             {
-                                 "perfil": "Admin"
-                             }
+                             "Admin"
                          ]
                      }
                  ]

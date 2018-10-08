@@ -168,9 +168,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         ///                 "email": "email@provedor"
         ///             },
         ///             "usuarioPerfil": [
-        ///                 {
-        ///                     "perfil": "Admin"
-        ///                 }
+        ///                 "Admin"
         ///             ]
         ///         }
         ///     ]
