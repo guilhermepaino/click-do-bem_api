@@ -5,7 +5,11 @@ using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros;
+using SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros;
+using SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 {
@@ -49,6 +53,54 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         #endregion
 
+        #region Métodos Locais
+
+        /// <summary>
+        /// Converte um objeto Dto em Response
+        /// </summary>
+        /// <param name="dto">Objeto Dto para conversão</param>
+        protected ItemResponse ConverterDtoEmResponse(ItemDto dto)
+        {
+
+            ItemResponse resp = new ItemResponse()
+            {
+                Id = dto.Id,
+                DataInclusao = dto.DataInclusao,
+                DataAlteracao = dto.DataAlteracao,
+                Titulo = dto.Titulo,
+                Descricao = dto.Descricao,
+                TipoItem = dto.TipoItem.Descricao,
+                Anonimo = dto.Anonimo,
+                Categoria = new CategoriaSimpleResponse()
+                {
+                    Id = dto.Categoria.Id,
+                    Descricao = dto.Categoria.Descricao,
+                    Pontuacao = dto.Categoria.Pontuacao,
+                    GerenciadaRh = dto.Categoria.GerenciadaRh
+                },
+                Usuario = new UsuarioSimpleResponse()
+                {
+                    Id = dto.Usuario.Id,
+                    Nome = dto.Usuario.Nome,
+                    CpfCnpj = dto.Usuario.CpfCnpj
+                }
+            };
+
+            return resp;
+
+        }
+
+        /// <summary>
+        /// Converte uma lista de objetos Dto em lista de objetos Response
+        /// </summary>
+        /// <param name="dto">Objeto Dto para conversão</param>
+        protected IEnumerable<ItemResponse> ConverterDtoEmResponse(IEnumerable<ItemDto> dto)
+        {
+            return dto.ToList().Select(x => ConverterDtoEmResponse(x));
+        }
+
+        #endregion
+
         #region Métodos/EndPoints Api
 
         /// <summary>
@@ -61,11 +113,13 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     {
         ///         "titulo": "Fralda Descartável",
         ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
-        ///         "tipoItem": "Necessidade",
+        ///         "tipoItem": "1",
         ///         "categoria": "Higiene e limpeza",
         ///         "anonimo": false
         ///      }
         ///      
+        ///     Para o campo tipoItem informe: 1=Necessidade ou 2=Doação
+        /// 
         ///     Resposta:
         ///     {
         ///         "sucesso": true,
@@ -76,9 +130,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     
         ///     Validações apresentadas em array, exemplo:
         ///     {
-        ///         "Titulo": [ "Critica1, "Critica2" ],
-        ///         "TipoItem": [ "Critica1, "Critica2" ],
-        ///         "Categoria": [ "Critica1, "Critica2" ]
+        ///         "sucesso": false,
+        ///         "Mensagem": [ 
+        ///             "Critica1, 
+        ///             "Critica2"
+        ///         ]
         ///     }
         /// 
         /// </remarks>
@@ -132,9 +188,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     
         ///     Validações apresentadas em array, exemplo:
         ///     {
-        ///         "Titulo": [ "Critica1, "Critica2" ],
-        ///         "TipoItem": [ "Critica1, "Critica2" ],
-        ///         "Categoria": [ "Critica1, "Critica2" ]
+        ///         "sucesso": false,
+        ///         "mensagem": [
+        ///             "Critica1,
+        ///             "Critica2"
+        ///         ]
         ///     }
         ///     
         /// </remarks>
@@ -205,56 +263,24 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     Resposta (array)
         ///     [
         ///         {
-        ///             "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
-        ///             "dataInclusao": "2018-10-08T11:35:41",
-        ///             "dataAlteracao": null,
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
         ///             "titulo": "string",
         ///             "descricao": "string",
-        ///             "tipoItem": {
-        ///                 "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
-        ///                 "dataInclusao": "2018-10-01T21:37:20",
-        ///                 "dataAlteracao": null,
-        ///                 "descricao": "string"
-        ///             },
+        ///             "tipoItem": "string",
         ///             "categoria": {
-        ///                 "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
-        ///                 "dataInclusao": "2018-09-30T19:04:21",
-        ///                 "dataAlteracao": null,
+        ///                 "id": "guid",
         ///                 "descricao": "string",
-        ///                 "pontuacao": 100,
-        ///                 "gerenciadaRh": false
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
         ///             },
         ///             "usuario": {
-        ///                 "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
-        ///                 "dataInclusao": "2018-10-08T12:18:36",
-        ///                 "dataAlteracao": null,
-        ///                 "cpfCnpj": "string",
+        ///                 "id": "guid",
         ///                 "nome": "string",
-        ///                 "usuarioLogin": {
-        ///                     "login": "string",
-        ///                     "senha": "*ENCRYPTED*"
-        ///                 },
-        ///                 "usuarioDados": {
-        ///                     "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
-        ///                     "dataInclusao": "2018-10-08T12:18:36",
-        ///                     "dataAlteracao": null,
-        ///                     "dataNascimento": "YYYY-MM-DD",
-        ///                     "logradouro": "string",
-        ///                     "numero": "string",
-        ///                     "complemento": "string",
-        ///                     "bairro": "string",
-        ///                     "cidade": "string",
-        ///                     "uf": "string",
-        ///                     "cep": "string",
-        ///                     "telefoneCelular": "string",
-        ///                     "telefoneFixo": "string",
-        ///                     "email": "string"
-        ///                 },
-        ///                 "usuarioPerfil": [
-        ///                 	"string"
-        ///                 ]
+        ///                 "cpfCnpj": "string"
         ///             },
-        ///             "anonimo": boolean
+        ///             "anonimo": bool
         ///         }
         ///     ]
         ///     
@@ -266,7 +292,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpGet]
         public IActionResult Listar()
         {
-            return Ok(_appService.ObterTodos());
+            return Ok(ConverterDtoEmResponse(_appService.ObterTodos()));
         }
 
         /// <summary>
@@ -279,59 +305,26 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     Nenhum parâmetro
         ///     
         ///     Resposta (array)
-        ///     Resposta (array)
         ///     [
         ///         {
-        ///             "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
-        ///             "dataInclusao": "2018-10-08T11:35:41",
-        ///             "dataAlteracao": null,
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
         ///             "titulo": "string",
         ///             "descricao": "string",
-        ///             "tipoItem": {
-        ///                 "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
-        ///                 "dataInclusao": "2018-10-01T21:37:20",
-        ///                 "dataAlteracao": null,
-        ///                 "descricao": "string"
-        ///             },
+        ///             "tipoItem": "string",
         ///             "categoria": {
-        ///                 "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
-        ///                 "dataInclusao": "2018-09-30T19:04:21",
-        ///                 "dataAlteracao": null,
+        ///                 "id": "guid",
         ///                 "descricao": "string",
-        ///                 "pontuacao": 100,
-        ///                 "gerenciadaRh": false
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
         ///             },
         ///             "usuario": {
-        ///                 "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
-        ///                 "dataInclusao": "2018-10-08T12:18:36",
-        ///                 "dataAlteracao": null,
-        ///                 "cpfCnpj": "string",
+        ///                 "id": "guid",
         ///                 "nome": "string",
-        ///                 "usuarioLogin": {
-        ///                     "login": "string",
-        ///                     "senha": "*ENCRYPTED*"
-        ///                 },
-        ///                 "usuarioDados": {
-        ///                     "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
-        ///                     "dataInclusao": "2018-10-08T12:18:36",
-        ///                     "dataAlteracao": null,
-        ///                     "dataNascimento": "YYYY-MM-DD",
-        ///                     "logradouro": "string",
-        ///                     "numero": "string",
-        ///                     "complemento": "string",
-        ///                     "bairro": "string",
-        ///                     "cidade": "string",
-        ///                     "uf": "string",
-        ///                     "cep": "string",
-        ///                     "telefoneCelular": "string",
-        ///                     "telefoneFixo": "string",
-        ///                     "email": "string"
-        ///                 },
-        ///                 "usuarioPerfil": [
-        ///                 	"string"
-        ///                 ]
+        ///                 "cpfCnpj": "string"
         ///             },
-        ///             "anonimo": boolean
+        ///             "anonimo": bool
         ///         }
         ///     ]
         ///     
@@ -343,7 +336,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpGet("listardoacoes")]
         public IActionResult ListarDoacoes()
         {
-            return Ok(_appService.ObterDoacoes());
+            return Ok(ConverterDtoEmResponse(_appService.ObterDoacoes()));
         }
 
         /// <summary>
@@ -356,59 +349,26 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     Nenhum parâmetro
         ///     
         ///     Resposta (array)
-        ///     Resposta (array)
         ///     [
         ///         {
-        ///             "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
-        ///             "dataInclusao": "2018-10-08T11:35:41",
-        ///             "dataAlteracao": null,
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
         ///             "titulo": "string",
         ///             "descricao": "string",
-        ///             "tipoItem": {
-        ///                 "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
-        ///                 "dataInclusao": "2018-10-01T21:37:20",
-        ///                 "dataAlteracao": null,
-        ///                 "descricao": "string"
-        ///             },
+        ///             "tipoItem": "string",
         ///             "categoria": {
-        ///                 "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
-        ///                 "dataInclusao": "2018-09-30T19:04:21",
-        ///                 "dataAlteracao": null,
+        ///                 "id": "guid",
         ///                 "descricao": "string",
-        ///                 "pontuacao": 100,
-        ///                 "gerenciadaRh": false
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
         ///             },
         ///             "usuario": {
-        ///                 "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
-        ///                 "dataInclusao": "2018-10-08T12:18:36",
-        ///                 "dataAlteracao": null,
-        ///                 "cpfCnpj": "string",
+        ///                 "id": "guid",
         ///                 "nome": "string",
-        ///                 "usuarioLogin": {
-        ///                     "login": "string",
-        ///                     "senha": "*ENCRYPTED*"
-        ///                 },
-        ///                 "usuarioDados": {
-        ///                     "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
-        ///                     "dataInclusao": "2018-10-08T12:18:36",
-        ///                     "dataAlteracao": null,
-        ///                     "dataNascimento": "YYYY-MM-DD",
-        ///                     "logradouro": "string",
-        ///                     "numero": "string",
-        ///                     "complemento": "string",
-        ///                     "bairro": "string",
-        ///                     "cidade": "string",
-        ///                     "uf": "string",
-        ///                     "cep": "string",
-        ///                     "telefoneCelular": "string",
-        ///                     "telefoneFixo": "string",
-        ///                     "email": "string"
-        ///                 },
-        ///                 "usuarioPerfil": [
-        ///                 	"string"
-        ///                 ]
+        ///                 "cpfCnpj": "string"
         ///             },
-        ///             "anonimo": boolean
+        ///             "anonimo": bool
         ///         }
         ///     ]
         ///     
@@ -420,7 +380,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpGet("listarnecessidades")]
         public IActionResult ListarNecessidades()
         {
-            return Ok(_appService.ObterNecessidades());
+            return Ok(ConverterDtoEmResponse(_appService.ObterNecessidades()));
         }
 
         /// <summary>

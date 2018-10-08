@@ -151,6 +151,18 @@
             Cria uma nova instância da API
             </summary>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ConverterDtoEmResponse(SantaHelena.ClickDoBem.Application.Dto.Cadastros.ItemDto)">
+            <summary>
+            Converte um objeto Dto em Response
+            </summary>
+            <param name="dto">Objeto Dto para conversão</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ConverterDtoEmResponse(System.Collections.Generic.IEnumerable{SantaHelena.ClickDoBem.Application.Dto.Cadastros.ItemDto})">
+            <summary>
+            Converte uma lista de objetos Dto em lista de objetos Response
+            </summary>
+            <param name="dto">Objeto Dto para conversão</param>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Inserir(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest)">
             <summary>
             Inserir um novo registro de item
@@ -162,11 +174,13 @@
                 {
                     "titulo": "Fralda Descartável",
                     "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
-                    "tipoItem": "Necessidade",
+                    "tipoItem": "1",
                     "categoria": "Higiene e limpeza",
                     "anonimo": false
                  }
                  
+                Para o campo tipoItem informe: 1=Necessidade ou 2=Doação
+            
                 Resposta:
                 {
                     "sucesso": true,
@@ -177,9 +191,11 @@
                 
                 Validações apresentadas em array, exemplo:
                 {
-                    "Titulo": [ "Critica1, "Critica2" ],
-                    "TipoItem": [ "Critica1, "Critica2" ],
-                    "Categoria": [ "Critica1, "Critica2" ]
+                    "sucesso": false,
+                    "Mensagem": [ 
+                        "Critica1, 
+                        "Critica2"
+                    ]
                 }
             
             </remarks>
@@ -212,9 +228,11 @@
                 
                 Validações apresentadas em array, exemplo:
                 {
-                    "Titulo": [ "Critica1, "Critica2" ],
-                    "TipoItem": [ "Critica1, "Critica2" ],
-                    "Categoria": [ "Critica1, "Critica2" ]
+                    "sucesso": false,
+                    "mensagem": [
+                        "Critica1,
+                        "Critica2"
+                    ]
                 }
                 
             </remarks>
@@ -258,56 +276,24 @@
                  Resposta (array)
                  [
                      {
-                         "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
-                         "dataInclusao": "2018-10-08T11:35:41",
-                         "dataAlteracao": null,
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
                          "titulo": "string",
                          "descricao": "string",
-                         "tipoItem": {
-                             "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
-                             "dataInclusao": "2018-10-01T21:37:20",
-                             "dataAlteracao": null,
-                             "descricao": "string"
-                         },
+                         "tipoItem": "string",
                          "categoria": {
-                             "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
-                             "dataInclusao": "2018-09-30T19:04:21",
-                             "dataAlteracao": null,
+                             "id": "guid",
                              "descricao": "string",
-                             "pontuacao": 100,
-                             "gerenciadaRh": false
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
                          },
                          "usuario": {
-                             "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
-                             "dataInclusao": "2018-10-08T12:18:36",
-                             "dataAlteracao": null,
-                             "cpfCnpj": "string",
+                             "id": "guid",
                              "nome": "string",
-                             "usuarioLogin": {
-                                 "login": "string",
-                                 "senha": "*ENCRYPTED*"
-                             },
-                             "usuarioDados": {
-                                 "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
-                                 "dataInclusao": "2018-10-08T12:18:36",
-                                 "dataAlteracao": null,
-                                 "dataNascimento": "YYYY-MM-DD",
-                                 "logradouro": "string",
-                                 "numero": "string",
-                                 "complemento": "string",
-                                 "bairro": "string",
-                                 "cidade": "string",
-                                 "uf": "string",
-                                 "cep": "string",
-                                 "telefoneCelular": "string",
-                                 "telefoneFixo": "string",
-                                 "email": "string"
-                             },
-                             "usuarioPerfil": [
-                             	"string"
-                             ]
+                             "cpfCnpj": "string"
                          },
-                         "anonimo": boolean
+                         "anonimo": bool
                      }
                  ]
                  
@@ -328,59 +314,26 @@
                  Nenhum parâmetro
                  
                  Resposta (array)
-                 Resposta (array)
                  [
                      {
-                         "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
-                         "dataInclusao": "2018-10-08T11:35:41",
-                         "dataAlteracao": null,
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
                          "titulo": "string",
                          "descricao": "string",
-                         "tipoItem": {
-                             "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
-                             "dataInclusao": "2018-10-01T21:37:20",
-                             "dataAlteracao": null,
-                             "descricao": "string"
-                         },
+                         "tipoItem": "string",
                          "categoria": {
-                             "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
-                             "dataInclusao": "2018-09-30T19:04:21",
-                             "dataAlteracao": null,
+                             "id": "guid",
                              "descricao": "string",
-                             "pontuacao": 100,
-                             "gerenciadaRh": false
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
                          },
                          "usuario": {
-                             "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
-                             "dataInclusao": "2018-10-08T12:18:36",
-                             "dataAlteracao": null,
-                             "cpfCnpj": "string",
+                             "id": "guid",
                              "nome": "string",
-                             "usuarioLogin": {
-                                 "login": "string",
-                                 "senha": "*ENCRYPTED*"
-                             },
-                             "usuarioDados": {
-                                 "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
-                                 "dataInclusao": "2018-10-08T12:18:36",
-                                 "dataAlteracao": null,
-                                 "dataNascimento": "YYYY-MM-DD",
-                                 "logradouro": "string",
-                                 "numero": "string",
-                                 "complemento": "string",
-                                 "bairro": "string",
-                                 "cidade": "string",
-                                 "uf": "string",
-                                 "cep": "string",
-                                 "telefoneCelular": "string",
-                                 "telefoneFixo": "string",
-                                 "email": "string"
-                             },
-                             "usuarioPerfil": [
-                             	"string"
-                             ]
+                             "cpfCnpj": "string"
                          },
-                         "anonimo": boolean
+                         "anonimo": bool
                      }
                  ]
                  
@@ -401,59 +354,26 @@
                  Nenhum parâmetro
                  
                  Resposta (array)
-                 Resposta (array)
                  [
                      {
-                         "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
-                         "dataInclusao": "2018-10-08T11:35:41",
-                         "dataAlteracao": null,
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
                          "titulo": "string",
                          "descricao": "string",
-                         "tipoItem": {
-                             "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
-                             "dataInclusao": "2018-10-01T21:37:20",
-                             "dataAlteracao": null,
-                             "descricao": "string"
-                         },
+                         "tipoItem": "string",
                          "categoria": {
-                             "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
-                             "dataInclusao": "2018-09-30T19:04:21",
-                             "dataAlteracao": null,
+                             "id": "guid",
                              "descricao": "string",
-                             "pontuacao": 100,
-                             "gerenciadaRh": false
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
                          },
                          "usuario": {
-                             "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
-                             "dataInclusao": "2018-10-08T12:18:36",
-                             "dataAlteracao": null,
-                             "cpfCnpj": "string",
+                             "id": "guid",
                              "nome": "string",
-                             "usuarioLogin": {
-                                 "login": "string",
-                                 "senha": "*ENCRYPTED*"
-                             },
-                             "usuarioDados": {
-                                 "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
-                                 "dataInclusao": "2018-10-08T12:18:36",
-                                 "dataAlteracao": null,
-                                 "dataNascimento": "YYYY-MM-DD",
-                                 "logradouro": "string",
-                                 "numero": "string",
-                                 "complemento": "string",
-                                 "bairro": "string",
-                                 "cidade": "string",
-                                 "uf": "string",
-                                 "cep": "string",
-                                 "telefoneCelular": "string",
-                                 "telefoneFixo": "string",
-                                 "email": "string"
-                             },
-                             "usuarioPerfil": [
-                             	"string"
-                             ]
+                             "cpfCnpj": "string"
                          },
-                         "anonimo": boolean
+                         "anonimo": bool
                      }
                  ]
                  
@@ -828,6 +748,81 @@
             Detalhes das linhas processadas
             </summary>
         </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse">
+            <summary>
+            Objeto de resposta de Api de Categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.Id">
+            <summary>
+            Id da categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.Descricao">
+            <summary>
+            Descriçaõ da categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.Pontuacao">
+            <summary>
+            Pontuação da categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.GerenciadaRh">
+            <summary>
+            Flag de indicação de geranciada pelo Rh
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse">
+            <summary>
+            Objeto de resposta de item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Id">
+            <summary>
+            Id do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.DataInclusao">
+            <summary>
+            Data de inclusão do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.DataAlteracao">
+            <summary>
+            Data da última alteraçaõ do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Titulo">
+            <summary>
+            Título do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Descricao">
+            <summary>
+            Descrição do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.TipoItem">
+            <summary>
+            Tipo do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Categoria">
+            <summary>
+            Categoria do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Usuario">
+            <summary>
+            Usuário que fez o registro do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Anonimo">
+            <summary>
+            Flag indicando que o usúario quer ser anônimo
+            </summary>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse">
             <summary>
             Modelo de resposta da linha de arquivo de upload de documento
@@ -891,6 +886,16 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Perfis">
             <summary>
             Lista de perfis
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse">
+            <summary>
+            Objeto de response de usuario, modelo simples
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse.Id">
+            <summary>
+            Id do usuário
             </summary>
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
