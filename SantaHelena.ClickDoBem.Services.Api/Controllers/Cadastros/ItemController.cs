@@ -257,8 +257,13 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <remarks>
         /// Contrato
         ///
-        ///     Requisição
-        ///     Nenhum parâmetro
+        ///     Requisição (parâmetro tipoItem = opcional)
+        ///     <?tipoItem=N>
+        ///     
+        ///     onde N pode ser:
+        ///     
+        ///         1 = Necessidade
+        ///         2 = Doação
         ///     
         ///     Resposta (array)
         ///     [
@@ -287,100 +292,33 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <returns>Lista dos registros cadastrados</returns>
         /// <response code="200">Retorna a lista de registros cadastrados</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet]
-        public IActionResult Listar()
+        public IActionResult Listar([FromQuery]int? tipoItem)
         {
-            return Ok(ConverterDtoEmResponse(_appService.ObterTodos()));
-        }
+            IEnumerable<ItemDto> registros = null;
+            if (tipoItem == null)
+            {
+                registros = _appService.ObterTodos();
+            }
+            else
+            {
+                switch (tipoItem.Value)
+                {
+                    case 1:
+                        registros = _appService.ObterNecessidades();
+                        break;
+                    case 2:
+                        registros = _appService.ObterDoacoes();
+                        break;
+                    default:
+                        return BadRequest(new { sucesso = "false", mensagem = "O tipo de item deve ser 1=Necessidade ou 2=Doação" });
+                }
+            }
 
-        /// <summary>
-        /// Listar todas as doações
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        ///
-        ///     Requisição
-        ///     Nenhum parâmetro
-        ///     
-        ///     Resposta (array)
-        ///     [
-        ///         {
-        ///             "id": "guid",
-        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
-        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
-        ///             "titulo": "string",
-        ///             "descricao": "string",
-        ///             "tipoItem": "string",
-        ///             "categoria": {
-        ///                 "id": "guid",
-        ///                 "descricao": "string",
-        ///                 "pontuacao": int,
-        ///                 "gerenciadaRh": bool
-        ///             },
-        ///             "usuario": {
-        ///                 "id": "guid",
-        ///                 "nome": "string",
-        ///                 "cpfCnpj": "string"
-        ///             },
-        ///             "anonimo": bool
-        ///         }
-        ///     ]
-        ///     
-        /// </remarks>
-        /// <returns>Lista dos registros de doações</returns>
-        /// <response code="200">Retorna a lista de registros de doações cadastrados</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpGet("listardoacoes")]
-        public IActionResult ListarDoacoes()
-        {
-            return Ok(ConverterDtoEmResponse(_appService.ObterDoacoes()));
-        }
-
-        /// <summary>
-        /// Listar todas as necessidades
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        ///
-        ///     Requisição
-        ///     Nenhum parâmetro
-        ///     
-        ///     Resposta (array)
-        ///     [
-        ///         {
-        ///             "id": "guid",
-        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
-        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
-        ///             "titulo": "string",
-        ///             "descricao": "string",
-        ///             "tipoItem": "string",
-        ///             "categoria": {
-        ///                 "id": "guid",
-        ///                 "descricao": "string",
-        ///                 "pontuacao": int,
-        ///                 "gerenciadaRh": bool
-        ///             },
-        ///             "usuario": {
-        ///                 "id": "guid",
-        ///                 "nome": "string",
-        ///                 "cpfCnpj": "string"
-        ///             },
-        ///             "anonimo": bool
-        ///         }
-        ///     ]
-        ///     
-        /// </remarks>
-        /// <returns>Lista dos registros de necessidades</returns>
-        /// <response code="200">Retorna a lista de registros de necessidades cadastrados</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpGet("listarnecessidades")]
-        public IActionResult ListarNecessidades()
-        {
-            return Ok(ConverterDtoEmResponse(_appService.ObterNecessidades()));
+            return Ok(ConverterDtoEmResponse(registros));
         }
 
         /// <summary>
@@ -394,12 +332,24 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     
         ///     Resposta
         ///         {
-        ///             "id": "2ef307a6-c4a5-11e8-8776-0242ac110006",
-        ///             "dataInclusao": "2018-09-30T19:04:19",
-        ///             "dataAlteracao": "0001-01-01T00:00:00",
-        ///             "descricao": "Higiene e limpeza",
-        ///             "pontuacao": 10,
-        ///             "gerenciadaRh": false
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": "string",
+        ///             "categoria": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string",
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "guid",
+        ///                 "nome": "string",
+        ///                 "cpfCnpj": "string"
+        ///             },
+        ///             "anonimo": bool
         ///         }
         ///     
         /// </remarks>

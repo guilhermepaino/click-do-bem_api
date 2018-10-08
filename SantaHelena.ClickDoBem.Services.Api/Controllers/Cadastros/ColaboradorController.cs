@@ -92,7 +92,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpPost("cadastrar")]
+        [HttpPost]
         [AllowAnonymous]
         public IActionResult Cadastrar([FromBody]ColaboradorInsertRequest req)
         {

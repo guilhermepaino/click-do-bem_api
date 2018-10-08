@@ -178,7 +178,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// <response code="200">Retorna a lista de registros cadastrados</response>
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpGet("listar")]
+        [HttpGet]
         public IActionResult Listar([FromQuery]string perfil)
         {
             IEnumerable<UsuarioDto> result;

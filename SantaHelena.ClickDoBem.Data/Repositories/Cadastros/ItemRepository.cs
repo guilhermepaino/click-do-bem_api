@@ -32,6 +32,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public override IEnumerable<Item> ObterTodos()
         {
+            //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT * FROM Item";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
@@ -50,12 +51,14 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public IEnumerable<Item> ObterNecessidades()
         {
+            //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Necessidade'";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
 
         public IEnumerable<Item> ObterDoacoes()
         {
+            //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Doação'";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
 
