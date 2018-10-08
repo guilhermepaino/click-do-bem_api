@@ -5,6 +5,7 @@ using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
+using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
 using System;
@@ -19,11 +20,19 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         #region Objetos/Variáveis Locais
 
+        protected enum TipoBuscaRegistros
+        {
+            Todos,
+            Necessidade,
+            Doacao
+        }
+
         protected readonly IUnitOfWork _uow;
         protected readonly IItemDomainService _dmn;
         protected readonly ICategoriaDomainService _categoriaDomain;
         protected readonly ITipoItemDomainService _tipoItemDomain;
         protected readonly IItemImagemDomainService _imagemDomain;
+        protected readonly IUsuarioDomainService _usuarioDomain;
         protected readonly IAppUser _usuario;
 
         #endregion
@@ -39,16 +48,41 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             IItemDomainService dmn,
             ICategoriaDomainService categoriaDomain,
             ITipoItemDomainService tipoItemDomain,
-            IAppUser usuario,
-            IItemImagemDomainService imagemDomain
+            IItemImagemDomainService imagemDomain,
+            IUsuarioDomainService usuarioDomain,
+            IAppUser usuario
         )
         {
             _uow = uow;
             _dmn = dmn;
             _categoriaDomain = categoriaDomain;
             _tipoItemDomain = tipoItemDomain;
-            _usuario = usuario;
             _imagemDomain = imagemDomain;
+            _usuarioDomain = usuarioDomain;
+            _usuario = usuario;
+        }
+
+        #endregion
+
+        #region Métodos Locais
+
+        protected void CarregaRelacoes(IEnumerable<Item> itens)
+        {
+
+            IEnumerable<Categoria> categorias = _categoriaDomain.ObterTodos();
+            IEnumerable<TipoItem> tiposItem = _tipoItemDomain.ObterTodos();
+            IEnumerable<Usuario> usuarios = _usuarioDomain.ObterPorLista(itens.Select(x => x.UsuarioId.Value).Distinct().ToList());
+
+
+            itens
+                .ToList()
+                .ForEach(i =>
+                {
+                    i.Categoria = categorias.Where(f => f.Id.Equals(i.CategoriaId)).FirstOrDefault();
+                    i.TipoItem = tiposItem.Where(f => f.Id.Equals(i.TipoItemId)).FirstOrDefault();
+                    i.Usuario = usuarios.Where(f => f.Id.Equals(i.UsuarioId)).FirstOrDefault();
+                });
+
         }
 
         #endregion
@@ -113,11 +147,47 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                         TelefoneCelular = item.Usuario.UsuarioDados.TelefoneCelular,
                         TelefoneFixo = item.Usuario.UsuarioDados.TelefoneFixo,
                         Email = item.Usuario.UsuarioDados.Email
-                    }
-
+                    },
+                    UsuarioPerfil = item.Usuario.Perfis.Select(x => x.Perfil).ToList()
                 }
 
             };
+        }
+
+        #endregion
+
+        #region Métodos Locais
+
+        protected IEnumerable<ItemDto> ObterRegistros(TipoBuscaRegistros tipo)
+        {
+
+            IEnumerable<Item> result = null;
+
+            switch (tipo)
+            {
+                case TipoBuscaRegistros.Necessidade:
+                    result = _dmn.ObterNecessidades();
+                    break;
+                case TipoBuscaRegistros.Doacao:
+                    result = _dmn.ObterDoacoes();
+                    break;
+                default:
+                    result = _dmn.ObterTodos();
+                    break;
+            }
+
+            CarregaRelacoes(result);
+
+            if (result == null)
+                return null;
+
+            return
+                (
+                    from r in result
+                    select ConverterEntidadeEmDto(r)
+
+                ).ToList();
+
         }
 
         #endregion
@@ -138,20 +208,28 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         }
 
         /// <summary>
-        /// Obter registros pelo perfil
+        /// Obter registros todos os registros
         /// </summary>
         public IEnumerable<ItemDto> ObterTodos()
         {
-            IEnumerable<Item> result = _dmn.ObterTodos();
-            if (result == null)
-                return null;
+            return ObterRegistros(TipoBuscaRegistros.Todos);
+        }
 
-            return
-                (
-                    from r in result
-                    select ConverterEntidadeEmDto(r)
+        /// <summary>
+        /// Listar os registros de doações
+        /// </summary>
+        public IEnumerable<ItemDto> ObterDoacoes()
+        {
+            return ObterRegistros(TipoBuscaRegistros.Doacao);
+        }
 
-                ).ToList();
+        /// <summary>
+        /// Listar os registros de necessidade
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ItemDto> ObterNecessidades()
+        {
+            return ObterRegistros(TipoBuscaRegistros.Necessidade);
         }
 
         /// <summary>

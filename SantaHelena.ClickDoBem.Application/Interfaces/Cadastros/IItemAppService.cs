@@ -11,5 +11,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         void Atualizar(ItemDto dto, out int statusCode, out object dados);
         void Excluir(Guid id, out int statusCode, out object dados);
         ItemDto ObterPorId(Guid id);
+        IEnumerable<ItemDto> ObterDoacoes();
+        IEnumerable<ItemDto> ObterNecessidades();
     }
 }

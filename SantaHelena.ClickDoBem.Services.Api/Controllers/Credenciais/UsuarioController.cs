@@ -110,10 +110,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
                 claimnsUsuario.Add(new Claim(ClaimTypes.Surname, usuarioDto.UsuarioLogin.Login));
                 claimnsUsuario.Add(new Claim(ClaimTypes.Name, usuarioDto.Nome));
 
-                foreach (UsuarioPerfilDto p in usuarioDto.UsuarioPerfil)
+                foreach (string p in usuarioDto.UsuarioPerfil)
                 {
-                    claimnsUsuario.Add(new Claim(ClaimTypes.Role, p.Perfil));
-                    perfis.Add(p.Perfil);
+                    claimnsUsuario.Add(new Claim(ClaimTypes.Role, p));
+                    perfis.Add(p);
                 }
 
                 JwtSecurityToken jwt = new JwtSecurityToken(

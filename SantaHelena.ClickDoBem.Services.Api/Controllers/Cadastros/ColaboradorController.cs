@@ -123,7 +123,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                     Login = req.Documento,
                     Senha = MD5.ByteArrayToString(MD5.HashMD5(req.Senha))
                 },
-                UsuarioPerfil = new List<UsuarioPerfilDto>() { new UsuarioPerfilDto("Colaborador") }
+                UsuarioPerfil = new List<string>() { "Colaborador" }
             };
 
             _appService.CadastrarColaborador(dto, out int statusCode, out object dados);

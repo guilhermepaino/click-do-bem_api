@@ -94,7 +94,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
         }
 
-        protected void ConverterDtoPerfilEmEntidadePerfil(Usuario usuario, IEnumerable<UsuarioPerfilDto> perfisDto)
+        protected void ConverterDtoPerfilEmEntidadePerfil(Usuario usuario, IEnumerable<string> perfisDto)
         {
 
             if (perfisDto.Count() > 0)
@@ -103,7 +103,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                     .ToList()
                     .ForEach(p =>
                     {
-                        usuario.Perfis.Add(new UsuarioPerfil() { UsuarioId = usuario.Id, Perfil = p.Perfil });
+                        usuario.Perfis.Add(new UsuarioPerfil() { UsuarioId = usuario.Id, Perfil = p });
                     });
 
             }
@@ -151,16 +151,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                 };
 
             if (usuario.Perfis != null)
-            {
-                uDto.UsuarioPerfil =
-                (
-                    from p in usuario.Perfis
-                    select new UsuarioPerfilDto()
-                    {
-                        Perfil = p.Perfil
-                    }
-                ).ToList();
-            }
+                uDto.UsuarioPerfil = usuario.Perfis.Select(x => x.Perfil).ToList();
 
             return uDto;
 

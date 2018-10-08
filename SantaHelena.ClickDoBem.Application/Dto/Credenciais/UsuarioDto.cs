@@ -24,7 +24,7 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Credenciais
 
         public UsuarioLoginDto UsuarioLogin { get; set; }
         public UsuarioDadosDto UsuarioDados { get; set; }
-        public IEnumerable<UsuarioPerfilDto> UsuarioPerfil { get; set; }
+        public IEnumerable<string> UsuarioPerfil { get; set; }
 
         #endregion
 

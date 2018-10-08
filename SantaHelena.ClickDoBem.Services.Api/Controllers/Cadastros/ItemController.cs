@@ -205,28 +205,56 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     Resposta (array)
         ///     [
         ///         {
-        ///             "id": "2ef307a6-c4a5-11e8-8776-0242ac110006",
-        ///             "dataInclusao": "2018-09-30T19:04:19",
-        ///             "dataAlteracao": "0001-01-01T00:00:00",
-        ///             "descricao": "Higiene e limpeza",
-        ///             "pontuacao": 10,
-        ///             "gerenciadaRh": false
-        ///         },
-        ///         {
-        ///             "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
-        ///             "dataInclusao": "2018-09-30T19:04:21",
-        ///             "dataAlteracao": "0001-01-01T00:00:00",
-        ///             "descricao": "Bebê",
-        ///             "pontuacao": 100,
-        ///             "gerenciadaRh": false
-        ///         },
-        ///         {
-        ///             "id": "38f292cc-c4a5-11e8-8776-0242ac110006",
-        ///             "dataInclusao": "2018-09-30T19:04:23",
-        ///             "dataAlteracao": "0001-01-01T00:00:00",
-        ///             "descricao": "Telefonia e acessórios",
-        ///             "pontuacao": 10,
-        ///             "gerenciadaRh": true
+        ///             "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
+        ///             "dataInclusao": "2018-10-08T11:35:41",
+        ///             "dataAlteracao": null,
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": {
+        ///                 "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
+        ///                 "dataInclusao": "2018-10-01T21:37:20",
+        ///                 "dataAlteracao": null,
+        ///                 "descricao": "string"
+        ///             },
+        ///             "categoria": {
+        ///                 "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
+        ///                 "dataInclusao": "2018-09-30T19:04:21",
+        ///                 "dataAlteracao": null,
+        ///                 "descricao": "string",
+        ///                 "pontuacao": 100,
+        ///                 "gerenciadaRh": false
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
+        ///                 "dataInclusao": "2018-10-08T12:18:36",
+        ///                 "dataAlteracao": null,
+        ///                 "cpfCnpj": "string",
+        ///                 "nome": "string",
+        ///                 "usuarioLogin": {
+        ///                     "login": "string",
+        ///                     "senha": "*ENCRYPTED*"
+        ///                 },
+        ///                 "usuarioDados": {
+        ///                     "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
+        ///                     "dataInclusao": "2018-10-08T12:18:36",
+        ///                     "dataAlteracao": null,
+        ///                     "dataNascimento": "YYYY-MM-DD",
+        ///                     "logradouro": "string",
+        ///                     "numero": "string",
+        ///                     "complemento": "string",
+        ///                     "bairro": "string",
+        ///                     "cidade": "string",
+        ///                     "uf": "string",
+        ///                     "cep": "string",
+        ///                     "telefoneCelular": "string",
+        ///                     "telefoneFixo": "string",
+        ///                     "email": "string"
+        ///                 },
+        ///                 "usuarioPerfil": [
+        ///                 	"string"
+        ///                 ]
+        ///             },
+        ///             "anonimo": boolean
         ///         }
         ///     ]
         ///     
@@ -239,6 +267,160 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public IActionResult Listar()
         {
             return Ok(_appService.ObterTodos());
+        }
+
+        /// <summary>
+        /// Listar todas as doações
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     Nenhum parâmetro
+        ///     
+        ///     Resposta (array)
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
+        ///             "dataInclusao": "2018-10-08T11:35:41",
+        ///             "dataAlteracao": null,
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": {
+        ///                 "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
+        ///                 "dataInclusao": "2018-10-01T21:37:20",
+        ///                 "dataAlteracao": null,
+        ///                 "descricao": "string"
+        ///             },
+        ///             "categoria": {
+        ///                 "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
+        ///                 "dataInclusao": "2018-09-30T19:04:21",
+        ///                 "dataAlteracao": null,
+        ///                 "descricao": "string",
+        ///                 "pontuacao": 100,
+        ///                 "gerenciadaRh": false
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
+        ///                 "dataInclusao": "2018-10-08T12:18:36",
+        ///                 "dataAlteracao": null,
+        ///                 "cpfCnpj": "string",
+        ///                 "nome": "string",
+        ///                 "usuarioLogin": {
+        ///                     "login": "string",
+        ///                     "senha": "*ENCRYPTED*"
+        ///                 },
+        ///                 "usuarioDados": {
+        ///                     "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
+        ///                     "dataInclusao": "2018-10-08T12:18:36",
+        ///                     "dataAlteracao": null,
+        ///                     "dataNascimento": "YYYY-MM-DD",
+        ///                     "logradouro": "string",
+        ///                     "numero": "string",
+        ///                     "complemento": "string",
+        ///                     "bairro": "string",
+        ///                     "cidade": "string",
+        ///                     "uf": "string",
+        ///                     "cep": "string",
+        ///                     "telefoneCelular": "string",
+        ///                     "telefoneFixo": "string",
+        ///                     "email": "string"
+        ///                 },
+        ///                 "usuarioPerfil": [
+        ///                 	"string"
+        ///                 ]
+        ///             },
+        ///             "anonimo": boolean
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros de doações</returns>
+        /// <response code="200">Retorna a lista de registros de doações cadastrados</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("listardoacoes")]
+        public IActionResult ListarDoacoes()
+        {
+            return Ok(_appService.ObterDoacoes());
+        }
+
+        /// <summary>
+        /// Listar todas as necessidades
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     Nenhum parâmetro
+        ///     
+        ///     Resposta (array)
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "c1971289-9c57-497d-8d16-1cda099dc83b",
+        ///             "dataInclusao": "2018-10-08T11:35:41",
+        ///             "dataAlteracao": null,
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": {
+        ///                 "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
+        ///                 "dataInclusao": "2018-10-01T21:37:20",
+        ///                 "dataAlteracao": null,
+        ///                 "descricao": "string"
+        ///             },
+        ///             "categoria": {
+        ///                 "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
+        ///                 "dataInclusao": "2018-09-30T19:04:21",
+        ///                 "dataAlteracao": null,
+        ///                 "descricao": "string",
+        ///                 "pontuacao": 100,
+        ///                 "gerenciadaRh": false
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "da07764a-fdd6-4a1d-a9e4-7709065c0645",
+        ///                 "dataInclusao": "2018-10-08T12:18:36",
+        ///                 "dataAlteracao": null,
+        ///                 "cpfCnpj": "string",
+        ///                 "nome": "string",
+        ///                 "usuarioLogin": {
+        ///                     "login": "string",
+        ///                     "senha": "*ENCRYPTED*"
+        ///                 },
+        ///                 "usuarioDados": {
+        ///                     "id": "d949b33c-bf75-4fa5-a2ca-6132224d7bb9",
+        ///                     "dataInclusao": "2018-10-08T12:18:36",
+        ///                     "dataAlteracao": null,
+        ///                     "dataNascimento": "YYYY-MM-DD",
+        ///                     "logradouro": "string",
+        ///                     "numero": "string",
+        ///                     "complemento": "string",
+        ///                     "bairro": "string",
+        ///                     "cidade": "string",
+        ///                     "uf": "string",
+        ///                     "cep": "string",
+        ///                     "telefoneCelular": "string",
+        ///                     "telefoneFixo": "string",
+        ///                     "email": "string"
+        ///                 },
+        ///                 "usuarioPerfil": [
+        ///                 	"string"
+        ///                 ]
+        ///             },
+        ///             "anonimo": boolean
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros de necessidades</returns>
+        /// <response code="200">Retorna a lista de registros de necessidades cadastrados</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("listarnecessidades")]
+        public IActionResult ListarNecessidades()
+        {
+            return Ok(_appService.ObterNecessidades());
         }
 
         /// <summary>

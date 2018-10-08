@@ -86,7 +86,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet("listar")]
-        public IActionResult Listar([FromQuery]string perfil)
+        public IActionResult Listar()
         {
             return Ok(_appService.ObterTodos());
         }

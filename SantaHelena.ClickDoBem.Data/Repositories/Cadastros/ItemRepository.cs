@@ -20,6 +20,10 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
         /// <param name="ctx">Contexto de banco de dados</param>
         public ItemRepository(CdbContext ctx) : base(ctx) { }
 
+        #endregion
+
+        #region Métodos Públicos
+
         public override Item ObterPorId(Guid id)
         {
             string sql = @"SELECT * FROM Item WHERE Id = @pid";
@@ -44,8 +48,21 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             return _ctx.Database.GetDbConnection().Query<Item>(sql, new { ptitulo = $"%{titulo}%" }).ToList();
         }
 
+        public IEnumerable<Item> ObterNecessidades()
+        {
+            string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Necessidade'";
+            return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
+        }
+
+        public IEnumerable<Item> ObterDoacoes()
+        {
+            string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Doação'";
+            return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
+
+        }
 
         #endregion
+
 
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 
 namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
 {
@@ -137,11 +138,32 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         }
 
         /// <summary>
+        /// Buscar usuários filtrando pela lista de ids
+        /// </summary>
+        /// <param name="ids">Lista de ids para filtro</param>
+        public IEnumerable<Usuario> ObterPorLista(List<Guid> ids)
+        {
+
+            if (ids == null || ids.Count().Equals(0))
+                return null;
+
+            StringBuilder sbFiltro = new StringBuilder();
+            ids.ForEach(id => sbFiltro.Append($"'{id.ToString()}',"));
+
+            string sql = $@"SELECT * FROM Usuario u WHERE u.Id IN ({sbFiltro.ToString().Substring(0, (sbFiltro.Length - 1))})";
+            IEnumerable<Usuario> usuarios = _ctx.Database.GetDbConnection().Query<Usuario>(sql).ToList();
+            CarregarRelacoesUsuario(usuarios);
+            return usuarios;
+
+
+        }
+
+        /// <summary>
         /// Verifica a situação do documento
         /// </summary>
         /// <param name="documento">Documento a ser verificado</param>
         /// <param name="situacao">Varíavel de saída de situação do documento</param>
-        /// <param name="cadastrado">Varíavel de saída de flag de situaçaõ de cadastro completo</param>
+        /// <param name="cadastrado">Varíavel de saída de flag de situação de cadastro completo</param>
         public void VerificarSituacaoDocumento(string documento, out string situacao, out bool cadastrado)
         {
             situacao = "inexistente";
