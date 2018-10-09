@@ -335,7 +335,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                                 LinhaArquivoDocumentoDto dadosLinha = new LinhaArquivoDocumentoDto
                                 {
                                     Linha = numLinha,
-                                    Conteudo = linha
+                                    Conteudo = linha,
+                                    Detalhe = string.Empty
                                 };
 
                                 string[] campos = linha.Split(',');
