@@ -14,13 +14,15 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         /// <summary>
         /// Título do item (obrigatório)
         /// </summary>
-        [Required(ErrorMessage = "A descrição deve ser informada.")]
-        [MaxLength(50, ErrorMessage = "A título deve ter no máximo 50 caracteres.")]
+        [Required(ErrorMessage = "O título deve ser informada.")]
+        [MaxLength(50, ErrorMessage = "O título deve ter no máximo 50 caracteres.")]
         public string Titulo { get; set; }
 
         /// <summary>
         /// Descrição do item (obrigatório)
         /// </summary>
+        [Required(ErrorMessage = "A descrição deve ser informada.")]
+        [MaxLength(50, ErrorMessage = "A descrição deve ter no máximo 1000 caracteres.")]
         public string Descricao { get; set; }
 
         /// <summary>
