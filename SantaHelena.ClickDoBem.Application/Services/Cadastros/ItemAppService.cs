@@ -2,7 +2,6 @@
 using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
-using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
@@ -66,6 +65,14 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         #region Métodos Locais
 
+        protected void CarregaRelacoes(Item item)
+        {
+            List<Item> lista = new List<Item>();
+            lista.Add(item);
+            CarregaRelacoes(lista);
+            item = lista.FirstOrDefault();
+        }
+
         protected void CarregaRelacoes(IEnumerable<Item> itens)
         {
 
@@ -83,6 +90,37 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     i.Usuario = usuarios.Where(f => f.Id.Equals(i.UsuarioId)).FirstOrDefault();
                 });
 
+        }
+
+        /// <summary>
+        /// Remover os itens ocultos (Gerenciada RH e Anônimo)
+        /// </summary>
+        /// <param name="itensDto">Item Dto</param>
+        protected ItemDto RemoverOcultos(ItemDto itemDto)
+        {
+            IList<ItemDto> lista = new List<ItemDto>();
+            lista.Add(itemDto);
+            lista = RemoverOcultos(lista);
+            return lista.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Remover os itens ocultos (Gerenciada RH e Anônimo)
+        /// </summary>
+        /// <param name="itensDto">Lista de Dto de Item</param>
+        protected IList<ItemDto> RemoverOcultos(IList<ItemDto> itensDto)
+        {
+
+            Guid usuarioId = _usuario.Id;
+
+            IList<ItemDto> result = new List<ItemDto>();
+            foreach (ItemDto item in itensDto)
+            {
+                if ((!(item.Categoria.GerenciadaRh || item.Anonimo) || item.Usuario.Id.Equals(usuarioId)) || _usuario.Perfis.Contains("Admin"))
+                    result.Add(item);
+            }
+
+            return result;
         }
 
         #endregion
@@ -176,17 +214,21 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     break;
             }
 
-            CarregaRelacoes(result);
-
             if (result == null)
                 return null;
 
-            return
-                (
-                    from r in result
-                    select ConverterEntidadeEmDto(r)
+            CarregaRelacoes(result);
+            IList<ItemDto> resultDto =
+            (
+                from r in result
+                select ConverterEntidadeEmDto(r)
 
-                ).ToList();
+            ).ToList();
+
+            resultDto = RemoverOcultos(resultDto);
+
+            return resultDto;
+
 
         }
 
@@ -203,7 +245,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             Item item = _dmn.ObterPorId(id);
             if (item == null)
                 return null;
-            return ConverterEntidadeEmDto(item);
+
+            CarregaRelacoes(item);
+            ItemDto resultDto = ConverterEntidadeEmDto(item);
+            resultDto = RemoverOcultos(resultDto);
+
+            return resultDto;
 
         }
 

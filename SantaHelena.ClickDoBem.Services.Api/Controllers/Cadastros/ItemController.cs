@@ -62,6 +62,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         protected ItemResponse ConverterDtoEmResponse(ItemDto dto)
         {
 
+            if (dto == null)
+                return null;
+
             ItemResponse resp = new ItemResponse()
             {
                 Id = dto.Id,
@@ -360,7 +363,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpGet("{id:guid}")]
         public IActionResult BuscarPorId(Guid id)
         {
-            return Ok(_appService.ObterPorId(id));
+            return Ok(ConverterDtoEmResponse(_appService.ObterPorId(id)));
         }
 
         #endregion
