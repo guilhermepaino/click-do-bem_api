@@ -309,6 +309,45 @@
              <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest)">
+             <summary>
+             Listar todos os registros que atendam os critérios de pesquisa
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 {
+                     "DataInicial": "YYYY-MM-DD",
+                     "DataFinal": "YYYY-MM-DD",
+                     "TipoItemId": "Guid",
+                     "CategoriaId": "Guid"
+                 }
+                 
+                 Resposta (array)
+                 [
+                     {
+                     	"tipoItem": "string",
+                     	"dataInclusao": "2018-08-21T17:24:38",
+                     	"dataEfetivacao": "2018-10-09T11:04:00",
+                     	"doador": "string",
+                     	"receptor": "string",
+                     	"titulo": "string",
+                     	"descricao": "string",
+                     	"categoria": "string",
+                     	"peso": int,
+                     	"gerenciadaRh": boolean
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+             <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.BuscarPorId(System.Guid)">
              <summary>
              Buscar registro de item pelo Id (guid)
@@ -344,6 +383,48 @@
              </remarks>
              <returns>Dados do registro localizado ou null se não encontrado</returns>
              <response code="200">Sucesso na operação de busca</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController">
+            <summary>
+            API de TipoItem
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.ITipoItemAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController.Listar">
+             <summary>
+             Listar todos os registros
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 Nenhum parâmetro
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
+                         "dataInclusao": "2018-09-30T19:04:19",
+                         "dataAlteracao": null,
+                         "descricao": "Necessidade",
+                     },
+                     {
+                         "id": "0acd2bb5-c5a5-11e8-ab80-0242ac110006",
+                         "dataInclusao": "2018-09-30T19:04:21",
+                         "dataAlteracao": null,
+                         "descricao": "Doação"
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros cadastrados</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
              <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
@@ -639,6 +720,31 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest.Id">
             <summary>
             Id do registro
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest">
+            <summary>
+            Request de Filtro de Itens
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.DataInicial">
+            <summary>
+            Data inicial do período
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.DataFinal">
+            <summary>
+            Data final do período
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.TipoItemId">
+            <summary>
+            Id do tipo do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.CategoriaId">
+            <summary>
+            Id da categoria
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest">
