@@ -359,15 +359,18 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                                     {
 
                                         if (!Check.VerificarDocumento(documento))
+                                        {
+                                            dadosLinha.Acao = AcaoDocumento.DocumentoOuSituacaoInvalida;
                                             dadosLinha.Detalhe = "Documento inválido";
+                                        }
 
                                         if (!(situacao.Equals("S") || situacao.Equals("N")))
+                                        {
                                             dadosLinha.Detalhe = $"{(dadosLinha.Detalhe.Length.Equals(0) ? string.Empty : $"{dadosLinha.Detalhe} / ")}Situação inválida";
+                                        }
 
                                         if (!string.IsNullOrEmpty(dadosLinha.Detalhe))
                                         {
-                                            dadosLinha.Acao = AcaoDocumento.DocumentoInvalido;
-                                            dadosLinha.Detalhe = EnumHelper.GetEnumDescription(AcaoDocumento.DocumentoInvalido);
                                             dadosLinha.Sucesso = false;
                                             documentoValido = false;
                                         }

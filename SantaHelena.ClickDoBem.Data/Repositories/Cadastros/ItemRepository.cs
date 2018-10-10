@@ -93,8 +93,8 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             if (dataInicial != null && dataFinal != null)
             {
                 sql = sql
-                    .Replace("_DATAINICIAL_", $"'{dataInicial.Value.ToString("yyyy-MM-dd")}'")
-                    .Replace("_DATAFINAL_", $"'{dataFinal.Value.ToString("yyyy-MM-dd")}'");
+                    .Replace("_DATAINICIAL_", $"'{dataInicial.Value.ToString("yyyy-MM-dd")} 00:00:00'")
+                    .Replace("_DATAFINAL_", $"'{dataFinal.Value.ToString("yyyy-MM-dd")} 23:59:59'");
             }
             else
                 sql = sql
@@ -106,7 +106,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             else
                 sql = sql.Replace("_TIPOITEMID_", "ti.Id");
 
-            if (tipoItemId != null)
+            if (categoriaId != null)
                 sql = sql.Replace("_CATEGORIAID_", $"'{categoriaId.ToString()}'");
             else
                 sql = sql.Replace("_CATEGORIAID_", "c.Id");

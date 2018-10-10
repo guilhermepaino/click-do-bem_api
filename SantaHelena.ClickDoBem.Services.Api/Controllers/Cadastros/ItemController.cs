@@ -334,10 +334,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///
         ///     Requisição
         ///     {
-        ///         "DataInicial": "YYYY-MM-DD",
-        ///         "DataFinal": "YYYY-MM-DD",
-        ///         "TipoItemId": "Guid",
-        ///         "CategoriaId": "Guid"
+        ///         "dataInicial": "YYYY-MM-DD",
+        ///         "dataFinal": "YYYY-MM-DD",
+        ///         "tipoItemId": "Guid",
+        ///         "categoriaId": "Guid"
         ///     }
         ///     
         ///     Resposta (array)
@@ -367,6 +367,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [Authorize(Roles = "Admin")]
         public IActionResult Listar([FromBody] PesquisaItemRequest request)
         {
+            if (request == null)
+                return BadRequest("Nenhuma informação de requisição");
             return Ok(_appService.Pesquisar(request.DataInicial, request.DataFinal, request.TipoItemId, request.CategoriaId));
         }
 

@@ -318,10 +318,10 @@
             
                  Requisição
                  {
-                     "DataInicial": "YYYY-MM-DD",
-                     "DataFinal": "YYYY-MM-DD",
-                     "TipoItemId": "Guid",
-                     "CategoriaId": "Guid"
+                     "dataInicial": "YYYY-MM-DD",
+                     "dataFinal": "YYYY-MM-DD",
+                     "tipoItemId": "Guid",
+                     "categoriaId": "Guid"
                  }
                  
                  Resposta (array)
