@@ -77,7 +77,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
 
             // Números e letras não podem ser sequenciais.
             if (PossuiSequencia(senha))
-                return new ValidationResult("A senha não pode conter letras e/ou números sequenciais");
+                return new ValidationResult("A senha não pode conter letras ou números na sequência (ex: AB, BC, 12, 23, etc).");
 
             return ValidationResult.Success;
 

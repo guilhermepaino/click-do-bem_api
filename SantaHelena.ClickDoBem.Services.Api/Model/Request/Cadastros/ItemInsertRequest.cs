@@ -14,7 +14,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         /// <summary>
         /// Título do item (obrigatório)
         /// </summary>
-        [Required(ErrorMessage = "O título deve ser informada.")]
+        [Required(ErrorMessage = "O título deve ser informado.")]
         [MaxLength(50, ErrorMessage = "O título deve ter no máximo 50 caracteres.")]
         public string Titulo { get; set; }
 
