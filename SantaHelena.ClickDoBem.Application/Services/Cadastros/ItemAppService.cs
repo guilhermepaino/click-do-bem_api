@@ -3,6 +3,7 @@ using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
+using SantaHelena.ClickDoBem.Domain.Core.ReportDto;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
@@ -448,6 +449,18 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             }
 
 
+        }
+
+        /// <summary>
+        /// Executar a pesquisa de itens com base nos critérios
+        /// </summary>
+        /// <param name="dataInicial">Data inicial do período</param>
+        /// <param name="dataFinal">Data final do período</param>
+        /// <param name="tipoItemId">Id do tipo de item</param>
+        /// <param name="categoriaId">Id da categoria</param>
+        public IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId)
+        {
+            return _dmn.Pesquisar(dataInicial, dataFinal, tipoItemId, categoriaId);            
         }
 
         #endregion

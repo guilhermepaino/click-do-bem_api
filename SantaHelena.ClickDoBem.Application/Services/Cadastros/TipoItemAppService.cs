@@ -8,13 +8,13 @@ using System.Linq;
 
 namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 {
-    public class CategoriaAppService : AppServiceBase<CategoriaDto, Categoria>, ICategoriaAppService
+    public class TipoItemAppService : AppServiceBase<TipoItemDto, TipoItem>, ITipoItemAppService
     {
 
         #region Objetos/Variáveis Locais
 
         protected readonly IUnitOfWork _uow;
-        protected readonly ICategoriaDomainService _dmn;
+        protected readonly ITipoItemDomainService _dmn;
 
         #endregion
 
@@ -23,10 +23,10 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <summary>
         /// Cria uma nova instância do ApplicationService
         /// </summary>
-        public CategoriaAppService
+        public TipoItemAppService
         (
             IUnitOfWork uow,
-            ICategoriaDomainService dmn
+            ITipoItemDomainService dmn
         )
         {
             _uow = uow;
@@ -40,17 +40,15 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <summary>
         /// Converter entidade em Dto
         /// </summary>
-        /// <param name="categoria">Objeto entidade</param>
-        protected override CategoriaDto ConverterEntidadeEmDto(Categoria categoria)
+        /// <param name="TipoItem">Objeto entidade</param>
+        protected override TipoItemDto ConverterEntidadeEmDto(TipoItem tipoItem)
         {
-            return new CategoriaDto()
+            return new TipoItemDto()
             {
-                Id = categoria.Id,
-                DataInclusao = categoria.DataInclusao,
-                DataAlteracao = categoria.DataAlteracao,
-                Descricao = categoria.Descricao,
-                Pontuacao = categoria.Pontuacao,
-                GerenciadaRh = categoria.GerenciadaRh
+                Id = tipoItem.Id,
+                DataInclusao = tipoItem.DataInclusao,
+                DataAlteracao = tipoItem.DataAlteracao,
+                Descricao = tipoItem.Descricao
             };
         }
 
@@ -61,9 +59,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <summary>
         /// Obter todos os registros
         /// </summary>
-        public IEnumerable<CategoriaDto> ObterTodos()
+        public IEnumerable<TipoItemDto> ObterTodos()
         {
-            IEnumerable<Categoria> result = _dmn.ObterTodos();
+            IEnumerable<TipoItem> result = _dmn.ObterTodos();
             if (result == null)
                 return null;
 

@@ -60,6 +60,7 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             services.AddScoped<ICategoriaAppService, CategoriaAppService>();
             services.AddScoped<IItemAppService, ItemAppService>();
+            services.AddScoped<ITipoItemAppService, TipoItemAppService>();
 
             // Infra.CrossCutting.Common
             services.AddScoped<IAppUser, AppUser>();

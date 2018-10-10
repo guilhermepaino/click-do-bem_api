@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
@@ -322,6 +324,50 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             }
 
             return Ok(ConverterDtoEmResponse(registros));
+        }
+
+        /// <summary>
+        /// Listar todos os registros que atendam os critérios de pesquisa
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     {
+        ///         "DataInicial": "YYYY-MM-DD",
+        ///         "DataFinal": "YYYY-MM-DD",
+        ///         "TipoItemId": "Guid",
+        ///         "CategoriaId": "Guid"
+        ///     }
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///         	"tipoItem": "string",
+        ///         	"dataInclusao": "2018-08-21T17:24:38",
+        ///         	"dataEfetivacao": "2018-10-09T11:04:00",
+        ///         	"doador": "string",
+        ///         	"receptor": "string",
+        ///         	"titulo": "string",
+        ///         	"descricao": "string",
+        ///         	"categoria": "string",
+        ///         	"peso": int,
+        ///         	"gerenciadaRh": boolean
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+        /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPost("pesquisar")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Listar([FromBody] PesquisaItemRequest request)
+        {
+            return Ok(_appService.Pesquisar(request.DataInicial, request.DataFinal, request.TipoItemId, request.CategoriaId));
         }
 
         /// <summary>

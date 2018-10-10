@@ -1,6 +1,7 @@
 ﻿using SantaHelena.ClickDoBem.Domain.Core;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
+using System;
 using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros

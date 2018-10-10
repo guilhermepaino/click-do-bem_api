@@ -103,7 +103,12 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Credenciais
         public Usuario ObterPorLogin(string login, string senha)
         {
 
-            string sql = $@"SELECT u.* FROM Usuario u INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId WHERE us.Login = @pusuario AND us.Senha = @psenha";
+            string sql = $@"SELECT u.*
+                            FROM Usuario u
+                            INNER JOIN UsuarioLogin us ON u.Id = us.UsuarioId
+                            LEFT JOIN DocumentoHabilitado dh ON u.CpfCnpj = dh.CpfCnpj
+                            WHERE us.Login = @pusuario AND us.Senha = @psenha 
+                            AND (IFNULL(dh.Ativo, 0) = 1 OR EXISTS (SELECT 1 FROM UsuarioPerfil up WHERE u.Id = up.UsuarioId AND up.Perfil = 'Admin'))";
             Usuario usuario = _ctx.Database.GetDbConnection().Query<Usuario>(sql,  new { pusuario = login, psenha = senha }).FirstOrDefault();
             CarregarRelacoesUsuario(usuario);
             return usuario;
