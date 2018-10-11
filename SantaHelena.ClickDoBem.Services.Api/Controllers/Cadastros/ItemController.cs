@@ -11,6 +11,7 @@ using SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
@@ -31,6 +32,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         protected readonly IItemAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
         protected readonly IAppUser _appUser;
+        protected readonly string _caminho;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -51,6 +53,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
             _appUser = appUser;
+            _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("\\images")).SingleOrDefault();
         }
 
         #endregion
@@ -412,6 +415,36 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public IActionResult BuscarPorId(Guid id)
         {
             return Ok(ConverterDtoEmResponse(_appService.ObterPorId(id)));
+        }
+
+        /// <summary>
+        /// Carregar uma imagem de um item
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     {
+        ///         "itemId": "guid",
+        ///         "NomeImagem": "string",
+        ///         "ImagemBase64": "string-base64"
+        ///     }
+        ///     
+        ///     Respostas
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "mensagem de sucesso ou crítica",
+        ///         "arquivo": "string"
+        ///     }
+        ///     
+        ///     o campo 'arquivo' somente é retornado em caso de sucesso na operação
+        /// 
+        /// </remarks>
+        [HttpPost("imagem/upload")]
+        public IActionResult CarregarImagem([FromBody]ItemImagemRequest request)
+        {
+            _appService.CarregarImagem(request.ItemId, request.NomeImagem, request.ImagemBase64, _caminho, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
         }
 
         #endregion

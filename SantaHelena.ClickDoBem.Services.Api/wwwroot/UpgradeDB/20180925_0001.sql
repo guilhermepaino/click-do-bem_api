@@ -164,6 +164,16 @@ INSERT INTO UsuarioPerfil (`UsuarioId`, `Perfil`) VALUES ('f763727d-c426-11e8-a7
 INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('2ef307a6-c4a5-11e8-8776-0242ac110006', NOW(), 'Higiene e limpeza', 10, 0);
 INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('340c1a33-c4a5-11e8-8776-0242ac110006', NOW(), 'Bebê', 100, 0);
 INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('38f292cc-c4a5-11e8-8776-0242ac110006', NOW(), 'Telefonia e acessórios', 10, 1);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f027f-cd63-11e8-8b62-0242ac110006', NOW(), 'Telefonia e Computador', 100, 1);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02c2-cd63-11e8-8b62-0242ac110006', NOW(), 'Cuidados Pessoais', 10, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02c8-cd63-11e8-8b62-0242ac110006', NOW(), 'Decoração (Enfeitos /  utensilio menores)', 10, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02cc-cd63-11e8-8b62-0242ac110006', NOW(), 'Brinquedos e bebes', 70, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02d1-cd63-11e8-8b62-0242ac110006', NOW(), 'Livros, Revistas, CDS e DVDs', 20, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02d6-cd63-11e8-8b62-0242ac110006', NOW(), 'Conhecimento e Treinamento', 100, 1);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02db-cd63-11e8-8b62-0242ac110006', NOW(), 'Roupas, Sapatos e Vestuários em Geral', 70, 0);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02e0-cd63-11e8-8b62-0242ac110006', NOW(), 'Eletrodomesticos e Eletroportateis', 100, 1);
+INSERT INTO Categoria (Id, DataInclusao, Descricao, Pontuacao, GerenciadaRh) VALUES ('e33f02e5-cd63-11e8-8b62-0242ac110006', NOW(), 'Saude e Bem Estar', 80, 1);
+
 
 -- Tabela de TipoItem
 INSERT INTO TipoItem (`Id`, `DataInclusao`, `Descricao`) VALUES ('0acd2b81-c5a5-11e8-ab80-0242ac110006', NOW(), 'Necessidade');

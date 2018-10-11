@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 {
@@ -460,7 +461,56 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <param name="categoriaId">Id da categoria</param>
         public IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId)
         {
-            return _dmn.Pesquisar(dataInicial, dataFinal, tipoItemId, categoriaId);            
+            return _dmn.Pesquisar(dataInicial, dataFinal, tipoItemId, categoriaId);
+        }
+
+        /// <summary>
+        /// Carregar uma imagem para um produto
+        /// </summary>
+        /// <param name="itemId">Id do item</param>
+        /// <param name="nomeImagem">Nome (título) da imagem</param>
+        /// <param name="imagemBase64">Hash Base 64 da imagem</param>
+        /// <param name="caminho">Caminho onde o arquivo será gravado</param>
+        /// <param name="statusCode">Variável de saída do StatusCode</param>
+        /// <param name="dadosRetorno">Variável de retorno da response</param>
+        public void CarregarImagem(Guid itemId, string nomeImagem, string imagemBase64, string caminho, out int statusCode, out object dadosRetorno)
+        {
+
+            StringBuilder criticas = new StringBuilder();
+
+            if (string.IsNullOrWhiteSpace(nomeImagem))
+                criticas.Append("Nome da imagem não informado|");
+
+            if (string.IsNullOrWhiteSpace(imagemBase64))
+                criticas.Append("Expressao Base64 da imagem não informada|");
+            else
+            {
+                imagemBase64 = imagemBase64.Trim();
+                if (!((imagemBase64.Length % 4 == 0) && Regex.IsMatch(imagemBase64, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None)))
+                    criticas.Append("Base64 inválida|");
+            }
+
+            Item item = _dmn.ObterPorId(itemId);
+            if (item == null)
+                criticas.Append($"Item \"{itemId}\" não necontrado|");
+
+            if (criticas.Length > 0)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    sucesso = false,
+                    mensagem = criticas.ToString().Substring(0, (criticas.Length - 1))
+                };
+            }
+            else
+            {
+                bool sucesso = _dmn.CarregarImagem(item, nomeImagem, imagemBase64, caminho, out dadosRetorno);
+                statusCode = (sucesso ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest);
+
+            }
+
+
         }
 
         #endregion
