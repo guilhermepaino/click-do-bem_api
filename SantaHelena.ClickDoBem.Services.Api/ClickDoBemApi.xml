@@ -386,6 +386,31 @@
              <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.CarregarImagem(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest)">
+            <summary>
+            Carregar uma imagem de um item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "itemId": "guid",
+                    "NomeImagem": "string",
+                    "ImagemBase64": "string-base64"
+                }
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica",
+                    "arquivo": "string"
+                }
+                
+                o campo 'arquivo' somente é retornado em caso de sucesso na operação
+            
+            </remarks>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController">
             <summary>
             API de TipoItem
@@ -682,6 +707,28 @@
             Senha do usuário (puro texto)
             </summary>
         </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest">
+            <summary>
+            Request de Upload de Imagens
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest.ItemId">
+            <summary>
+            Id do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest.NomeImagem">
+            <summary>
+            Nome (Título da Imagem)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest.ImagemBase64">
+            <summary>
+            Expressão string do arquivo (Base64)
+            </summary>
+            <seealso cref="!:https://pt.wikipedia.org/wiki/Base64"/>
+            <seealso cref="!:https://www.4devs.com.br/codificar_decodificar_base64"/>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest">
             <summary>
             Request de INSERT de item
@@ -817,6 +864,21 @@
             Flag de indicação de geranciada pelo Rh
             </summary>
         </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse">
+            <summary>
+            Objeto de resposta de imagem de item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse.NomeImagem">
+            <summary>
+            Nome (título da imagem)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse.Arquivo">
+            <summary>
+            Arquivo da imagem (caminho relativo)
+            </summary>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse">
             <summary>
             Objeto de resposta de item
@@ -865,6 +927,11 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Anonimo">
             <summary>
             Flag indicando que o usúario quer ser anônimo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Imagens">
+            <summary>
+            Lista das imagens do item
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse">
