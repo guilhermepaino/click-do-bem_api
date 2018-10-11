@@ -1,6 +1,7 @@
 ﻿using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Application.Dto.Cadastros
 {
@@ -23,6 +24,8 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Cadastros
         public UsuarioDto Usuario { get; set; }
 
         public bool Anonimo { get; set; }
+
+        public IEnumerable<ItemImagemDto> Imagens { get; set; }
 
     }
 }

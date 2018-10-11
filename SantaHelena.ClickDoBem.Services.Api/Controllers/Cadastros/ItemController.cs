@@ -91,7 +91,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                     Id = dto.Usuario.Id,
                     Nome = dto.Usuario.Nome,
                     CpfCnpj = dto.Usuario.CpfCnpj
-                }
+                },
+                Imagens = dto.Imagens.Select(i => new ItemImagenResponse() { NomeImagem = i.NomeOriginal, Arquivo = i.Caminho })
             };
 
             return resp;
@@ -255,7 +256,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpDelete("{id:guid}")]
         public IActionResult Excluir(Guid id)
         {
-            _appService.Excluir(id, out int statusCode, out object dados);
+            _appService.Excluir(id, _hostingEnvironment.WebRootPath, out int statusCode, out object dados);
             return StatusCode(statusCode, dados);
         }
 

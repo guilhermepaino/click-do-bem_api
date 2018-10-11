@@ -7,10 +7,15 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Cadastros
     {
 
         public Guid Id { get; set; }
+
         public DateTime DataInclusao { get; set; }
 
         public DateTime? DataAlteracao { get; set; }
+
+        public Guid ItemId { get; set; }
+
         public string NomeOriginal { get; set; }
+
         public string Caminho { get; set; }
 
     }

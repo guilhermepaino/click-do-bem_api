@@ -8,5 +8,6 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
     public interface IItemImagemRepository : IMySqlRepositoryBase<ItemImagem>
     {
         IEnumerable<ItemImagem> ObterPorItem(Guid itemId);
+        IEnumerable<ItemImagem> ObterPorLista(List<Guid> listaIds);
     }
 }

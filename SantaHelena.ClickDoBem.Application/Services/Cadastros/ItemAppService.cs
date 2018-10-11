@@ -10,9 +10,12 @@ using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Credenciais;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 {
@@ -81,6 +84,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             IEnumerable<Categoria> categorias = _categoriaDomain.ObterTodos();
             IEnumerable<TipoItem> tiposItem = _tipoItemDomain.ObterTodos();
             IEnumerable<Usuario> usuarios = _usuarioDomain.ObterPorLista(itens.Select(x => x.UsuarioId.Value).Distinct().ToList());
+            IEnumerable<ItemImagem> imagens = _imagemDomain.ObterPorLista(itens.Select(x => x.Id).Distinct().ToList());
 
 
             itens
@@ -90,6 +94,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     i.Categoria = categorias.Where(f => f.Id.Equals(i.CategoriaId)).FirstOrDefault();
                     i.TipoItem = tiposItem.Where(f => f.Id.Equals(i.TipoItemId)).FirstOrDefault();
                     i.Usuario = usuarios.Where(f => f.Id.Equals(i.UsuarioId)).FirstOrDefault();
+                    i.Imagens = imagens.Where(f => f.ItemId.Equals(i.Id)).ToList();
                 });
 
         }
@@ -123,6 +128,19 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Remover fisicamente o arquivo
+        /// </summary>
+        /// <param name="imagens"></param>
+        protected void RemoverArquivosItemExcluido(string caminho, IEnumerable<string> imagens)
+        {
+            foreach (string img in imagens)
+            {
+                try { File.Delete(Path.Combine(caminho, img)); }
+                finally { /* Nada a fazer, segue a vida */ }
+            }
         }
 
         #endregion
@@ -189,7 +207,16 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                         Email = item.Usuario.UsuarioDados.Email
                     },
                     UsuarioPerfil = item.Usuario.Perfis.Select(x => x.Perfil).ToList()
-                }
+                },
+                Imagens = item.Imagens.Select(i => new ItemImagemDto()
+                {
+                    Id = i.Id,
+                    DataInclusao = i.DataInclusao,
+                    DataAlteracao = i.DataAlteracao,
+                    ItemId = i.ItemId.Value,
+                    NomeOriginal = i.NomeOriginal,
+                    Caminho = i.Caminho
+                })
 
             };
         }
@@ -415,9 +442,10 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// Excluir registro
         /// </summary>
         /// <param name="id">Id do registro a ser excluído</param>
+        /// <param name="pastaWwwRoot">local da pasta wwwroot</param>
         /// <param name="statusCode">Variável de saída de StatusCode</param>
         /// <param name="dados">Objeto de saída de dados (mensagem)</param>
-        public void Excluir(Guid id, out int statusCode, out object dados)
+        public void Excluir(Guid id, string pastaWwwRoot, out int statusCode, out object dados)
         {
 
             // Verificando TipoItem
@@ -443,7 +471,11 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
                 _dmn.Excluir(id);
                 _uow.Efetivar();
-                //TODO: Remover arquivo físico
+
+                Task.Factory.StartNew(() => {
+                    Thread.Sleep(10000);
+                    RemoverArquivosItemExcluido(pastaWwwRoot, arquivosRemover);
+                });
 
                 dados = new { sucesso = true, mensagem = "Item éxcluído com sucesso" };
                 statusCode = StatusCodes.Status200OK;

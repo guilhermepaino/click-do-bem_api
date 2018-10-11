@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/SantaHelena.ClickDoBem.Services.Api/wwwroot/images

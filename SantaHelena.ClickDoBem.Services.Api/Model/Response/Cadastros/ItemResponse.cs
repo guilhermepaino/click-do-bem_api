@@ -1,5 +1,6 @@
 ﻿using SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais;
 using System;
+using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros
 {
@@ -54,6 +55,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros
         /// Flag indicando que o usúario quer ser anônimo
         /// </summary>
         public bool Anonimo { get; set; }
+
+        /// <summary>
+        /// Lista das imagens do item
+        /// </summary>
+        public IEnumerable<ItemImagenResponse> Imagens { get; set; }
 
     }
 }
