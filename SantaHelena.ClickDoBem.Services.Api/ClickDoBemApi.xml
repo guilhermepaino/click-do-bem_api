@@ -176,7 +176,12 @@
                     "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
                     "tipoItem": "1",
                     "categoria": "Higiene e limpeza",
-                    "anonimo": false
+                    "anonimo": false,
+                    "Imagens":
+                    [
+                        "NomeImagem": "string",
+                        "ImagemBase64": "string-base64"
+                    ]
                  }
                  
                 Para o campo tipoItem informe: 1=Necessidade ou 2=Doação
@@ -185,7 +190,21 @@
                 {
                     "sucesso": true,
                     "mensagem": {
-                        "id": "fe9b1395-3753-4cb1-9b4e-23c246c04282"
+                        "id": "289fbf37-eb30-4a18-ab28-ee394aa10e87",
+                        "imagens": [
+                            {
+                                "sucesso": true,
+                                "mensagem": "Imagem carregada com sucesso",
+                                "id": "a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed",
+                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.png"
+                            },
+                            {
+                                "sucesso": true,
+                                "mensagem": "Imagem carregada com sucesso",
+                                "id": "a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e",
+                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.png"
+                            }
+                        ]
                     }
                 }
                 
@@ -298,7 +317,13 @@
                              "nome": "string",
                              "cpfCnpj": "string"
                          },
-                         "anonimo": bool
+                         "anonimo": bool,
+                         "imagens":
+                         [
+                             "id": "guid",
+                             "nomeImagem": "string",
+                             "arquivo": "string"
+                         ]
                      }
                  ]
                  
@@ -327,16 +352,30 @@
                  Resposta (array)
                  [
                      {
-                     	"tipoItem": "string",
-                     	"dataInclusao": "2018-08-21T17:24:38",
-                     	"dataEfetivacao": "2018-10-09T11:04:00",
-                     	"doador": "string",
-                     	"receptor": "string",
-                     	"titulo": "string",
-                     	"descricao": "string",
-                     	"categoria": "string",
-                     	"peso": int,
-                     	"gerenciadaRh": boolean
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool,
+                         "imagens":
+                         [
+                             "id": "guid",
+                             "nomeImagem": "string",
+                             "arquivo": "string"
+                         ]
                      }
                  ]
                  
@@ -404,10 +443,32 @@
                 {
                     "sucesso": boolean,
                     "mensagem": "mensagem de sucesso ou crítica",
+                    "id": "guid",
                     "arquivo": "string"
                 }
                 
+                o campo 'id' somente é retornado em caso de sucesso na operação
                 o campo 'arquivo' somente é retornado em caso de sucesso na operação
+            
+            </remarks>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ApagarImagem(System.Guid)">
+            <summary>
+            Remover uma imagem de um item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "id": "guid"
+                }
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica"
+                }
             
             </remarks>
         </member>
@@ -717,18 +778,6 @@
             Id do item
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest.NomeImagem">
-            <summary>
-            Nome (Título da Imagem)
-            </summary>
-        </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest.ImagemBase64">
-            <summary>
-            Expressão string do arquivo (Base64)
-            </summary>
-            <seealso cref="!:https://pt.wikipedia.org/wiki/Base64"/>
-            <seealso cref="!:https://www.4devs.com.br/codificar_decodificar_base64"/>
-        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest">
             <summary>
             Request de INSERT de item
@@ -757,6 +806,11 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Anonimo">
             <summary>
             Flag indicando se o item deve ser anônimo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Imagens">
+            <summary>
+            Lista de Imagens do item
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest">
@@ -793,6 +847,23 @@
             <summary>
             Id da categoria
             </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest">
+            <summary>
+            Request de Upload de Imagens
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest.NomeImagem">
+            <summary>
+            Nome (Título da Imagem)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest.ImagemBase64">
+            <summary>
+            Expressão string do arquivo (Base64)
+            </summary>
+            <seealso cref="!:https://pt.wikipedia.org/wiki/Base64"/>
+            <seealso cref="!:https://www.4devs.com.br/codificar_decodificar_base64"/>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest">
             <summary>
@@ -867,6 +938,11 @@
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse">
             <summary>
             Objeto de resposta de imagem de item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse.Id">
+            <summary>
+            Id da imagem
             </summary>
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse.NomeImagem">
@@ -1045,6 +1121,23 @@
             </summary>
             <param name="value">Objeto a ser validado</param>
         </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Validations.ImagensValidationAttribute">
+            <summary>
+            Validador de upload de imagens
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.ImagensValidationAttribute.#ctor">
+            <summary>
+            Cria uma nova instância do validador
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.ImagensValidationAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Determina se o objeto é válido
+            </summary>
+            <param name="value">Objeto a ser validado</param>
+            <param name="validationContext">Contexto de validação</param>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute">
             <summary>
             Validador de complexidade de senha
@@ -1066,18 +1159,18 @@
             </summary>
             <param name="propriedadeDataNascimento">Nome da propriedade de data de nascimento</param>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute.PossuiSequencia(System.String)">
+            <summary>
+            Verifica se os caracteres estão em sequência
+            </summary>
+            <param name="expressao">Expressão a ser testada</param>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
             <summary>
             Determina se o objeto é válido
             </summary>
             <param name="value">Objeto a ser validado</param>
             <param name="validationContext">Contexto de validação</param>
-        </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute.PossuiSequencia(System.String)">
-            <summary>
-            Verifica se os caracteres estão em sequência
-            </summary>
-            <param name="expressao">Expressão a ser testada</param>
         </member>
     </members>
 </doc>
