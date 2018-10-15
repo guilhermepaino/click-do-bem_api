@@ -92,7 +92,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                     Nome = dto.Usuario.Nome,
                     CpfCnpj = dto.Usuario.CpfCnpj
                 },
-                Imagens = dto.Imagens.Select(i => new ItemImagenResponse() { NomeImagem = i.NomeOriginal, Arquivo = i.Caminho })
+                Imagens = dto.Imagens.Select(i => new ItemImagenResponse() { Id = i.Id, NomeImagem = i.NomeOriginal, Arquivo = i.Caminho })
             };
 
             return resp;
@@ -124,7 +124,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
         ///         "tipoItem": "1",
         ///         "categoria": "Higiene e limpeza",
-        ///         "anonimo": false
+        ///         "anonimo": false,
+        ///         "Imagens":
+        ///         [
+        ///             "NomeImagem": "string",
+        ///             "ImagemBase64": "string-base64"
+        ///         ]
         ///      }
         ///      
         ///     Para o campo tipoItem informe: 1=Necessidade ou 2=Doação
@@ -169,7 +174,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             };
 
             _appService.Inserir(dto, out int statusCode, out object dados);
-
             return StatusCode(statusCode, dados);
 
         }
@@ -294,7 +298,13 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                 "nome": "string",
         ///                 "cpfCnpj": "string"
         ///             },
-        ///             "anonimo": bool
+        ///             "anonimo": bool,
+        ///             "imagens":
+        ///             [
+        ///                 "id": "guid",
+        ///                 "nomeImagem": "string",
+        ///                 "arquivo": "string"
+        ///             ]
         ///         }
         ///     ]
         ///     
@@ -347,16 +357,30 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     Resposta (array)
         ///     [
         ///         {
-        ///         	"tipoItem": "string",
-        ///         	"dataInclusao": "2018-08-21T17:24:38",
-        ///         	"dataEfetivacao": "2018-10-09T11:04:00",
-        ///         	"doador": "string",
-        ///         	"receptor": "string",
-        ///         	"titulo": "string",
-        ///         	"descricao": "string",
-        ///         	"categoria": "string",
-        ///         	"peso": int,
-        ///         	"gerenciadaRh": boolean
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": "string",
+        ///             "categoria": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string",
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "guid",
+        ///                 "nome": "string",
+        ///                 "cpfCnpj": "string"
+        ///             },
+        ///             "anonimo": bool,
+        ///             "imagens":
+        ///             [
+        ///                 "id": "guid",
+        ///                 "nomeImagem": "string",
+        ///                 "arquivo": "string"
+        ///             ]
         ///         }
         ///     ]
         ///     
@@ -368,7 +392,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost("pesquisar")]
-        [Authorize(Roles = "Admin")]
         public IActionResult Listar([FromBody] PesquisaItemRequest request)
         {
             if (request == null)
@@ -435,16 +458,43 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     {
         ///         "sucesso": boolean,
         ///         "mensagem": "mensagem de sucesso ou crítica",
+        ///         "id": "guid",
         ///         "arquivo": "string"
         ///     }
         ///     
+        ///     o campo 'id' somente é retornado em caso de sucesso na operação
         ///     o campo 'arquivo' somente é retornado em caso de sucesso na operação
         /// 
         /// </remarks>
-        [HttpPost("imagem/upload")]
+        [HttpPost("imagem")]
         public IActionResult CarregarImagem([FromBody]ItemImagemRequest request)
         {
             _appService.CarregarImagem(request.ItemId, request.NomeImagem, request.ImagemBase64, _caminho, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
+        }
+
+        /// <summary>
+        /// Remover uma imagem de um item
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     {
+        ///         "id": "guid"
+        ///     }
+        ///     
+        ///     Respostas
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "mensagem de sucesso ou crítica"
+        ///     }
+        /// 
+        /// </remarks>
+        [HttpDelete("imagem/{id:guid}")]
+        public IActionResult ApagarImagem(Guid id)
+        {
+            _appService.RemoverImagem(id, _caminho, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
 

@@ -16,5 +16,6 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         void Atualizar(ItemDto dto, out int statusCode, out object dados);
         void Excluir(Guid id, string pastaWwwRoot, out int statusCode, out object dados);
         void CarregarImagem(Guid itemId, string nomeImagem, string imagemBase64, string caminho, out int statusCode, out object dadosRetorno);
+        void RemoverImagem(Guid id, string caminho, out int statusCode, out object dadosRetorno);
     }
 }

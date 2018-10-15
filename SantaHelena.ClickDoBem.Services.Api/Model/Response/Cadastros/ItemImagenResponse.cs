@@ -1,4 +1,6 @@
-﻿namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros
+﻿using System;
+
+namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros
 {
 
     /// <summary>
@@ -6,6 +8,11 @@
     /// </summary>
     public class ItemImagenResponse
     {
+
+        /// <summary>
+        /// Id da imagem
+        /// </summary>
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Nome (título da imagem)

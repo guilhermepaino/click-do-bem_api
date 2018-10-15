@@ -136,6 +136,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <param name="imagens"></param>
         protected void RemoverArquivosItemExcluido(string caminho, IEnumerable<string> imagens)
         {
+
             foreach (string img in imagens)
             {
                 try { File.Delete(Path.Combine(caminho, img)); }
@@ -225,6 +226,10 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         #region Métodos Locais
 
+        /// <summary>
+        /// Obter registros com base nos filtros
+        /// </summary>
+        /// <param name="tipo">Tipo de busca de registro</param>
         protected IEnumerable<ItemDto> ObterRegistros(TipoBuscaRegistros tipo)
         {
 
@@ -258,6 +263,39 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
             return resultDto;
 
+
+        }
+
+        /// <summary>
+        /// Valida dos dados de carregamento de Imagem
+        /// </summary>
+        /// <param name="nomeImagem">Nome da imagem</param>
+        /// <param name="imagemBase64">Expressão base64 da imagem</param>
+        /// <param name="itemId">Id do item</param>
+        /// <param name="item">Objeto de saída do item</param>
+        /// <returns></returns>
+        protected string ValidaDadosCarregamentoImagem(string nomeImagem, string imagemBase64, Guid itemId, out Item item)
+        {
+
+            StringBuilder criticas = new StringBuilder();
+
+            if (string.IsNullOrWhiteSpace(nomeImagem))
+                criticas.Append("Nome da imagem não informado|");
+
+            if (string.IsNullOrWhiteSpace(imagemBase64))
+                criticas.Append("Expressao Base64 da imagem não informada|");
+            else
+            {
+                imagemBase64 = imagemBase64.Trim();
+                if (!((imagemBase64.Length % 4 == 0) && Regex.IsMatch(imagemBase64, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None)))
+                    criticas.Append("Base64 inválida|");
+            }
+
+            item = _dmn.ObterPorId(itemId);
+            if (item == null)
+                criticas.Append($"Item \"{itemId}\" não necontrado|");
+
+            return criticas.ToString();
 
         }
 
@@ -359,7 +397,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     _dmn.Adicionar(entidade);
                     _uow.Efetivar();
 
-                    dados = new { sucesso = true, mensagem = new { Id = entidade.Id } };
+                    dados = new { Sucesso = true, Mensagem = new { Id = entidade.Id } };
+                    dto.Id = entidade.Id;
                     statusCode = StatusCodes.Status200OK;
 
                 }
@@ -448,8 +487,6 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         public void Excluir(Guid id, string pastaWwwRoot, out int statusCode, out object dados)
         {
 
-            // Verificando TipoItem
-            // Verificando Item
             Item entidade = _dmn.ObterPorId(id);
             if (entidade == null)
             {
@@ -459,6 +496,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             else
             {
 
+                CarregaRelacoes(entidade);
                 IList<string> arquivosRemover = new List<string>();
 
                 entidade.Imagens
@@ -497,7 +535,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         }
 
         /// <summary>
-        /// Carregar uma imagem para um produto
+        /// Carregar uma imagem para um item
         /// </summary>
         /// <param name="itemId">Id do item</param>
         /// <param name="nomeImagem">Nome (título) da imagem</param>
@@ -508,31 +546,15 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         public void CarregarImagem(Guid itemId, string nomeImagem, string imagemBase64, string caminho, out int statusCode, out object dadosRetorno)
         {
 
-            StringBuilder criticas = new StringBuilder();
+            string criticas = ValidaDadosCarregamentoImagem(nomeImagem, imagemBase64, itemId, out Item item);
 
-            if (string.IsNullOrWhiteSpace(nomeImagem))
-                criticas.Append("Nome da imagem não informado|");
-
-            if (string.IsNullOrWhiteSpace(imagemBase64))
-                criticas.Append("Expressao Base64 da imagem não informada|");
-            else
-            {
-                imagemBase64 = imagemBase64.Trim();
-                if (!((imagemBase64.Length % 4 == 0) && Regex.IsMatch(imagemBase64, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None)))
-                    criticas.Append("Base64 inválida|");
-            }
-
-            Item item = _dmn.ObterPorId(itemId);
-            if (item == null)
-                criticas.Append($"Item \"{itemId}\" não necontrado|");
-
-            if (criticas.Length > 0)
+            if (!string.IsNullOrWhiteSpace(criticas))
             {
                 statusCode = StatusCodes.Status400BadRequest;
                 dadosRetorno = new
                 {
                     sucesso = false,
-                    mensagem = criticas.ToString().Substring(0, (criticas.Length - 1))
+                    mensagem = criticas.Substring(0, (criticas.Length - 1))
                 };
             }
             else
@@ -543,6 +565,18 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             }
 
 
+        }
+        /// <summary>
+        /// Remover uma imagem de um item
+        /// </summary>
+        /// <param name="id">Id da imagem</param>
+        /// <param name="caminho">Caminho base das imagens</param>
+        /// <param name="statusCode">Variável de saída do StatusCode</param>
+        /// <param name="dadosRetorno">Variável de retorno da response</param>
+        public void RemoverImagem(Guid id, string caminho, out int statusCode, out object dadosRetorno)
+        {
+            bool sucesso = _dmn.RemoverImagem(id, caminho, out dadosRetorno);
+            statusCode = (sucesso ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest);
         }
 
         #endregion

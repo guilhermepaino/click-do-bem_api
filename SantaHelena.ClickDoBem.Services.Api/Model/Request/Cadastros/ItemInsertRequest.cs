@@ -1,5 +1,7 @@
 ﻿using SantaHelena.ClickDoBem.Application.Dto;
+using SantaHelena.ClickDoBem.Services.Api.Validations;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
@@ -42,6 +44,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         /// Flag indicando se o item deve ser anônimo
         /// </summary>
         public bool Anonimo { get; set; }
+
+        /// <summary>
+        /// Lista de Imagens do item
+        /// </summary>
+        [ImagensValidation]
+        public IEnumerable<SimpleImagemRequest> Imagens { get; set; }
 
     }
 

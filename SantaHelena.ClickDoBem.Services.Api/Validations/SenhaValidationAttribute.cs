@@ -21,6 +21,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
 
         #endregion
 
+        #region Construtores
+
         /// <summary>
         /// Cria uma nova instância do atributo
         /// </summary>
@@ -36,6 +38,42 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
         {
             _nomePropriedadeDataNascimento = propriedadeDataNascimento;
         }
+
+        #endregion
+
+        #region Métodos Locais
+
+        /// <summary>
+        /// Verifica se os caracteres estão em sequência
+        /// </summary>
+        /// <param name="expressao">Expressão a ser testada</param>
+        protected bool PossuiSequencia(string expressao)
+        {
+
+            for (int p = 0; p < expressao.Length; p++)
+            {
+
+                if ((p + 1).Equals(expressao.Length))
+                    break;
+
+                char caractere1 = expressao.Substring(p, 1).ToCharArray().First();
+                char caractere2 = expressao.Substring((p + 1), 1).ToCharArray().First();
+
+                int codigo1 = caractere1;
+                int codigo2 = caractere2;
+
+                if (codigo2.Equals(codigo1 + 1) || codigo1.Equals(codigo2))
+                    return true;
+
+            }
+
+            return false;
+
+        }
+
+        #endregion
+
+        #region Overrides
 
         /// <summary>
         /// Determina se o objeto é válido
@@ -83,33 +121,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
 
         }
 
-        /// <summary>
-        /// Verifica se os caracteres estão em sequência
-        /// </summary>
-        /// <param name="expressao">Expressão a ser testada</param>
-        protected bool PossuiSequencia(string expressao)
-        {
+        #endregion
 
-            for (int p = 0; p < expressao.Length; p++)
-            {
-
-                if ((p + 1).Equals(expressao.Length))
-                    break;
-
-                char caractere1 = expressao.Substring(p, 1).ToCharArray().First();
-                char caractere2 = expressao.Substring((p + 1), 1).ToCharArray().First();
-
-                int codigo1 = caractere1;
-                int codigo2 = caractere2;
-
-                if (codigo2.Equals(codigo1 + 1) || codigo1.Equals(codigo2))
-                    return true;
-
-            }
-
-            return false;
-
-        }
 
     }
 }
