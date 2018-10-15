@@ -139,7 +139,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
             foreach (string img in imagens)
             {
-                try { File.Delete(Path.Combine(caminho, img)); }
+                try
+                {
+                    string arq = img.Replace("/", @"\");
+                    string nomeCompleto = Path.Combine(caminho, arq);
+                    File.Delete(nomeCompleto);
+                }
                 finally { /* Nada a fazer, segue a vida */ }
             }
         }
@@ -351,8 +356,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// </summary>
         /// <param name="dto">Objeto de transporte de dados de item</param>
         /// <param name="statusCode">Variável de saída de StatusCode</param>
-        /// <param name="dados">Objeto de saída de dados (mensagem)</param>
-        public void Inserir(ItemDto dto, out int statusCode, out object dados)
+        /// <param name="mensagem">Objeto de saída de dados (mensagem)</param>
+        public void Inserir(ItemDto dto, out int statusCode, out string mensagem)
         {
 
             StringBuilder criticas = new StringBuilder();
@@ -370,7 +375,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
             if (criticas.Length > 0)
             {
-                dados = new { sucesso = false, mensagem = criticas.ToString().Substring(0, (criticas.Length - 1)).Replace("|", "\r\n") };
+                mensagem = criticas.ToString().Substring(0, (criticas.Length - 1)).Replace("|", "\r\n");
                 statusCode = StatusCodes.Status400BadRequest;
             }
             else
@@ -388,7 +393,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
                 if (!entidade.EstaValido())
                 {
-                    dados = new { sucesso = false, mensagem = entidade.ValidationResult.ToString() };
+                    mensagem = entidade.ValidationResult.ToString();
                     statusCode = StatusCodes.Status400BadRequest;
                 }
                 else
@@ -397,7 +402,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     _dmn.Adicionar(entidade);
                     _uow.Efetivar();
 
-                    dados = new { Sucesso = true, Mensagem = new { Id = entidade.Id } };
+                    mensagem = entidade.Id.ToString();
                     dto.Id = entidade.Id;
                     statusCode = StatusCodes.Status200OK;
 
@@ -503,7 +508,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     .ToList()
                     .ForEach(i =>
                     {
-                        arquivosRemover.Add(i.Caminho);
+                        arquivosRemover.Add(i.Caminho.Substring(1));
                         _imagemDomain.Excluir(i.Id);
                     });
 
@@ -511,7 +516,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 _uow.Efetivar();
 
                 Task.Factory.StartNew(() => {
-                    Thread.Sleep(10000);
+                    Thread.Sleep(2000);
                     RemoverArquivosItemExcluido(pastaWwwRoot, arquivosRemover);
                 });
 

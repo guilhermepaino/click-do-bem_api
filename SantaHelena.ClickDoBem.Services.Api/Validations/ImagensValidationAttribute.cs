@@ -49,6 +49,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
 
             IEnumerable<SimpleImagemRequest> imagens = (IEnumerable<SimpleImagemRequest>)value;
 
+            if (imagens.Count() > 0)
+                return new ValidationResult("Limite de imagens excedido");
+
             int contador = 0;
             foreach (SimpleImagemRequest img in imagens)
             {

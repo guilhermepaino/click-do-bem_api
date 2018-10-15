@@ -138,7 +138,21 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     {
         ///         "sucesso": true,
         ///         "mensagem": {
-        ///             "id": "fe9b1395-3753-4cb1-9b4e-23c246c04282"
+        ///             "id": "289fbf37-eb30-4a18-ab28-ee394aa10e87",
+        ///             "imagens": [
+        ///                 {
+        ///                     "sucesso": true,
+        ///                     "mensagem": "Imagem carregada com sucesso",
+        ///                     "id": "a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed",
+        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.png"
+        ///                 },
+        ///                 {
+        ///                     "sucesso": true,
+        ///                     "mensagem": "Imagem carregada com sucesso",
+        ///                     "id": "a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e",
+        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.png"
+        ///                 }
+        ///             ]
         ///         }
         ///     }
         ///     
@@ -173,8 +187,19 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Anonimo = req.Anonimo
             };
 
-            _appService.Inserir(dto, out int statusCode, out object dados);
-            return StatusCode(statusCode, dados);
+            _appService.Inserir(dto, out int statusCode, out string mensagem);
+
+            IList<object> respImage = new List<object>();
+            if (req.Imagens != null && req.Imagens.Count() > 0)
+            {
+                foreach (SimpleImagemRequest img in req.Imagens)
+                {
+                    _appService.CarregarImagem(dto.Id, img.NomeImagem, img.ImagemBase64, _caminho, out int sc, out object retImg);
+                    respImage.Add(retImg);
+                }
+            }
+
+            return StatusCode(statusCode, new { Sucesso = statusCode.Equals(StatusCodes.Status200OK), Mensagem = new { Id = dto.Id.ToString(), Imagens = respImage } });
 
         }
 
