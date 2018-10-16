@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using SantaHelena.ClickDoBem.Data.Mappings;
-using SantaHelena.ClickDoBem.Domain.Entities;
+using SantaHelena.ClickDoBem.Data.Mappings.Cadastros;
+using SantaHelena.ClickDoBem.Data.Mappings.Credenciais;
+using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
+using SantaHelena.ClickDoBem.Domain.Entities.Credenciais;
 
 namespace SantaHelena.ClickDoBem.Data.Context
 {
@@ -37,7 +37,14 @@ namespace SantaHelena.ClickDoBem.Data.Context
 
             // Mapping das tabelas
             modelBuilder.ApplyConfiguration(new UsuarioMapping());
-
+            modelBuilder.ApplyConfiguration(new UsuarioLoginMapping());
+            modelBuilder.ApplyConfiguration(new UsuarioDadosMapping());
+            modelBuilder.ApplyConfiguration(new UsuarioPerfilMapping());
+            modelBuilder.ApplyConfiguration(new CategoriaMapping());
+            modelBuilder.ApplyConfiguration(new DocumentoHabilitadoMapping());
+            modelBuilder.ApplyConfiguration(new TipoItemMapping());
+            modelBuilder.ApplyConfiguration(new ItemMapping());
+            modelBuilder.ApplyConfiguration(new ItemImagemMapping());
 
         }
 
@@ -69,7 +76,23 @@ namespace SantaHelena.ClickDoBem.Data.Context
 
         #region DbSets
 
-        public DbSet<Usuario> Usuario { get; set; }
+        public virtual DbSet<Usuario> Usuario { get; set; }
+
+        public virtual DbSet<UsuarioLogin> UsuarioLogin { get; set; }
+
+        public virtual DbSet<UsuarioDados> UsuarioDados { get; set; }
+
+        public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+
+        public virtual DbSet<Categoria> Categoria { get; set; }
+
+        public virtual DbSet<DocumentoHabilitado> DocumentoHabilitado { get; set; }
+
+        public virtual DbSet<TipoItem> TipoItem { get; set; }
+
+        public virtual DbSet<Item> Item { get; set; }
+
+        public virtual DbSet<ItemImagem> ItemImagem { get; set; }
 
         #endregion
 

@@ -11,25 +11,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-Domain", "3-Domain", "{6A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-Infra", "4-Infra", "{C138541F-3F93-4B65-B932-AE815A42FC89}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5-Tests", "5-Tests", "{1AED2D3D-4070-49FB-8180-3D8823434225}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SantaHelena.ClickDoBem.Domain", "SantaHelena.ClickDoBem.Domain\SantaHelena.ClickDoBem.Domain.csproj", "{4DD74F41-4002-4F09-8444-59B1C2212D83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Domain", "SantaHelena.ClickDoBem.Domain\SantaHelena.ClickDoBem.Domain.csproj", "{4DD74F41-4002-4F09-8444-59B1C2212D83}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1-Data", "4.1-Data", "{AE4C927F-5FBA-4C5A-8809-7B40EE446E32}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.2-CrossCutting", "4.2-CrossCutting", "{877F3556-3E00-4F9B-AF8E-E2FAE9D7BB24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SantaHelena.ClickDoBem.Domain.Core", "SantaHelena.ClickDoBem.Domain.Core\SantaHelena.ClickDoBem.Domain.Core.csproj", "{A4E21369-0550-4EB1-BB3A-6185A97D4D53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Domain.Core", "SantaHelena.ClickDoBem.Domain.Core\SantaHelena.ClickDoBem.Domain.Core.csproj", "{A4E21369-0550-4EB1-BB3A-6185A97D4D53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SantaHelena.ClickDoBem.Infra.CrossCutting.Common", "SantaHelena.ClickDoBem.Infra.CrossCutting.Common\SantaHelena.ClickDoBem.Infra.CrossCutting.Common.csproj", "{6C895076-A020-43D1-B560-E6BD40632AA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Infra.CrossCutting.Common", "SantaHelena.ClickDoBem.Infra.CrossCutting.Common\SantaHelena.ClickDoBem.Infra.CrossCutting.Common.csproj", "{6C895076-A020-43D1-B560-E6BD40632AA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SantaHelena.ClickDoBem.Infra.CrossCutting.IoC", "SantaHelena.ClickDoBem.Infra.CrossCutting.IoC\SantaHelena.ClickDoBem.Infra.CrossCutting.IoC.csproj", "{BA81C209-BBBB-44A1-85E5-5DD9B864BB76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Infra.CrossCutting.IoC", "SantaHelena.ClickDoBem.Infra.CrossCutting.IoC\SantaHelena.ClickDoBem.Infra.CrossCutting.IoC.csproj", "{BA81C209-BBBB-44A1-85E5-5DD9B864BB76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SantaHelena.ClickDoBem.Application", "SantaHelena.ClickDoBem.Application\SantaHelena.ClickDoBem.Application.csproj", "{2E340866-FF63-443D-924B-7AE5E9CD49CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Application", "SantaHelena.ClickDoBem.Application\SantaHelena.ClickDoBem.Application.csproj", "{2E340866-FF63-443D-924B-7AE5E9CD49CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SantaHelena.ClickDoBem.Data", "SantaHelena.ClickDoBem.Data\SantaHelena.ClickDoBem.Data.csproj", "{4716C56D-53B5-45F6-888C-F5C1BEEBEB3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Data", "SantaHelena.ClickDoBem.Data\SantaHelena.ClickDoBem.Data.csproj", "{4716C56D-53B5-45F6-888C-F5C1BEEBEB3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SantaHelena.ClickDoBem.Services.Api", "SantaHelena.ClickDoBem.Services.Api\SantaHelena.ClickDoBem.Services.Api.csproj", "{9DE7201B-AD15-4324-B5B2-2D36FC3FE58A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Services.Api", "SantaHelena.ClickDoBem.Services.Api\SantaHelena.ClickDoBem.Services.Api.csproj", "{9DE7201B-AD15-4324-B5B2-2D36FC3FE58A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

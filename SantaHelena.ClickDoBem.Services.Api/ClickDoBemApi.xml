@@ -1,0 +1,1176 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SantaHelena.ClickDoBem.Services.Api</name>
+    </assembly>
+    <members>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CategoriaController">
+            <summary>
+            API de Categoria
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CategoriaController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.ICategoriaAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CategoriaController.Listar">
+             <summary>
+             Listar todos os registros
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 Nenhum parâmetro
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "2ef307a6-c4a5-11e8-8776-0242ac110006",
+                         "dataInclusao": "2018-09-30T19:04:19",
+                         "dataAlteracao": "0001-01-01T00:00:00",
+                         "descricao": "Higiene e limpeza",
+                         "pontuacao": 10,
+                         "gerenciadaRh": false
+                     },
+                     {
+                         "id": "340c1a33-c4a5-11e8-8776-0242ac110006",
+                         "dataInclusao": "2018-09-30T19:04:21",
+                         "dataAlteracao": "0001-01-01T00:00:00",
+                         "descricao": "Bebê",
+                         "pontuacao": 100,
+                         "gerenciadaRh": false
+                     },
+                     {
+                         "id": "38f292cc-c4a5-11e8-8776-0242ac110006",
+                         "dataInclusao": "2018-09-30T19:04:23",
+                         "dataAlteracao": "0001-01-01T00:00:00",
+                         "descricao": "Telefonia e acessórios",
+                         "pontuacao": 10,
+                         "gerenciadaRh": true
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros cadastrados</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController">
+            <summary>
+            API de Usuario
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Credenciais.IUsuarioAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Cadastrar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest)">
+            <summary>
+            Cadastrar um novo colaborador
+            </summary>
+            <remarks>
+            
+            Contrato
+            
+                Requisição
+                ColaboradorInsertRequest
+                
+                Exemplo:
+                {
+                    "documento": "43994645000",
+                    "nome": "JOAO DA SILVA",
+                    "dataNascimento": "1976-11-13",
+                    "endereco": {
+                        "logradouro": "RUA DOS BOBOS",
+                        "numero": "0",
+                        "complemento": "BLOCO A - APTO 00",
+                        "bairro": "PARQUE DOS DESORIENTADOS",
+                        "cidade": "ARARAQUARA",
+                        "uf": "SP",
+                        "cep": "16123789"
+                    },
+                    "telefoneFixo": "",
+                    "telefoneCelular": "(16)91234-1234",
+                    "email": "usuario.teste@s2it.com.br",
+                    "senha": "a1b2c3d4"
+                }
+            
+            </remarks>
+            <param name="req">Modelo de requisição de cadastro de usuário</param>
+            <response code="200">Cadastro realizado com sucesso</response>
+            <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Upload">
+            <summary>
+            Recepciona arquivo de carga de colaboradores
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                Content-Type: multipart/form-data
+                Enviar arquivo através de FormFile
+                
+                Resposta
+                {
+                    "sucesso" : "boolean",
+                    "mensagem" : "mensagem do resultado do processamento",
+                    "resultado" : 
+                    [
+                        { 
+                            "linha": "1",
+                            "situacao": "Ok"
+                        },
+                        { 
+                           "linha": "2",
+                          "situacao": "Cpf/Cnpj inválido"
+                        }
+                    ]
+                }
+            
+            </remarks>
+            <response code="200">Processamento do arquivo realizado com sucesso</response>
+            <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Ocorreu alguma falha no processamento da request</response>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController">
+            <summary>
+            API de Item
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.IItemAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment,SantaHelena.ClickDoBem.Domain.Core.Interfaces.IAppUser)">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ConverterDtoEmResponse(SantaHelena.ClickDoBem.Application.Dto.Cadastros.ItemDto)">
+            <summary>
+            Converte um objeto Dto em Response
+            </summary>
+            <param name="dto">Objeto Dto para conversão</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ConverterDtoEmResponse(System.Collections.Generic.IEnumerable{SantaHelena.ClickDoBem.Application.Dto.Cadastros.ItemDto})">
+            <summary>
+            Converte uma lista de objetos Dto em lista de objetos Response
+            </summary>
+            <param name="dto">Objeto Dto para conversão</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Inserir(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest)">
+            <summary>
+            Inserir um novo registro de item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição: ItemInsertRequest
+                {
+                    "titulo": "Fralda Descartável",
+                    "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
+                    "tipoItem": "1",
+                    "categoria": "Higiene e limpeza",
+                    "anonimo": false,
+                    "Imagens":
+                    [
+                        "NomeImagem": "string",
+                        "ImagemBase64": "string-base64"
+                    ]
+                 }
+                 
+                Para o campo tipoItem informe: 1=Necessidade ou 2=Doação
+            
+                Resposta:
+                {
+                    "sucesso": true,
+                    "mensagem": {
+                        "id": "289fbf37-eb30-4a18-ab28-ee394aa10e87",
+                        "imagens": [
+                            {
+                                "sucesso": true,
+                                "mensagem": "Imagem carregada com sucesso",
+                                "id": "a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed",
+                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.png"
+                            },
+                            {
+                                "sucesso": true,
+                                "mensagem": "Imagem carregada com sucesso",
+                                "id": "a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e",
+                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.png"
+                            }
+                        ]
+                    }
+                }
+                
+                Validações apresentadas em array, exemplo:
+                {
+                    "sucesso": false,
+                    "Mensagem": [ 
+                        "Critica1, 
+                        "Critica2"
+                    ]
+                }
+            
+            </remarks>
+            <response code="200">Sucesso na gravação - retornará o Id do registro no campo mensagem</response>
+            <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Atualizar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest)">
+            <summary>
+            Inserir um novo registro de item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição: ItemRequest
+                {
+                    "titulo": "Fralda Descartável Infantil",
+                    "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
+                    "tipoItem": "Necessidade",
+                    "categoria": "Higiene e limpeza",
+                    "anonimo": false
+                 }
+                 
+                Resposta:
+                {
+                    "sucesso": true,
+                    "mensagem": "Registro alterado com sucesso"
+                }
+                
+                Validações apresentadas em array, exemplo:
+                {
+                    "sucesso": false,
+                    "mensagem": [
+                        "Critica1,
+                        "Critica2"
+                    ]
+                }
+                
+            </remarks>
+            <response code="200">Sucesso na gravação</response>
+            <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Excluir(System.Guid)">
+            <summary>
+            Excluir o registro
+            </summary>
+            <param name="id">Id do registro</param>
+            <remarks>
+            
+                Requisição: DELETE
+                url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
+            
+                Resposta:
+                {
+                    "sucesso": true,
+                    "mensagem": "Item excluído com sucesso"
+                }
+                
+            </remarks>
+            <response code="200">Sucesso na exclusão</response>
+            <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(System.Nullable{System.Int32})">
+             <summary>
+             Listar todos os registros
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição (parâmetro tipoItem = opcional)
+                 [ tipoItem=N ]
+                 
+                 onde N pode ser:
+                 
+                     1 = Necessidade
+                     2 = Doação
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool,
+                         "imagens":
+                         [
+                             "id": "guid",
+                             "nomeImagem": "string",
+                             "arquivo": "string"
+                         ]
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros cadastrados</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest)">
+             <summary>
+             Listar todos os registros que atendam os critérios de pesquisa
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 {
+                     "dataInicial": "YYYY-MM-DD",
+                     "dataFinal": "YYYY-MM-DD",
+                     "tipoItemId": "Guid",
+                     "categoriaId": "Guid"
+                 }
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool,
+                         "imagens":
+                         [
+                             "id": "guid",
+                             "nomeImagem": "string",
+                             "arquivo": "string"
+                         ]
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+             <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.BuscarPorId(System.Guid)">
+             <summary>
+             Buscar registro de item pelo Id (guid)
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
+                 
+                 Resposta
+                     {
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool
+                     }
+                 
+             </remarks>
+             <returns>Dados do registro localizado ou null se não encontrado</returns>
+             <response code="200">Sucesso na operação de busca</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.CarregarImagem(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest)">
+            <summary>
+            Carregar uma imagem de um item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "itemId": "guid",
+                    "NomeImagem": "string",
+                    "ImagemBase64": "string-base64"
+                }
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica",
+                    "id": "guid",
+                    "arquivo": "string"
+                }
+                
+                o campo 'id' somente é retornado em caso de sucesso na operação
+                o campo 'arquivo' somente é retornado em caso de sucesso na operação
+            
+            </remarks>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ApagarImagem(System.Guid)">
+            <summary>
+            Remover uma imagem de um item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "id": "guid"
+                }
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica"
+                }
+            
+            </remarks>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController">
+            <summary>
+            API de TipoItem
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.ITipoItemAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController.Listar">
+             <summary>
+             Listar todos os registros
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 Nenhum parâmetro
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "0acd2b81-c5a5-11e8-ab80-0242ac110006",
+                         "dataInclusao": "2018-09-30T19:04:19",
+                         "dataAlteracao": null,
+                         "descricao": "Necessidade",
+                     },
+                     {
+                         "id": "0acd2bb5-c5a5-11e8-ab80-0242ac110006",
+                         "dataInclusao": "2018-09-30T19:04:21",
+                         "dataAlteracao": null,
+                         "descricao": "Doação"
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros cadastrados</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController">
+            <summary>
+            API de Usuario
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Credenciais.IUsuarioAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Options.IOptions{SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions})">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Autenticar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest)">
+             <summary>
+             Autenticar usuário no sistema / gera chave (token) de acesso
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 {
+                    "nome": "admin",
+                    "senha": "202cb962ac59075b964b07152d234b70",
+                 }
+                 
+                 Resposta
+                 { 
+                     "sucesso" : "true",
+                     "mensagem" : "mensagem do resultado da operação",
+                     "token" : "hash informado se sucesso, caso contrário será nulo",
+                     "dataValidade : "data de validade do token quando sucesso, em caso de falha será informado nulo",
+                     "perfis" : [
+                         "Admin",
+                         "Colaborador"
+                     ]
+                 }
+                 
+             </remarks>
+             <param name="request">Informações da requisição</param>
+             <response code="200">Sucesso na autenticação</response>
+             <response code="403">Falha na autenticação/Acesso Negado</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Listar(System.String)">
+             <summary>
+             Listar todos os registros
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 Parâmetro: Perfil -> Filtra somente usuários do perfil informado (opcional)
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "80f763b0-c327-11e8-bbe3-0242ac110006",
+                         "dataInclusao": "2018-09-28T14:05:06",
+                         "dataAlteracao": null,
+                         "cpfCnpj": "11111111111",
+                         "nome": "admin",
+                         "usuarioLogin": {
+                             "login": "admin",
+                             "senha": "*ENCRYPTED*"
+                         },
+                         "usuarioDados": {
+                             "id": "f381eaf4-c37e-11e8-8987-0242ac110006",
+                             "dataInclusao": "2018-09-28T00:31:04",
+                             "dataAlteracao": null,
+                             "dataNascimento": "1976-11-13T00:00:00",
+                             "logradouro": "string",
+                             "numero": "string",
+                             "complemento": "string",
+                             "bairro": "string",
+                             "cidade": "string",
+                             "uf": "string",
+                             "cep": "00000000",
+                             "telefoneCelular": "(00)00000-0000",
+                             "telefoneFixo": ""(00)0000-0000",
+                             "email": "email@provedor"
+                         },
+                         "usuarioPerfil": [
+                             "Admin"
+                         ]
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros cadastrados</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.VerificarDocumentoHabilitado(System.String)">
+             <summary>
+             Verifica o status de um documento
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/usuario/verificadocumento/11111111111
+                 
+                 Resposta (array)
+                 {
+                     "situacao": "ativo",
+                     "cadastroCompleto": true
+                 }
+                 
+                 situações possíveis: 
+                 
+                     ativo           = cadastrado e habilitado para fazer cadastro
+                     inativo         = cadastrado e INABILITADO para fazer cdastro
+                     inexistente     = não cadastrado
+                 
+             </remarks>
+             <returns>Situação de cadastro do documento</returns>
+             <response code="200">Sucesso na busca</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions">
+            <summary>
+            Objeto de Opções de Jwt
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.Issuer">
+            <summary>
+            4.1.1.  "iss" (Issuer) Claim - The "iss" (issuer) claim identifies the principal that issued the JWT.
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.Subject">
+            <summary>
+            4.1.2.  "sub" (Subject) Claim - The "sub" (subject) claim identifies the principal that is the subject of the JWT.
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.Audience">
+            <summary>
+            4.1.3.  "aud" (Audience) Claim - The "aud" (audience) claim identifies the recipients that the JWT is intended for.
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.Expiration">
+            <summary>
+            4.1.4.  "exp" (Expiration Time) Claim - The "exp" (expiration time) claim identifies the expiration time on or after which the JWT MUST NOT be accepted for processing.
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.NotBefore">
+            <summary>
+            4.1.5.  "nbf" (Not Before) Claim - The "nbf" (not before) claim identifies the time before which the JWT MUST NOT be accepted for processing.
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.IssuedAt">
+            <summary>
+            4.1.6.  "iat" (Issued At) Claim - The "iat" (issued at) claim identifies the time at which the JWT was issued.
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.ValidFor">
+            <summary>
+            Set the timespan the token will be valid for (default is 120 min)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.JtiGenerator">
+            <summary>
+            "jti" (JWT ID) Claim (default ID is a GUID)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.SigningCredentials">
+            <summary>
+            The signing key to use when generating tokens.
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest">
+            <summary>
+            Modelo base de endereço
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest.Logradouro">
+            <summary>
+            Logradouro do endereço (rua, avenida, etc)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest.Numero">
+            <summary>
+            Número do endereço
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest.Complemento">
+            <summary>
+            Complemento do endereço (bloco, apto, andar, etc)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest.Bairro">
+            <summary>
+            Bairro do endereço
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest.Cidade">
+            <summary>
+            Cidade do endereço
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest.Uf">
+            <summary>
+            Uf do endereço
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases.EnderecoRequest.Cep">
+            <summary>
+            CEP do endereço (apenas números)
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest">
+            <summary>
+            Modelo de requisição de inserção de Colaborador
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Documento">
+            <summary>
+            Número do documento (Cpf/Cnpj)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Nome">
+            <summary>
+            Nome do colaborador
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.DataNascimento">
+            <summary>
+            Data de nascimento (formato YYYY-MM-AA)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Endereco">
+            <summary>
+            Endereço do colaborador
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.TelefoneFixo">
+            <summary>
+            Número do telefone fixo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.TelefoneCelular">
+            <summary>
+            Número do telefone fixo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Email">
+            <summary>
+            E-mail do colaborador/usuário
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorInsertRequest.Senha">
+            <summary>
+            Senha do usuário (puro texto)
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest">
+            <summary>
+            Request de Upload de Imagens
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest.ItemId">
+            <summary>
+            Id do item
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest">
+            <summary>
+            Request de INSERT de item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Titulo">
+            <summary>
+            Título do item (obrigatório)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Descricao">
+            <summary>
+            Descrição do item (obrigatório)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.TipoItem">
+            <summary>
+            Id do tipo de item (obrigatório)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Categoria">
+            <summary>
+            Id da categoria (obrigatório)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Anonimo">
+            <summary>
+            Flag indicando se o item deve ser anônimo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Imagens">
+            <summary>
+            Lista de Imagens do item
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest">
+            <summary>
+            Request de INSERT de item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest.Id">
+            <summary>
+            Id do registro
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest">
+            <summary>
+            Request de Filtro de Itens
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.DataInicial">
+            <summary>
+            Data inicial do período
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.DataFinal">
+            <summary>
+            Data final do período
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.TipoItemId">
+            <summary>
+            Id do tipo do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest.CategoriaId">
+            <summary>
+            Id da categoria
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest">
+            <summary>
+            Request de Upload de Imagens
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest.NomeImagem">
+            <summary>
+            Nome (Título da Imagem)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest.ImagemBase64">
+            <summary>
+            Expressão string do arquivo (Base64)
+            </summary>
+            <seealso cref="!:https://pt.wikipedia.org/wiki/Base64"/>
+            <seealso cref="!:https://www.4devs.com.br/codificar_decodificar_base64"/>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest">
+            <summary>
+            Request de Autenticacao
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest.Nome">
+            <summary>
+            Nome do usuário (UserName)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest.Senha">
+            <summary>
+            Senha do usuário (Hash Md5)
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse">
+            <summary>
+            Modelo de resposta do processamento de arquivo de documento
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.#ctor">
+            <summary>
+            Cria uma nova instância da response
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.NomeArquivo">
+            <summary>
+            Nome do arquivo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.Sucesso">
+            <summary>
+            Flag indicando o resultado do processamento do arquivo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.Detalhe">
+            <summary>
+            Detalhe geral do arquivo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse.Linhas">
+            <summary>
+            Detalhes das linhas processadas
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse">
+            <summary>
+            Objeto de resposta de Api de Categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.Id">
+            <summary>
+            Id da categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.Descricao">
+            <summary>
+            Descriçaõ da categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.Pontuacao">
+            <summary>
+            Pontuação da categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse.GerenciadaRh">
+            <summary>
+            Flag de indicação de geranciada pelo Rh
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse">
+            <summary>
+            Objeto de resposta de imagem de item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse.Id">
+            <summary>
+            Id da imagem
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse.NomeImagem">
+            <summary>
+            Nome (título da imagem)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemImagenResponse.Arquivo">
+            <summary>
+            Arquivo da imagem (caminho relativo)
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse">
+            <summary>
+            Objeto de resposta de item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Id">
+            <summary>
+            Id do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.DataInclusao">
+            <summary>
+            Data de inclusão do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.DataAlteracao">
+            <summary>
+            Data da última alteraçaõ do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Titulo">
+            <summary>
+            Título do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Descricao">
+            <summary>
+            Descrição do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.TipoItem">
+            <summary>
+            Tipo do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Categoria">
+            <summary>
+            Categoria do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Usuario">
+            <summary>
+            Usuário que fez o registro do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Anonimo">
+            <summary>
+            Flag indicando que o usúario quer ser anônimo
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Imagens">
+            <summary>
+            Lista das imagens do item
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse">
+            <summary>
+            Modelo de resposta da linha de arquivo de upload de documento
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Linha">
+            <summary>
+            Número da linha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Conteudo">
+            <summary>
+            Conteudo da Linha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Sucesso">
+            <summary>
+            Flag indicando o resultado do processamento
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Detalhe">
+            <summary>
+            Detalhe do processamento
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse">
+            <summary>
+            Response de Autenticacao
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.#ctor(System.Boolean,System.String,System.String,System.Nullable{System.DateTime},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Cria uma nova instâncioa da resposta de autenticação
+            </summary>
+            <param name="sucesso">Status da autenticação</param>
+            <param name="mensagem">Mensagem da autenticação</param>
+            <param name="token">Token gerado</param>
+            <param name="dataValidade">Data de validade do token</param>
+            <param name="perfis">Lista de perfis</param>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Sucesso">
+            <summary>
+            Status da autenticação
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Mensagem">
+            <summary>
+            Mensagem da autenticação
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Token">
+            <summary>
+            Token gerado em caso de sucesso na autenticação
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.DataValidade">
+            <summary>
+            Data de validade do token
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Perfis">
+            <summary>
+            Lista de perfis
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse">
+            <summary>
+            Objeto de response de usuario, modelo simples
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse.Id">
+            <summary>
+            Id do usuário
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse.Nome">
+            <summary>
+            Nome do usuário
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse.CpfCnpj">
+            <summary>
+            Documento do usuário
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Validations.CpfCnpjValidationAttribute">
+            <summary>
+            Validador de Documento (Cpf/Cnpj)
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.CpfCnpjValidationAttribute.#ctor">
+            <summary>
+            Cria uma nova instância do atributo
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.CpfCnpjValidationAttribute.IsValid(System.Object)">
+            <summary>
+            Determina se o objeto é válido
+            </summary>
+            <param name="value">Objeto a ser validado</param>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Validations.ImagensValidationAttribute">
+            <summary>
+            Validador de upload de imagens
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.ImagensValidationAttribute.#ctor">
+            <summary>
+            Cria uma nova instância do validador
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.ImagensValidationAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Determina se o objeto é válido
+            </summary>
+            <param name="value">Objeto a ser validado</param>
+            <param name="validationContext">Contexto de validação</param>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute">
+            <summary>
+            Validador de complexidade de senha
+            </summary>
+        </member>
+        <member name="F:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute._nomePropriedadeDataNascimento">
+            <summary>
+            Nome da propriedade de data de nascimento
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute.#ctor">
+            <summary>
+            Cria uma nova instância do atributo
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute.#ctor(System.String)">
+            <summary>
+            Cria uma nova instância do atributo
+            </summary>
+            <param name="propriedadeDataNascimento">Nome da propriedade de data de nascimento</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute.PossuiSequencia(System.String)">
+            <summary>
+            Verifica se os caracteres estão em sequência
+            </summary>
+            <param name="expressao">Expressão a ser testada</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.SenhaValidationAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Determina se o objeto é válido
+            </summary>
+            <param name="value">Objeto a ser validado</param>
+            <param name="validationContext">Contexto de validação</param>
+        </member>
+    </members>
+</doc>

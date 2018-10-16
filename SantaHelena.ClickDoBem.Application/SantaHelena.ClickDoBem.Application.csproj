@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SantaHelena.ClickDoBem.Domain.Core\SantaHelena.ClickDoBem.Domain.Core.csproj" />
+    <ProjectReference Include="..\SantaHelena.ClickDoBem.Domain\SantaHelena.ClickDoBem.Domain.csproj" />
+    <ProjectReference Include="..\SantaHelena.ClickDoBem.Infra.CrossCutting.Common\SantaHelena.ClickDoBem.Infra.CrossCutting.Common.csproj" />
+  </ItemGroup>
+
 </Project>
