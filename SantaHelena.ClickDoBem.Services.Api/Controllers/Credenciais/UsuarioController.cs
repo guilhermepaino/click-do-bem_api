@@ -125,7 +125,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
                      signingCredentials: _jwtTokenOptions.SigningCredentials);
 
                 token = new JwtSecurityTokenHandler().WriteToken(jwt);
-                validade = DateTime.Now.AddMilliseconds((int)_jwtTokenOptions.ValidFor.TotalSeconds);
+                validade = jwt.ValidTo;
             }
             return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade, perfis));
         }

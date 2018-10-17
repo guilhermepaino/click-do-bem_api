@@ -25,6 +25,14 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         #region Métodos Públicos
 
+        public IEnumerable<Item> ObterTodos(bool incluirMatches)
+        {
+            string sql = @"SELECT i.* FROM Item i";
+            if (!incluirMatches)
+                sql = $"{sql} WHERE NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
+            return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
+        }
+
         public override Item ObterPorId(Guid id)
         {
             string sql = @"SELECT * FROM Item WHERE Id = @pid";
@@ -50,17 +58,25 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             return _ctx.Database.GetDbConnection().Query<Item>(sql, new { ptitulo = $"%{titulo}%" }).ToList();
         }
 
-        public IEnumerable<Item> ObterNecessidades()
+        public IEnumerable<Item> ObterNecessidades(bool incluirMatches)
         {
             //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Necessidade'";
+            if (!incluirMatches)
+            {
+                sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
+            }
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
 
-        public IEnumerable<Item> ObterDoacoes()
+        public IEnumerable<Item> ObterDoacoes(bool incluirMatches)
         {
             //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Doação'";
+            if (!incluirMatches)
+            {
+                sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
+            }
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
 
         }

@@ -42,14 +42,22 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
         #region Métodos públicos
 
         /// <summary>
+        /// Obter todos os registros
+        /// </summary>
+        /// <param name="incluirMatches">Flag indicando se vai incluir os itens de matches</param>
+        public IEnumerable<Item> ObterTodos(bool incluirMatches) => _repository.ObterTodos(incluirMatches);
+
+        /// <summary>
         /// Obter registros de necessidades
         /// </summary>
-        public IEnumerable<Item> ObterNecessidades() => _repository.ObterNecessidades();
+        /// <param name="incluirMatches">Flag indicando se vai incluir os itens de matches</param>
+        public IEnumerable<Item> ObterNecessidades(bool incluirMatches) => _repository.ObterNecessidades(incluirMatches);
 
         /// <summary>
         /// Obter registros de doações
         /// </summary>
-        public IEnumerable<Item> ObterDoacoes() => _repository.ObterDoacoes();
+        /// <param name="incluirMatches">Flag indicando se vai incluir os itens de matches</param>
+        public IEnumerable<Item> ObterDoacoes(bool incluirMatches) => _repository.ObterDoacoes(incluirMatches);
 
         /// <summary>
         /// Pesquisar itens com base nos filtros informados
@@ -92,9 +100,9 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                 ItemId = item.Id,
                 NomeOriginal = nomeImagem
             };
-            string arquivo = $"{imagem.Id.ToString()}.png";
+            string arquivo = $"{imagem.Id.ToString()}.jpg";
             string nomeCompleto = Path.Combine(pastaItem, arquivo);
-            string caminhoUrl = $"/images/{item.Id.ToString()}/{imagem.Id.ToString()}.png";
+            string caminhoUrl = $"/images/{item.Id.ToString()}/{imagem.Id.ToString()}.jpg";
             imagem.Caminho = caminhoUrl;
 
             try
@@ -112,8 +120,20 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                 return false;
             }
 
-            byte[] bytes = Convert.FromBase64String(imagemBase64);
-            File.WriteAllBytes(nomeCompleto, bytes);
+            try
+            {
+                byte[] bytes = Convert.FromBase64String(imagemBase64);
+                File.WriteAllBytes(nomeCompleto, bytes);
+            }
+            catch (Exception ex)
+            {
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"Falha ao converter Base64 em Imagem - {ex.Message} - {ex.StackTrace}"
+                };
+                return false;
+            }
 
             try
             {
@@ -172,7 +192,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                     return false;
                 }
 
-                string caminhoImagem = $"{imagem.ItemId.ToString()}\\{imagem.Id.ToString()}.png";
+                string caminhoImagem = $"{imagem.ItemId.ToString()}\\{imagem.Id.ToString()}.jpg";
                 string nomeCompleto = Path.Combine(caminho, caminhoImagem);
                 if (!Directory.Exists(caminho))
                 {
