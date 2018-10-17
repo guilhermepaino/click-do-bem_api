@@ -53,7 +53,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
             _appUser = appUser;
-            _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("\\images")).SingleOrDefault();
+            _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("images")).SingleOrDefault();
         }
 
         #endregion
