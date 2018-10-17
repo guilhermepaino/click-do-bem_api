@@ -7,6 +7,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
 {
     public interface IItemAppService : IAppServiceBase
     {
+
         IEnumerable<ItemDto> ObterTodos();
         ItemDto ObterPorId(Guid id);
         IEnumerable<ItemDto> ObterDoacoes();
@@ -17,5 +18,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         void Excluir(Guid id, string pastaWwwRoot, out int statusCode, out object dados);
         void CarregarImagem(Guid itemId, string nomeImagem, string imagemBase64, string caminho, out int statusCode, out object dadosRetorno);
         void RemoverImagem(Guid id, string caminho, out int statusCode, out object dadosRetorno);
+        void ExecutarMatch(Guid doacaoId, Guid necessidadeId, out int statusCode, out object dadosRetorno);
+        void DesfazerMatch(Guid id, out int statusCode, out object dadosRetorno);
     }
 }

@@ -36,6 +36,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         protected readonly ICategoriaDomainService _categoriaDomain;
         protected readonly ITipoItemDomainService _tipoItemDomain;
         protected readonly IItemImagemDomainService _imagemDomain;
+        protected readonly IItemMatchDomainService _matchDomain;
         protected readonly IUsuarioDomainService _usuarioDomain;
         protected readonly IAppUser _usuario;
 
@@ -53,6 +54,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             ICategoriaDomainService categoriaDomain,
             ITipoItemDomainService tipoItemDomain,
             IItemImagemDomainService imagemDomain,
+            IItemMatchDomainService matchDomain,
             IUsuarioDomainService usuarioDomain,
             IAppUser usuario
         )
@@ -62,6 +64,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             _categoriaDomain = categoriaDomain;
             _tipoItemDomain = tipoItemDomain;
             _imagemDomain = imagemDomain;
+            _matchDomain = matchDomain;
             _usuarioDomain = usuarioDomain;
             _usuario = usuario;
         }
@@ -582,6 +585,141 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         {
             bool sucesso = _dmn.RemoverImagem(id, caminho, out dadosRetorno);
             statusCode = (sucesso ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest);
+        }
+
+        /// <summary>
+        /// Efetua o match entre item de doação e item de necessidade
+        /// </summary>
+        /// <param name="doacaoId">Id do item de doação</param>
+        /// <param name="necessidadeId">Id do item de necessidade</param>
+        /// <param name="statusCode">Variável de saída StatusCode de resposta</param>
+        /// <param name="dadosRetorno">Variável de saída de mensagem de retorno</param>
+        public void ExecutarMatch(Guid doacaoId, Guid necessidadeId, out int statusCode, out object dadosRetorno)
+        {
+
+            // Validando item de necessidade
+            Item itemNecessidade = _dmn.ObterPorId(necessidadeId);
+            if (itemNecessidade == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"O item de necessidade '{necessidadeId.ToString()}' não foi encontrado"
+                };
+                return;
+            }
+            else
+            {
+                CarregaRelacoes(itemNecessidade);
+                if (!itemNecessidade.TipoItem.Descricao.ToLower().Equals("necessidade"))
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    dadosRetorno = new
+                    {
+                        Sucesso = false,
+                        Mensagem = $"O item de necessidade '{necessidadeId.ToString()}' não é do tipo 'Necessidade'"
+                    };
+                    return;
+                }
+            }
+
+            // Validando item de doação
+            Item itemDoacao = _dmn.ObterPorId(doacaoId);
+            if (itemDoacao == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"O item de doação '{doacaoId.ToString()}' não foi encontrado"
+                };
+                return;
+            }
+            else
+            {
+                CarregaRelacoes(itemDoacao);
+                if (!itemDoacao.TipoItem.Descricao.ToLower().Equals("doação"))
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    dadosRetorno = new
+                    {
+                        Sucesso = false,
+                        Mensagem = $"O item de doação'{doacaoId.ToString()}' não é do tipo 'Doação'"
+                    };
+                    return;
+                }
+            }
+
+            // Verificando se o match já existe
+            ItemMatch match = _matchDomain.BuscarPorMatch(doacaoId, necessidadeId);
+            if (match != null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"Já existe um match para esses itens"
+                };
+                return;
+            }
+
+            // Gravando o match
+            match = new ItemMatch()
+            {
+                UsuarioId = _usuario.Id,
+                DoacaoId = doacaoId,
+                NecessidadeId = necessidadeId
+            };
+            _matchDomain.Adicionar(match);
+            _uow.Efetivar();
+
+            statusCode = StatusCodes.Status200OK;
+            dadosRetorno = new
+            {
+                Sucesso = true,
+                Mensagem = $"Match realizado com sucesso",
+                Id = match.Id.ToString()
+            };
+
+        }
+
+        /// <summary>
+        /// Desfaz um match realizado
+        /// </summary>
+        /// <param name="id">Id do match</param>
+        /// <param name="statusCode">Variável de saída StatusCode de resposta</param>
+        /// <param name="dadosRetorno">Variável de saída de mensagem de retorno</param>
+        public void DesfazerMatch(Guid id, out int statusCode, out object dadosRetorno)
+        {
+
+            // Validando match
+            ItemMatch match = _matchDomain.ObterPorId(id);
+            if (match == null)
+            {
+
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"O match de id {id.ToString()} não foi encontrado"
+                };
+
+            }
+            else
+            {
+                _matchDomain.Excluir(id);
+                _uow.Efetivar();
+
+                statusCode = StatusCodes.Status200OK;
+                dadosRetorno = new
+                {
+                    Sucesso = true,
+                    Mensagem = $"Match excluído com sucesso"
+                };
+
+            }
+
         }
 
         #endregion

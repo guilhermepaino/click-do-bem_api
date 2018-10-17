@@ -26,6 +26,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers
 
         protected new IActionResult Response<TViewModel>(object result = null) where TViewModel : ViewModelBase
         {
+
             var errorMessages = new List<string>();
 
             if (result != null && result.GetType() == typeof(TViewModel))
@@ -59,6 +60,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers
                 sucesso = false,
                 mensagem = errorMessages.Distinct().ToList()
             });
+
         }
     }
 

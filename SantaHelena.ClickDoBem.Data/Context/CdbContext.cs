@@ -34,7 +34,6 @@ namespace SantaHelena.ClickDoBem.Data.Context
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
 
-
             // Mapping das tabelas
             modelBuilder.ApplyConfiguration(new UsuarioMapping());
             modelBuilder.ApplyConfiguration(new UsuarioLoginMapping());
@@ -45,6 +44,7 @@ namespace SantaHelena.ClickDoBem.Data.Context
             modelBuilder.ApplyConfiguration(new TipoItemMapping());
             modelBuilder.ApplyConfiguration(new ItemMapping());
             modelBuilder.ApplyConfiguration(new ItemImagemMapping());
+            modelBuilder.ApplyConfiguration(new ItemMatchMapping());
 
         }
 
@@ -93,6 +93,8 @@ namespace SantaHelena.ClickDoBem.Data.Context
         public virtual DbSet<Item> Item { get; set; }
 
         public virtual DbSet<ItemImagem> ItemImagem { get; set; }
+
+        public virtual DbSet<ItemMatch> ItemMatch { get; set; }
 
         #endregion
 

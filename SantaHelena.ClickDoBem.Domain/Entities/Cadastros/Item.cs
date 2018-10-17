@@ -54,6 +54,10 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public ICollection<ItemImagem> Imagens { get; set; }
 
+        public ItemMatch MatchDoacao { get; set; }
+
+        public ItemMatch MatchNecessidade { get; set; }
+
         #endregion
 
         #region Métodos Locais

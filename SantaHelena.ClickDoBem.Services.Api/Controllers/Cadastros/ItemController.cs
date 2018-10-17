@@ -523,6 +523,63 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             return StatusCode(statusCode, dadosRetorno);
         }
 
+        /// <summary>
+        /// Efetua o match entre um item de doação e um item de necessidade
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     {
+        ///         "NecessidadeId": "guid",
+        ///         "DoacaoId": "guid"
+        ///     }
+        ///     
+        ///     Respostas
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "mensagem de sucesso ou crítica",
+        ///         "id": "guid"
+        ///     }
+        ///     
+        ///     o campo 'id' será informado somente no caso de sucesso
+        /// 
+        /// </remarks>
+        [HttpPost("match")]
+        public IActionResult EfetuarMatch([FromBody]MatchRequest request)
+        {
+
+            if (!ModelState.IsValid)
+                return Response<ItemInsertRequest>(request);
+
+            _appService.ExecutarMatch(request.DoacaoId.Value, request.NecessidadeId.Value, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
+
+        }
+
+        /// <summary>
+        /// Desfaz um match realizado
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     
+        ///     Respostas
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "mensagem de sucesso ou crítica"
+        ///     }
+        /// 
+        /// </remarks>
+        [HttpDelete("match/{id:guid}")]
+        public IActionResult DesfazerMatch(Guid id)
+        {
+            _appService.DesfazerMatch(id, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
+        }
+
         #endregion
 
     }

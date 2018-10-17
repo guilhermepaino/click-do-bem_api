@@ -44,6 +44,7 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
             services.AddScoped<ITipoItemRepository, TipoItemRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IItemImagemRepository, ItemImagemRepository>();
+            services.AddScoped<IItemMatchRepository, ItemMatchRepository>();
 
             // Domain
             services.AddScoped<IUsuarioDomainService, UsuarioDomainService>();
@@ -55,7 +56,8 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
             services.AddScoped<ITipoItemDomainService, TipoItemDomainService>();
             services.AddScoped<IItemDomainService, ItemDomainService>();
             services.AddScoped<IItemImagemDomainService, ItemImagemDomainService>();
-
+            services.AddScoped<IItemMatchDomainService, ItemMatchDomainService>();
+            
             // Application
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             services.AddScoped<ICategoriaAppService, CategoriaAppService>();
