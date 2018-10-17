@@ -292,12 +292,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
             if (string.IsNullOrWhiteSpace(imagemBase64))
                 criticas.Append("Expressao Base64 da imagem não informada|");
-            else
-            {
-                imagemBase64 = imagemBase64.Trim();
-                if (!((imagemBase64.Length % 4 == 0) && Regex.IsMatch(imagemBase64, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None)))
-                    criticas.Append("Base64 inválida|");
-            }
+            //else
+            //{
+            //    imagemBase64 = imagemBase64.Trim();
+            //    if (!((imagemBase64.Length % 4 == 0) && Regex.IsMatch(imagemBase64, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None)))
+            //        criticas.Append("Base64 inválida|");
+            //}
 
             item = _dmn.ObterPorId(itemId);
             if (item == null)
