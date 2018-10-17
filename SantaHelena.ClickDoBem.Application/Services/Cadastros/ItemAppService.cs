@@ -198,7 +198,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                         Login = item.Usuario.UsuarioLogin.Login,
                         Senha = "*ENCRYPTED*"
                     },
-                    UsuarioDados = new UsuarioDadosDto()
+                    UsuarioDados = (item.Usuario.UsuarioDados != null ? new UsuarioDadosDto()
                     {
                         Id = item.Usuario.UsuarioDados.Id,
                         DataInclusao = item.Usuario.UsuarioDados.DataInclusao,
@@ -214,7 +214,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                         TelefoneCelular = item.Usuario.UsuarioDados.TelefoneCelular,
                         TelefoneFixo = item.Usuario.UsuarioDados.TelefoneFixo,
                         Email = item.Usuario.UsuarioDados.Email
-                    },
+                    } : null),
                     UsuarioPerfil = item.Usuario.Perfis.Select(x => x.Perfil).ToList()
                 },
                 Imagens = item.Imagens.Select(i => new ItemImagemDto()
