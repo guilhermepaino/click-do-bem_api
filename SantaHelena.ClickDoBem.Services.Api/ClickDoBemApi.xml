@@ -196,13 +196,13 @@
                                 "sucesso": true,
                                 "mensagem": "Imagem carregada com sucesso",
                                 "id": "a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed",
-                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.png"
+                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.jpg"
                             },
                             {
                                 "sucesso": true,
                                 "mensagem": "Imagem carregada com sucesso",
                                 "id": "a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e",
-                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.png"
+                                "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.jpg"
                             }
                         ]
                     }
@@ -463,6 +463,48 @@
                 {
                     "id": "guid"
                 }
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica"
+                }
+            
+            </remarks>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.EfetuarMatch(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.MatchRequest)">
+            <summary>
+            Efetua o match entre um item de doação e um item de necessidade
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "NecessidadeId": "guid",
+                    "DoacaoId": "guid"
+                }
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica",
+                    "id": "guid"
+                }
+                
+                o campo 'id' será informado somente no caso de sucesso
+            
+            </remarks>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.DesfazerMatch(System.Guid)">
+            <summary>
+            Desfaz um match realizado
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006
                 
                 Respostas
                 {
@@ -821,6 +863,21 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest.Id">
             <summary>
             Id do registro
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.MatchRequest">
+            <summary>
+            Modelo de request de match
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.MatchRequest.DoacaoId">
+            <summary>
+            Id de doação
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.MatchRequest.NecessidadeId">
+            <summary>
+            Id de necessidade
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest">

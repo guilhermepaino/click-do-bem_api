@@ -144,13 +144,13 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                     "sucesso": true,
         ///                     "mensagem": "Imagem carregada com sucesso",
         ///                     "id": "a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed",
-        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.png"
+        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.jpg"
         ///                 },
         ///                 {
         ///                     "sucesso": true,
         ///                     "mensagem": "Imagem carregada com sucesso",
         ///                     "id": "a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e",
-        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.png"
+        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.jpg"
         ///                 }
         ///             ]
         ///         }
@@ -345,7 +345,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             IEnumerable<ItemDto> registros = null;
             if (tipoItem == null)
             {
-                registros = _appService.ObterTodos();
+                registros = _appService.ObterTodos(false);
             }
             else
             {

@@ -238,7 +238,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// Obter registros com base nos filtros
         /// </summary>
         /// <param name="tipo">Tipo de busca de registro</param>
-        protected IEnumerable<ItemDto> ObterRegistros(TipoBuscaRegistros tipo)
+        /// <param name="incluirItensMatches">Flag indicando se irá incluir itens de matches</param>
+        protected IEnumerable<ItemDto> ObterRegistros(TipoBuscaRegistros tipo, bool incluirItensMatches)
         {
 
             IEnumerable<Item> result = null;
@@ -246,10 +247,10 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             switch (tipo)
             {
                 case TipoBuscaRegistros.Necessidade:
-                    result = _dmn.ObterNecessidades();
+                    result = _dmn.ObterNecessidades(false);
                     break;
                 case TipoBuscaRegistros.Doacao:
-                    result = _dmn.ObterDoacoes();
+                    result = _dmn.ObterDoacoes(false);
                     break;
                 default:
                     result = _dmn.ObterTodos();
@@ -330,19 +331,11 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         }
 
         /// <summary>
-        /// Obter registros todos os registros
-        /// </summary>
-        public IEnumerable<ItemDto> ObterTodos()
-        {
-            return ObterRegistros(TipoBuscaRegistros.Todos);
-        }
-
-        /// <summary>
         /// Listar os registros de doações
         /// </summary>
         public IEnumerable<ItemDto> ObterDoacoes()
         {
-            return ObterRegistros(TipoBuscaRegistros.Doacao);
+            return ObterRegistros(TipoBuscaRegistros.Doacao, false);
         }
 
         /// <summary>
@@ -351,7 +344,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <returns></returns>
         public IEnumerable<ItemDto> ObterNecessidades()
         {
-            return ObterRegistros(TipoBuscaRegistros.Necessidade);
+            return ObterRegistros(TipoBuscaRegistros.Necessidade, false);
+        }
+
+        public IEnumerable<ItemDto> ObterTodos(bool incluirItensMatches)
+        {
+            return ObterRegistros(TipoBuscaRegistros.Todos, incluirItensMatches);
         }
 
         /// <summary>

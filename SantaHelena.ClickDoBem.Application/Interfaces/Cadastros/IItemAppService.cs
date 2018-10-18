@@ -8,7 +8,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
     public interface IItemAppService : IAppServiceBase
     {
 
-        IEnumerable<ItemDto> ObterTodos();
+        IEnumerable<ItemDto> ObterTodos(bool incluirItensMatches);
         ItemDto ObterPorId(Guid id);
         IEnumerable<ItemDto> ObterDoacoes();
         IEnumerable<ItemDto> ObterNecessidades();

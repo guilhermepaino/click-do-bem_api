@@ -8,8 +8,9 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
 {
     public interface IItemRepository : IMySqlRepositoryBase<Item>
     {
-        IEnumerable<Item> ObterNecessidades();
-        IEnumerable<Item> ObterDoacoes();
+        IEnumerable<Item> ObterTodos(bool incluirMatches);
+        IEnumerable<Item> ObterNecessidades(bool incluirMatches);
+        IEnumerable<Item> ObterDoacoes(bool incluirMatches);
         IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId);
     }
 }
