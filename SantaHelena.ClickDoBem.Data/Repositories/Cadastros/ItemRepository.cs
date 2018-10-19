@@ -132,6 +132,41 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         }
 
+        public IEnumerable<Item> PesquisarParaMatche(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId)
+        {
+
+            string sql = $@"SELECT i.*
+                            FROM Item i
+                            INNER JOIN Categoria c ON i.CategoriaId = c.Id
+                            INNER JOIN Usuario u ON i.UsuarioId = u.Id
+                            WHERE
+                              (i.DataInclusao BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
+                              AND c.Id = _CATEGORIAID_";
+
+            //TODO: Revisitar após efetivar doação
+
+            if (dataInicial != null && dataFinal != null)
+            {
+                sql = sql
+                    .Replace("_DATAINICIAL_", $"'{dataInicial.Value.ToString("yyyy-MM-dd")} 00:00:00'")
+                    .Replace("_DATAFINAL_", $"'{dataFinal.Value.ToString("yyyy-MM-dd")} 23:59:59'");
+            }
+            else
+                sql = sql
+                    .Replace("_DATAINICIAL_", "i.DataInclusao")
+                    .Replace("_DATAFINAL_", "i.DataInclusao");
+
+            if (categoriaId != null)
+                sql = sql.Replace("_CATEGORIAID_", $"'{categoriaId.ToString()}'");
+            else
+                sql = sql.Replace("_CATEGORIAID_", "c.Id");
+
+            sql = $"{sql} ORDER BY i.DataInclusao DESC";
+
+            return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
+
+        }
+
         #endregion
 
 

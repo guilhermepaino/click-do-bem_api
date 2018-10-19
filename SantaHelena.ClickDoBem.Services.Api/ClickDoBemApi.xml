@@ -472,6 +472,59 @@
             
             </remarks>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ListarItensParaMatches(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest)">
+             <summary>
+             Listar todos os registros de itens que estejam livres para match e atendam os critérios de pesquisa
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 {
+                     "dataInicial": "YYYY-MM-DD",
+                     "dataFinal": "YYYY-MM-DD",
+                     "tipoItemId": "Guid",
+                     "categoriaId": "Guid"
+                 }
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool,
+                         "imagens":
+                         [
+                             "id": "guid",
+                             "nomeImagem": "string",
+                             "arquivo": "string"
+                         ]
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+             <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.EfetuarMatch(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.MatchRequest)">
             <summary>
             Efetua o match entre um item de doação e um item de necessidade

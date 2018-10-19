@@ -417,7 +417,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost("pesquisar")]
-        public IActionResult Listar([FromBody] PesquisaItemRequest request)
+        public IActionResult Listar([FromBody]PesquisaItemRequest request)
         {
             if (request == null)
                 return BadRequest("Nenhuma informação de requisição");
@@ -521,6 +521,65 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         {
             _appService.RemoverImagem(id, _caminho, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
+        }
+
+        /// <summary>
+        /// Listar todos os registros de itens que estejam livres para match e atendam os critérios de pesquisa
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     {
+        ///         "dataInicial": "YYYY-MM-DD",
+        ///         "dataFinal": "YYYY-MM-DD",
+        ///         "tipoItemId": "Guid",
+        ///         "categoriaId": "Guid"
+        ///     }
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": "string",
+        ///             "categoria": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string",
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "guid",
+        ///                 "nome": "string",
+        ///                 "cpfCnpj": "string"
+        ///             },
+        ///             "anonimo": bool,
+        ///             "imagens":
+        ///             [
+        ///                 "id": "guid",
+        ///                 "nomeImagem": "string",
+        ///                 "arquivo": "string"
+        ///             ]
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+        /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPost("livres")]
+        public IActionResult ListarItensParaMatches([FromBody]PesquisaItemRequest request)
+        {
+            if (request == null)
+                return BadRequest("Nenhuma informação de requisição");
+            return Ok(_appService.ListarLivresParaMatches(request.DataInicial, request.DataFinal, request.CategoriaId));
         }
 
         /// <summary>

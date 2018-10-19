@@ -235,6 +235,25 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         #region Métodos Locais
 
         /// <summary>
+        /// Converter uma lista de entidade em uma lista de dto
+        /// </summary>
+        /// <param name="itens">Lista de entidades</param>
+        protected IEnumerable<ItemDto> ConverterEntidadeEmDto(IEnumerable<Item> itens)
+        {
+
+            if (itens == null)
+                return null;
+
+            IList<ItemDto> result = new List<ItemDto>();
+            foreach (Item item in itens)
+                result.Add(ConverterEntidadeEmDto(item));
+
+            return result;
+            
+
+        }
+
+        /// <summary>
         /// Obter registros com base nos filtros
         /// </summary>
         /// <param name="tipo">Tipo de busca de registro</param>
@@ -538,6 +557,19 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         public IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId)
         {
             return _dmn.Pesquisar(dataInicial, dataFinal, tipoItemId, categoriaId);
+        }
+
+        /// <summary>
+        /// Executar a pesquisa de itens livres para match com base nos critérios
+        /// </summary>
+        /// <param name="dataInicial">Data inicial do período</param>
+        /// <param name="dataFinal">Data final do período</param>
+        /// <param name="categoriaId">Id da categoria</param>
+        public IEnumerable<ItemDto> ListarLivresParaMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId)
+        {
+            IEnumerable<Item> itens = _dmn.PesquisarParaMatche(dataInicial, dataFinal, categoriaId);
+            CarregaRelacoes(itens);
+            return ConverterEntidadeEmDto(itens);
         }
 
         /// <summary>
