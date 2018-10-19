@@ -30,32 +30,32 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             string sql = @"SELECT i.* FROM Item i";
             if (!incluirMatches)
                 sql = $"{sql} WHERE NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
-            sql = $"{sql} ORDER BY i.DataInclusao ASC";
+            sql = $"{sql} ORDER BY i.DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
 
         public override Item ObterPorId(Guid id)
         {
-            string sql = @"SELECT * FROM Item WHERE Id = @pid ORDER BY DataInclusao ASC";
+            string sql = @"SELECT * FROM Item WHERE Id = @pid ORDER BY DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql, new { pid = id }).SingleOrDefault();
         }
 
         public override IEnumerable<Item> ObterTodos()
         {
             //TODO: Verificar questão de Gerido pelo RH
-            string sql = @"SELECT * FROM Item ORDER BY DataInclusao ASC";
+            string sql = @"SELECT * FROM Item ORDER BY DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
 
         public Item ObterPorTitulo(string titulo)
         {
-            string sql = @"SELECT * FROM Item WHERE Titulo = @ptitulo ORDER BY DataInclusao ASC";
+            string sql = @"SELECT * FROM Item WHERE Titulo = @ptitulo ORDER BY DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql, new { ptitulo = titulo }).SingleOrDefault();
         }
 
         public IEnumerable<Item> ObterPorSemelhanca(string titulo)
         {
-            string sql = @"SELECT * FROM Item WHERE Titulo LIKE @ptitulo ORDER BY DataInclusao ASC";
+            string sql = @"SELECT * FROM Item WHERE Titulo LIKE @ptitulo ORDER BY DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql, new { ptitulo = $"%{titulo}%" }).ToList();
         }
 
@@ -65,7 +65,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Necessidade'";
             if (!incluirMatches)
                 sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
-            sql = $"{sql} ORDER BY i.DataInclusao ASC";
+            sql = $"{sql} ORDER BY i.DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
 
@@ -75,7 +75,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Doação'";
             if (!incluirMatches)
                 sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
-            sql = $"{sql} ORDER BY i.DataInclusao ASC";
+            sql = $"{sql} ORDER BY i.DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
 
         }
@@ -126,7 +126,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             else
                 sql = sql.Replace("_CATEGORIAID_", "c.Id");
 
-            sql = $"{sql} ORDER BY i.DataInclusao ASC";
+            sql = $"{sql} ORDER BY i.DataInclusao DESC";
 
             return _ctx.Database.GetDbConnection().Query<ItemListaReportDto>(sql).ToList();
 
