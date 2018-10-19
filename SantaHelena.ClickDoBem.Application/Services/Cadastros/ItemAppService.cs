@@ -253,7 +253,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     result = _dmn.ObterDoacoes(false);
                     break;
                 default:
-                    result = _dmn.ObterTodos();
+                    result = _dmn.ObterTodos(false);
                     break;
             }
 
