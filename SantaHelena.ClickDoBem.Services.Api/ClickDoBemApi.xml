@@ -641,8 +641,37 @@
                      "perfis" : [
                          "Admin",
                          "Colaborador"
-                     ]
-                 }
+                     ],
+                     "usuario": {
+                         "id": "guid",
+                         "dataInclusao": "2018-10-08T12:18:36",
+                         "dataAlteracao": null,
+                         "cpfCnpj": "00000000000",
+                         "nome": "string",
+                         "usuarioLogin": {
+                             "login": "string",
+                             "senha": "*ENCRYPTED*"
+                         },
+                         "usuarioDados": {
+                             "id": "guid",
+                             "dataInclusao": "2018-10-08T12:18:36",
+                             "dataAlteracao": null,
+                             "dataNascimento": "AAAA-MM-DD",
+                             "logradouro": "string",
+                             "numero": "string",
+                             "complemento": "string",
+                             "bairro": "string",
+                             "cidade": "string",
+                             "uf": "string",
+                             "cep": "string",
+                             "telefoneCelular": "string",
+                             "telefoneFixo": "string",
+                             "email": "email@provedor"
+                         },
+                         "usuarioPerfil": [
+                             "Colaborador"
+                         ]
+                     }
                  
              </remarks>
              <param name="request">Informações da requisição</param>
@@ -1148,7 +1177,7 @@
             Response de Autenticacao
             </summary>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.#ctor(System.Boolean,System.String,System.String,System.Nullable{System.DateTime},System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.#ctor(System.Boolean,System.String,System.String,System.Nullable{System.DateTime},System.Collections.Generic.IEnumerable{System.String},SantaHelena.ClickDoBem.Application.Dto.Credenciais.UsuarioDto)">
             <summary>
             Cria uma nova instâncioa da resposta de autenticação
             </summary>
@@ -1157,6 +1186,7 @@
             <param name="token">Token gerado</param>
             <param name="dataValidade">Data de validade do token</param>
             <param name="perfis">Lista de perfis</param>
+            <param name="dtoUsuario">Detalhes do Usuário</param>
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Sucesso">
             <summary>
@@ -1181,6 +1211,11 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Perfis">
             <summary>
             Lista de perfis
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse.Usuario">
+            <summary>
+            Dados completo do usuário
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.UsuarioSimpleResponse">

@@ -79,8 +79,37 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         ///         "perfis" : [
         ///             "Admin",
         ///             "Colaborador"
-        ///         ]
-        ///     }
+        ///         ],
+        ///         "usuario": {
+        ///             "id": "guid",
+        ///             "dataInclusao": "2018-10-08T12:18:36",
+        ///             "dataAlteracao": null,
+        ///             "cpfCnpj": "00000000000",
+        ///             "nome": "string",
+        ///             "usuarioLogin": {
+        ///                 "login": "string",
+        ///                 "senha": "*ENCRYPTED*"
+        ///             },
+        ///             "usuarioDados": {
+        ///                 "id": "guid",
+        ///                 "dataInclusao": "2018-10-08T12:18:36",
+        ///                 "dataAlteracao": null,
+        ///                 "dataNascimento": "AAAA-MM-DD",
+        ///                 "logradouro": "string",
+        ///                 "numero": "string",
+        ///                 "complemento": "string",
+        ///                 "bairro": "string",
+        ///                 "cidade": "string",
+        ///                 "uf": "string",
+        ///                 "cep": "string",
+        ///                 "telefoneCelular": "string",
+        ///                 "telefoneFixo": "string",
+        ///                 "email": "email@provedor"
+        ///             },
+        ///             "usuarioPerfil": [
+        ///                 "Colaborador"
+        ///             ]
+        ///         }
         ///     
         /// </remarks>
         /// <param name="request">Informações da requisição</param>
@@ -127,7 +156,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
                 token = new JwtSecurityTokenHandler().WriteToken(jwt);
                 validade = jwt.ValidTo;
             }
-            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade, perfis));
+            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade, perfis, usuarioDto));
         }
 
         /// <summary>

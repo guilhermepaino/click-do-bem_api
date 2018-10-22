@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
+using System;
 using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais
@@ -20,13 +21,15 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais
         /// <param name="token">Token gerado</param>
         /// <param name="dataValidade">Data de validade do token</param>
         /// <param name="perfis">Lista de perfis</param>
-        public AutenticacaoResponse(bool sucesso, string mensagem, string token, DateTime? dataValidade, IEnumerable<string> perfis)
+        /// <param name="dtoUsuario">Detalhes do Usuário</param>
+        public AutenticacaoResponse(bool sucesso, string mensagem, string token, DateTime? dataValidade, IEnumerable<string> perfis, UsuarioDto dtoUsuario)
         {
             Sucesso = sucesso;
             Mensagem = mensagem;
             Token = token;
             DataValidade = dataValidade;
             Perfis = perfis;
+            Usuario = dtoUsuario;
         }
 
         #endregion
@@ -58,6 +61,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais
         /// Lista de perfis
         /// </summary>
         public IEnumerable<string> Perfis { get; set; }
+
+        /// <summary>
+        /// Dados completo do usuário
+        /// </summary>
+        public UsuarioDto Usuario { get; set; }
 
         #endregion
 
