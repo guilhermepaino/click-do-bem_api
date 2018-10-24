@@ -108,6 +108,71 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             return dto.ToList().Select(x => ConverterDtoEmResponse(x));
         }
 
+        /// <summary>
+        /// Carregar imagens de um item
+        /// </summary>
+        /// <param name="itemId">Id do item</param>
+        /// <param name="imagens">Lista de requisições de imagem</param>
+        /// <returns>Uma json object com o resultado do carregamento</returns>
+        protected IEnumerable<object> CarregarImagens(Guid itemId, IEnumerable<SimpleImagemRequest> imagens)
+        {
+            IList<object> respImage = new List<object>();
+
+            if (imagens != null && imagens.Count() > 0)
+            {
+                foreach (SimpleImagemRequest img in imagens)
+                {
+                    _appService.CarregarImagem(itemId, img.NomeImagem, img.ImagemBase64, _caminho, out int sc, out object retImg);
+                    respImage.Add(retImg);
+                }
+            }
+
+            return respImage;
+
+        }
+
+        /// <summary>
+        /// Validar a quantidade de imagens
+        /// </summary>
+        /// <param name="itemId">Id da imagem</param>
+        /// <param name="imgExcluir">Lista de imagens a serem excluídas</param>
+        /// <param name="imagens">Lista de imagens a serem adicionadas</param>
+        /// <param name="criticas">Variável de saída de críticas</param>
+        protected bool ValidaQuantidadeImagens(Guid itemId, IEnumerable<Guid> imgExcluir, IEnumerable<SimpleImagemRequest> imagens, out string criticas)
+        {
+
+            criticas = string.Empty;
+
+            ItemDto item = _appService.ObterPorId(itemId);
+            if (item != null && imgExcluir != null && imagens != null)
+            {
+
+                int qtdImagens = (item.Imagens.Count() - item.Imagens.Where(x => imgExcluir.Contains(x.Id)).Select(x => x.Id).Count() + imagens.Count());
+                if (qtdImagens > 5)
+                {
+                    criticas = "Limite de imagens excedido";
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
+
+        /// <summary>
+        /// Excluir as imagens de acordo a lista
+        /// </summary>
+        /// <param name="imgExcluir"></param>
+        protected void ExcluirImagens(IEnumerable<Guid> imgExcluir)
+        {
+            imgExcluir
+                .ToList()
+                .ForEach(img => 
+                    _appService.RemoverImagem(img, _caminho, out int statusCode, out object dadosRetorno)
+                );
+                
+        }
+
         #endregion
 
         #region Métodos/EndPoints Api
@@ -189,15 +254,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             _appService.Inserir(dto, out int statusCode, out string mensagem);
 
-            IList<object> respImage = new List<object>();
-            if (req.Imagens != null && req.Imagens.Count() > 0)
-            {
-                foreach (SimpleImagemRequest img in req.Imagens)
-                {
-                    _appService.CarregarImagem(dto.Id, img.NomeImagem, img.ImagemBase64, _caminho, out int sc, out object retImg);
-                    respImage.Add(retImg);
-                }
-            }
+            IEnumerable<object> respImage = CarregarImagens(dto.Id, req.Imagens);
 
             return StatusCode(statusCode, new { Sucesso = statusCode.Equals(StatusCodes.Status200OK), Mensagem = new { Id = dto.Id.ToString(), Imagens = respImage } });
 
@@ -215,15 +272,32 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
         ///         "tipoItem": "Necessidade",
         ///         "categoria": "Higiene e limpeza",
-        ///         "anonimo": false
+        ///         "anonimo": false,
+        ///         "Imagens": [
+        ///             {
+        ///                 "NomeImagem": "string",
+        ///                 "ImagemBase64": "string-base64"
+        ///             }
+        ///         ],
+        ///         "ImgExcluir": [
+        ///             "guid1",
+        ///             "guid2"
+        ///         ]
         ///      }
         ///      
         ///     Resposta:
         ///     {
         ///         "sucesso": true,
-        ///         "mensagem": "Registro alterado com sucesso"
+        ///         "mensagem": "Registro alterado com sucesso",
+        ///         "imagens": [
+        ///             {
+        ///                 "id": "guid",
+        ///                 "nomeImagem": "string",
+        ///                 "arquivo": "string"
+        ///             }
+        ///         ]
         ///     }
-        ///     
+        /// 
         ///     Validações apresentadas em array, exemplo:
         ///     {
         ///         "sucesso": false,
@@ -245,6 +319,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemInsertRequest>(req);
 
+            // Validando quanidade de imagens
+            if (!ValidaQuantidadeImagens(req.Id, req.ImgExcluir, req.Imagens, out string criticas))
+                return BadRequest(new { sucess = false, mensagem = criticas });
+
             var dto = new ItemDto()
             {
                 Id = req.Id,
@@ -256,9 +334,13 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Anonimo = req.Anonimo
             };
 
-            _appService.Atualizar(dto, out int statusCode, out object dados);
+            _appService.Atualizar(dto, out int statusCode, out string mensagem);
 
-            return StatusCode(statusCode, dados);
+            ExcluirImagens(req.ImgExcluir);
+
+            IEnumerable<object> respImage = CarregarImagens(dto.Id, req.Imagens);
+
+            return StatusCode(statusCode, new { sucesso = statusCode.Equals(StatusCodes.Status200OK), mensagem, imagens = respImage });
 
         }
 

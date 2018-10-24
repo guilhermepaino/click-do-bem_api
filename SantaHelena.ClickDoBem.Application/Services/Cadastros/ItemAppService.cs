@@ -437,8 +437,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// </summary>
         /// <param name="dto">Objeto de transporte de dados de item</param>
         /// <param name="statusCode">Variável de saída de StatusCode</param>
-        /// <param name="dados">Objeto de saída de dados (mensagem)</param>
-        public void Atualizar(ItemDto dto, out int statusCode, out object dados)
+        /// <param name="mensagem">Variável string de saída de dados (mensagem)</param>
+        public void Atualizar(ItemDto dto, out int statusCode, out string mensagem)
         {
 
 
@@ -448,7 +448,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             Item entidade = _dmn.ObterPorId(dto.Id);
             if (entidade == null)
             {
-                dados = new { sucesso = false, mensagem = "Item não encontrado" };
+                mensagem = "Item não encontrado";
                 statusCode = StatusCodes.Status400BadRequest;
             }
             else
@@ -467,7 +467,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
                 if (criticas.Length > 0)
                 {
-                    dados = new { sucesso = false, mensagem = criticas.ToString().Substring(0, (criticas.Length - 1)).Replace("|", "\r\n") };
+                    mensagem = criticas.ToString().Substring(0, (criticas.Length - 1)).Replace("|", "\r\n");
                     statusCode = StatusCodes.Status400BadRequest;
                 }
                 else
@@ -482,7 +482,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
                     if (!entidade.EstaValido())
                     {
-                        dados = new { sucesso = false, mensagem = entidade.ValidationResult.ToString() };
+                        mensagem = entidade.ValidationResult.ToString();
                         statusCode = StatusCodes.Status400BadRequest;
                     }
                     else
@@ -491,7 +491,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                         _dmn.Atualizar(entidade);
                         _uow.Efetivar();
 
-                        dados = new { sucesso = true, mensagem = "Registro alterado com sucesso" };
+                        mensagem = "Registro alterado com sucesso";
                         statusCode = StatusCodes.Status200OK;
 
                     }

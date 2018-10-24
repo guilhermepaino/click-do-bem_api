@@ -190,7 +190,6 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
             {
 
                 ItemImagem imagem = _imgDomain.ObterPorId(id);
-                //string pastaItem = Path.Combine(caminho, imagem.ItemId.ToString());
 
                 if (imagem == null)
                 {
@@ -227,6 +226,8 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                     else
                     {
                         File.Delete(nomeCompleto);
+                        _imgDomain.Excluir(id);
+                        _uow.Efetivar();
                         dadosRetorno = new
                         {
                             Sucesso = true,

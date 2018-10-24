@@ -163,6 +163,29 @@
             </summary>
             <param name="dto">Objeto Dto para conversão</param>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.CarregarImagens(System.Guid,System.Collections.Generic.IEnumerable{SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest})">
+            <summary>
+            Carregar imagens de um item
+            </summary>
+            <param name="itemId">Id do item</param>
+            <param name="imagens">Lista de requisições de imagem</param>
+            <returns>Uma json object com o resultado do carregamento</returns>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ValidaQuantidadeImagens(System.Guid,System.Collections.Generic.IEnumerable{System.Guid},System.Collections.Generic.IEnumerable{SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.SimpleImagemRequest},System.String@)">
+            <summary>
+            Validar a quantidade de imagens
+            </summary>
+            <param name="itemId">Id da imagem</param>
+            <param name="imgExcluir">Lista de imagens a serem excluídas</param>
+            <param name="imagens">Lista de imagens a serem adicionadas</param>
+            <param name="criticas">Variável de saída de críticas</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ExcluirImagens(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Excluir as imagens de acordo a lista
+            </summary>
+            <param name="imgExcluir"></param>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Inserir(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest)">
             <summary>
             Inserir um novo registro de item
@@ -236,15 +259,32 @@
                     "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
                     "tipoItem": "Necessidade",
                     "categoria": "Higiene e limpeza",
-                    "anonimo": false
+                    "anonimo": false,
+                    "Imagens": [
+                        {
+                            "NomeImagem": "string",
+                            "ImagemBase64": "string-base64"
+                        }
+                    ],
+                    "ImgExcluir": [
+                        "guid1",
+                        "guid2"
+                    ]
                  }
                  
                 Resposta:
                 {
                     "sucesso": true,
-                    "mensagem": "Registro alterado com sucesso"
+                    "mensagem": "Registro alterado com sucesso",
+                    "imagens": [
+                        {
+                            "id": "guid",
+                            "nomeImagem": "string",
+                            "arquivo": "string"
+                        }
+                    ]
                 }
-                
+            
                 Validações apresentadas em array, exemplo:
                 {
                     "sucesso": false,
@@ -945,6 +985,11 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest.Id">
             <summary>
             Id do registro
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest.ImgExcluir">
+            <summary>
+            Lista de Ids de imagens a serem excluídas
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.MatchRequest">

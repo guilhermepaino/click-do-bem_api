@@ -21,7 +21,7 @@
         "MYSQL_PASSWORD": "sh.click"
       }
     },
-    "SantaHelena.ClickDoBem.Services.Api": {
+    "Kestrel": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
