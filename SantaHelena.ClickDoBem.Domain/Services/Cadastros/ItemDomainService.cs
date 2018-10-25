@@ -201,8 +201,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                     return false;
                 }
 
-                string caminhoImagem = $"{imagem.ItemId.ToString()}\\{imagem.Id.ToString()}.jpg";
-                string nomeCompleto = Path.Combine(caminho, caminhoImagem);
+                string nomeCompleto = Path.Combine(caminho, imagem.ItemId.ToString(), $"{imagem.Id.ToString()}{imagem.Caminho.Substring(imagem.Caminho.LastIndexOf("."))}");
                 if (!Directory.Exists(caminho))
                 {
                     dadosRetorno = new
@@ -219,7 +218,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                         dadosRetorno = new
                         {
                             Sucesso = false,
-                            Mensagem = $"Arquivo da imagem não encontrado (caminho: {nomeCompleto})"
+                            Mensagem = $"Arquivo da imagem não encontrado"
                         };
                         return false;
                     }
