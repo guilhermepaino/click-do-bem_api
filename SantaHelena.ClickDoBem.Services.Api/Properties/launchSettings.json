@@ -1,8 +1,8 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:33484",
       "sslPort": 0
@@ -31,6 +31,19 @@
         "MYSQL_SERVER": "192.168.3.1",
         "MYSQL_DATABASE": "clickdobem",
         "MYSQL_USER": "shclickappuser",
+        "MYSQL_PASSWORD": "sh.click"
+      }
+    },
+    "Kestrel-SH-AWS": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5010",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MYSQL_SERVER": "sh-clickdobem.cs9qmxdrrnhg.us-east-1.rds.amazonaws.com",
+        "MYSQL_DATABASE": "clickdobemdev",
+        "MYSQL_USER": "shdev",
         "MYSQL_PASSWORD": "sh.click"
       }
     }

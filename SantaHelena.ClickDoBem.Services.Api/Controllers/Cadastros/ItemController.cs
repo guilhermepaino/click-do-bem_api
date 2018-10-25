@@ -163,14 +163,21 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// Excluir as imagens de acordo a lista
         /// </summary>
         /// <param name="imgExcluir"></param>
-        protected void ExcluirImagens(IEnumerable<Guid> imgExcluir)
+        protected object ExcluirImagens(IEnumerable<Guid> imgExcluir)
         {
+
+            IList<object> respExclusao = new List<object>();
+
             imgExcluir
                 .ToList()
-                .ForEach(img => 
-                    _appService.RemoverImagem(img, _caminho, out int statusCode, out object dadosRetorno)
-                );
-                
+                .ForEach(img =>
+                {
+                    _appService.RemoverImagem(img, _caminho, out int statusCode, out object dadosRetorno);
+                    respExclusao.Add(new { sucesso = statusCode.Equals(StatusCodes.Status200OK), mensagem = dadosRetorno });
+                });
+
+            return respExclusao;
+
         }
 
         #endregion
@@ -317,7 +324,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         {
 
             if (!ModelState.IsValid)
-                return Response<ItemInsertRequest>(req);
+                return Response<ItemUpdateRequest>(req);
 
             // Validando quanidade de imagens
             if (!ValidaQuantidadeImagens(req.Id, req.ImgExcluir, req.Imagens, out string criticas))
@@ -336,11 +343,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             _appService.Atualizar(dto, out int statusCode, out string mensagem);
 
-            ExcluirImagens(req.ImgExcluir);
+            var respExclusao = ExcluirImagens(req.ImgExcluir);
 
             IEnumerable<object> respImage = CarregarImagens(dto.Id, req.Imagens);
 
-            return StatusCode(statusCode, new { sucesso = statusCode.Equals(StatusCodes.Status200OK), mensagem, imagens = respImage });
+            return StatusCode(statusCode, new { sucesso = statusCode.Equals(StatusCodes.Status200OK), mensagem, imagens = respImage, imgExclusao = respExclusao });
 
         }
 
@@ -697,6 +704,37 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             return StatusCode(statusCode, dadosRetorno);
 
         }
+
+        /*
+        /// <summary>
+        /// Efetua o match de um determinado item de doação ou necessidade criando um item oposto correspondente e fazendo o match
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///     
+        ///     Requisição
+        ///     {
+        ///         "itemId": "guid"
+        ///     }
+        ///     
+        ///     Respostas
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "mensagem de sucesso ou crítica",
+        ///         "id": "guid",
+        ///         "idItemRelacionado": "guid"
+        ///     }
+        ///     
+        ///     O campo 'id' será informado somente no caso de sucesso
+        ///     O campo 'idItemRelacionado' será informado somente no caso de sucesso e corresponde ao id o item criado para efetuar o match
+        /// 
+        /// </remarks>
+        [HttpPost("match-simples")]
+        public IActionResult EfetuarMatchUnilateral([FromBody]MatchUnilateralRequest request)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { sucesso = false, mensagem = "Não implementado ainda" });
+        }
+        */
 
         /// <summary>
         /// Desfaz um match realizado
