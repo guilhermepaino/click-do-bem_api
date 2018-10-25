@@ -219,7 +219,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                         dadosRetorno = new
                         {
                             Sucesso = false,
-                            Mensagem = $"Arquivo da imagem não encontrado"
+                            Mensagem = $"Arquivo da imagem não encontrado (caminho: {nomeCompleto})"
                         };
                         return false;
                     }

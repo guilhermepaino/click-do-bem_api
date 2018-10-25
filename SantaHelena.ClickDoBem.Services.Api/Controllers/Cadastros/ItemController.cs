@@ -173,7 +173,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 .ForEach(img =>
                 {
                     _appService.RemoverImagem(img, _caminho, out int statusCode, out object dadosRetorno);
-                    respExclusao.Add(new { sucesso = statusCode.Equals(StatusCodes.Status200OK), mensagem = dadosRetorno });
+                    respExclusao.Add(dadosRetorno);
                 });
 
             return respExclusao;
