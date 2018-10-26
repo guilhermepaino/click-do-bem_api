@@ -468,7 +468,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         }
 
         /// <summary>
-        /// Realizar a troca de senha
+        /// Realizar a recuperação de senha
         /// </summary>
         /// <param name="cpfCnpj">Número do cpf/cpf do usuário</param>
         /// <param name="dataNascimento">Data de nascimento do usuário</param>
@@ -507,6 +507,70 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
                 statusCode = StatusCodes.Status200OK;
                 mensagem = "Senha recuperada com sucesso";
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+                mensagem = $"Falha na troca de senha [{ex.Message} - {ex.StackTrace}]";
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Realizar a troca de senha do usuário
+        /// </summary>
+        /// <param name="usuarioLogado">Id do usuário</param>
+        /// <param name="senhaAtual">Senha atual (MD5)</param>
+        /// <param name="novaSenha">Nova senha</param>
+        /// <param name="confirmarSenha">Confirmação de senha</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="mensagem">Variável de saída de mensagem com o resultado da operação</param>
+        public bool TrocarSenha(IAppUser usuarioLogado, string senhaAtual, string novaSenha, string confirmarSenha, out int statusCode, out string mensagem)
+        {
+
+            // Localizando usuario
+            Usuario usuario = _dmn.ObterPorLogin(usuarioLogado.Login, senhaAtual);
+            if (usuario == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                mensagem = "Usuário não localizado";
+                return false;
+            }
+
+            if (usuario.UsuarioDados == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                mensagem = "Dados do usuário não localizado";
+                return false;
+            }
+
+            try
+            {
+
+                UsuarioLogin login = _loginDomain.ObterPorId(usuario.Id);
+                if (login == null)
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    mensagem = "Dados de login não localizado";
+                    return false;
+                }
+
+                if (novaSenha.Equals(usuario.UsuarioDados.DataNascimento.Value.ToString("ddMMyyyy")))
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    mensagem = "A senha não pode ser igual a data de nascimento";
+                    return false;
+                }
+
+                login.Senha = MD5.ByteArrayToString(MD5.HashMD5(novaSenha));
+                _loginDomain.Atualizar(login);
+                _uow.Efetivar();
+
+                statusCode = StatusCodes.Status200OK;
+                mensagem = "Senha alterada com sucesso";
                 return true;
 
             }

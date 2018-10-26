@@ -7,22 +7,28 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais
 {
 
     /// <summary>
-    /// Modelo de request de troca de senha
+    /// Modelo de request de esqueci a senha
     /// </summary>
-    public class TrocaSenhaRequest : ViewModelBase
+    public class EsqueciSenhaRequest : ViewModelBase
     {
 
         /// <summary>
-        /// Senha atual (MD5)
+        /// Número do documento do usuário (Cpf ou Cnpj)
         /// </summary>
-        [Required(ErrorMessage = "A senha atual deve ser informada")]
-        public string SenhaAtual { get; set; }
+        [Required(ErrorMessage = "O número do documento deve ser informado")]
+        public string CpfCnpj { get; set; }
+
+        /// <summary>
+        /// Data de Nascimento do usuário
+        /// </summary>
+        [Required(ErrorMessage = "A data de nascimento deve ser informada")]
+        public DateTime? DataNascimento { get; set; }
 
         /// <summary>
         /// Nova Senha
         /// </summary>
         [Required(ErrorMessage = "A senha deve ser informada")]
-        [SenhaValidation]
+        [SenhaValidation("DataNascimento")]
         public string NovaSenha { get; set; }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
+using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Credenciais
         ArquivoDocumentoDto ImportarArquivoColaborador(IFormFile arquivo, string caminho, out int statusCode);
         void VerificarSituacaoDocumento(string documento, out string situacao, out bool cadastrado);
         bool EsqueciSenha(string cpfCnpj, DateTime? dataNascimento, string novaSenha, string confirmarSenha, out int statusCode, out string mensagem);
+        bool TrocarSenha(IAppUser usuario, string senhaAtual, string novaSenha, string confirmarSenha, out int statusCode, out string mensagem);
     }
 
 }

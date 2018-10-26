@@ -589,6 +589,29 @@
             
             </remarks>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.EfetuarMatchUnilateral(System.Nullable{System.Guid})">
+            <summary>
+            Efetua o match de um determinado item de doação ou necessidade criando um item oposto correspondente e fazendo o match
+            </summary>
+            <remarks>
+            Contrato
+                
+                Requisição
+                url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica",
+                    "id": "guid",
+                    "idItemRelacionado": "guid"
+                }
+                
+                O campo 'id' será informado somente no caso de sucesso
+                O campo 'idItemRelacionado' será informado somente no caso de sucesso e corresponde ao id o item criado para efetuar o match
+            
+            </remarks>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.DesfazerMatch(System.Guid)">
             <summary>
             Desfaz um match realizado
@@ -654,7 +677,7 @@
             API de Usuario
             </summary>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Credenciais.IUsuarioAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Options.IOptions{SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions})">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Credenciais.IUsuarioAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Options.IOptions{SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions},SantaHelena.ClickDoBem.Domain.Core.Interfaces.IAppUser)">
             <summary>
             Cria uma nova instância da API
             </summary>
@@ -718,6 +741,52 @@
              <response code="200">Sucesso na autenticação</response>
              <response code="403">Falha na autenticação/Acesso Negado</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.EsqueciSenha(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.EsqueciSenhaRequest)">
+            <summary>
+            Realizar a recuperação da senha do colaborador
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "cpfCnpj": "string",
+                    "dataNascimento": "AAAA-MM-DD",
+                    "novaSenha": "string",
+                    "confirmarSenha": "string"
+                }
+                
+                Resposta
+                {
+                    "sucesso" : boolean,
+                    "mensagem": "texto com o resultado da operação"
+                }
+                
+            </remarks>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.AlterarSenha(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.TrocaSenhaRequest)">
+            <summary>
+            Realizar a troca de senha do colaborador
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "documento": "string",
+                    "senhaAtual": "hashMD5",
+                    "novaSenha": "string",
+                    "confirmarSenha": "string"
+                }
+                
+                Resposta
+                {
+                    "sucesso": boolean,
+                    "mensagem": "texto com o resultado da operação"
+                }
+            
+            </remarks>
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Listar(System.String)">
              <summary>
@@ -1062,6 +1131,51 @@
             Senha do usuário (Hash Md5)
             </summary>
         </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.EsqueciSenhaRequest">
+            <summary>
+            Modelo de request de esqueci a senha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.EsqueciSenhaRequest.CpfCnpj">
+            <summary>
+            Número do documento do usuário (Cpf ou Cnpj)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.EsqueciSenhaRequest.DataNascimento">
+            <summary>
+            Data de Nascimento do usuário
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.EsqueciSenhaRequest.NovaSenha">
+            <summary>
+            Nova Senha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.EsqueciSenhaRequest.ConfirmarSenha">
+            <summary>
+            Confirmação de senha
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.TrocaSenhaRequest">
+            <summary>
+            Modelo de request de troca de senha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.TrocaSenhaRequest.SenhaAtual">
+            <summary>
+            Senha atual (MD5)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.TrocaSenhaRequest.NovaSenha">
+            <summary>
+            Nova Senha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.TrocaSenhaRequest.ConfirmarSenha">
+            <summary>
+            Confirmação de senha
+            </summary>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ArquivoDocumentoResponse">
             <summary>
             Modelo de resposta do processamento de arquivo de documento
@@ -1292,6 +1406,29 @@
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Validations.ConfirmacaoSenhaValidationAttribute">
+            <summary>
+            Validador de complexidade de confirmação de senha
+            </summary>
+        </member>
+        <member name="F:SantaHelena.ClickDoBem.Services.Api.Validations.ConfirmacaoSenhaValidationAttribute._nomePropriedadeNovaSenha">
+            <summary>
+            Nome da propriedade de data de nova senha
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.ConfirmacaoSenhaValidationAttribute.#ctor(System.String)">
+            <summary>
+            Cria uma nova instância do atributo
+            </summary>
+            <param name="propriedadeNovaSenha">Nome da propriedade de nova senha</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Validations.ConfirmacaoSenhaValidationAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Determina se o objeto é válido
+            </summary>
+            <param name="value">Objeto a ser validado</param>
+            <param name="validationContext">Contexto de validação</param>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Validations.CpfCnpjValidationAttribute">
             <summary>

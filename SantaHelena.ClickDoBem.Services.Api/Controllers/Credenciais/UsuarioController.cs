@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
+using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Services.Api.Identity;
 using SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais;
@@ -31,6 +32,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
 
         protected readonly IUsuarioAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IAppUser _usuario;
         protected readonly JwtTokenOptions _jwtTokenOptions;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
@@ -46,12 +48,14 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         (
             IUsuarioAppService appService,
             IHostingEnvironment hostingEnvironment,
-            IOptions<JwtTokenOptions> jwtTokenOptions
+            IOptions<JwtTokenOptions> jwtTokenOptions,
+            IAppUser usuario
         )
         {
             _jwtTokenOptions = jwtTokenOptions.Value;
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
+            _usuario = usuario;
         }
 
         #endregion
@@ -160,12 +164,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         }
 
         /// <summary>
-        /// Realizar a troca de senha do colaborador
+        /// Realizar a recuperação da senha do colaborador
         /// </summary>
         /// <remarks>
         /// Contrato
         /// 
-        ///     Requisição:
+        ///     Requisição
         ///     {
         ///         "cpfCnpj": "string",
         ///         "dataNascimento": "AAAA-MM-DD",
@@ -173,22 +177,56 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         ///         "confirmarSenha": "string"
         ///     }
         ///     
-        ///     Resposta:
+        ///     Resposta
         ///     {
-        ///         "sucesso" : bool,
-        ///         "mensagem": "mensagem do resultado da operação"
+        ///         "sucesso" : boolean,
+        ///         "mensagem": "texto com o resultado da operação"
         ///     }
         ///     
         /// </remarks>
         [HttpPost("esquecisenha")]
         [AllowAnonymous]
-        public IActionResult EsqueciSenha([FromBody] EsqueciSenha request)
+        public IActionResult EsqueciSenha([FromBody] EsqueciSenhaRequest request)
         {
             if (!ModelState.IsValid)
-                return Response<EsqueciSenha>(request);
+                return Response<EsqueciSenhaRequest>(request);
 
             bool sucesso = _appService.EsqueciSenha(request.CpfCnpj, request.DataNascimento, request.NovaSenha, request.ConfirmarSenha, out int statusCode, out string mensagem);
             return StatusCode(statusCode, new { Sucesso = sucesso, Mensagem = mensagem });
+        }
+
+        /// <summary>
+        /// Realizar a troca de senha do colaborador
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     {
+        ///         "documento": "string",
+        ///         "senhaAtual": "hashMD5",
+        ///         "novaSenha": "string",
+        ///         "confirmarSenha": "string"
+        ///     }
+        ///     
+        ///     Resposta
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "texto com o resultado da operação"
+        ///     }
+        /// 
+        /// </remarks>
+        [HttpPost("trocarsenha")]
+        public IActionResult AlterarSenha([FromBody] TrocaSenhaRequest request)
+        {
+
+            if (!ModelState.IsValid)
+                return Response<TrocaSenhaRequest>(request);
+
+            bool sucesso = _appService.TrocarSenha(_usuario, request.SenhaAtual, request.NovaSenha, request.ConfirmarSenha, out int statusCode, out string mensagem);
+            return StatusCode(statusCode, new { Sucesso = sucesso, Mensagem = mensagem });
+
+
         }
 
         /// <summary>
