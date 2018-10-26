@@ -11,6 +11,7 @@ using SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros;
 using System.IO;
 using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros;
+using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 {
@@ -29,6 +30,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         protected readonly IUsuarioAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IAppUser _usuario;
         private readonly string _caminho;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
@@ -43,10 +45,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public ColaboradorController
         (
             IUsuarioAppService appService,
-            IHostingEnvironment hostingEnvironment
+            IHostingEnvironment hostingEnvironment,
+            IAppUser usuario
         )
         {
             _appService = appService;
+            _usuario = usuario;
             _hostingEnvironment = hostingEnvironment;
             _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("tmp")).SingleOrDefault();
         }
@@ -127,6 +131,78 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             };
 
             _appService.CadastrarColaborador(dto, out int statusCode, out object dados);
+
+            return StatusCode(statusCode, dados);
+
+        }
+
+        /// <summary>
+        /// Cadastrar um novo colaborador
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     ColaboradorInsertRequest
+        ///     
+        ///     Exemplo:
+        ///     {
+        ///         "id": "guid",
+        ///         "nome": "JOAO DA SILVA",
+        ///         "dataNascimento": "1976-11-13",
+        ///         "endereco": {
+        ///             "logradouro": "RUA DOS BOBOS",
+        ///             "numero": "0",
+        ///             "complemento": "BLOCO A - APTO 00",
+        ///             "bairro": "PARQUE DOS DESORIENTADOS",
+        ///             "cidade": "ARARAQUARA",
+        ///             "uf": "SP",
+        ///             "cep": "16123789"
+        ///         },
+        ///         "telefoneFixo": "",
+        ///         "telefoneCelular": "(16)91234-1234",
+        ///         "email": "usuario.teste@s2it.com.br"
+        ///     }
+        /// 
+        /// </remarks>
+        /// <param name="request">Modelo de requisição de alteração de usuário</param>
+        /// <response code="200">Cadastro realizado com sucesso</response>
+        /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPut]
+        public IActionResult Editar([FromBody]ColaboradorUpdateRequest request)
+        {
+
+            if (!ModelState.IsValid)
+                return Response<ColaboradorUpdateRequest>(request);
+
+            if (!request.Id.Equals(_usuario.Id) && !_usuario.Perfis.Contains("Administrador"))
+                return BadRequest(new { Sucesso = false, Mensagem = "Não é permitido alterar dados de outro usuário" });
+
+            UsuarioDto dto = new UsuarioDto()
+            {
+                Id = request.Id,
+                Nome = request.Nome,
+                UsuarioDados = new UsuarioDadosDto()
+                {
+                    DataNascimento = request.DataNascimento,
+                    Logradouro = request.Endereco.Logradouro,
+                    Numero = request.Endereco.Numero,
+                    Complemento = request.Endereco.Complemento,
+                    Bairro = request.Endereco.Bairro,
+                    Cidade = request.Endereco.Cidade,
+                    UF = request.Endereco.Uf,
+                    CEP = request.Endereco.Cep,
+                    TelefoneFixo = request.TelefoneFixo,
+                    TelefoneCelular = request.TelefoneCelular,
+                    Email = request.Email
+                }
+            };
+
+            _appService.AlterarColaborador(dto, out int statusCode, out object dados);
 
             return StatusCode(statusCode, dados);
 

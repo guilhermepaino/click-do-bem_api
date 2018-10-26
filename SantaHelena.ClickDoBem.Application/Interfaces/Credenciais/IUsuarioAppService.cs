@@ -15,6 +15,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Credenciais
         IEnumerable<UsuarioDto> ObterTodos();
         IEnumerable<UsuarioDto> ObterPorPerfil(string perfil);
         void CadastrarColaborador(UsuarioDto dto, out int statusCode, out object dados);
+        void AlterarColaborador(UsuarioDto dto, out int statusCode, out object dados);
         ArquivoDocumentoDto ImportarArquivoColaborador(IFormFile arquivo, string caminho, out int statusCode);
         void VerificarSituacaoDocumento(string documento, out string situacao, out bool cadastrado);
         bool EsqueciSenha(string cpfCnpj, DateTime? dataNascimento, string novaSenha, string confirmarSenha, out int statusCode, out string mensagem);

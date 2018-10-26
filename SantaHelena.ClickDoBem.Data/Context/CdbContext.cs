@@ -65,7 +65,7 @@ namespace SantaHelena.ClickDoBem.Data.Context
                         break;
                     case EntityState.Modified:
                         entry.Property("DataAlteracao").CurrentValue = DateTime.Now;
-                        entry.Property("DataAlteracao").IsModified = false;
+                        entry.Property("DataAlteracao").IsModified = true;
                         break;
                 }
             }

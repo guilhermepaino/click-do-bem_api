@@ -275,6 +275,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// 
         ///     Requisição: ItemRequest
         ///     {
+        ///         "id": "Id do item (guid)",
         ///         "titulo": "Fralda Descartável Infantil",
         ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
         ///         "tipoItem": "Necessidade",

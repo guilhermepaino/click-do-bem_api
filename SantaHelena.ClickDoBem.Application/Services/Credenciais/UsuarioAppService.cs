@@ -72,12 +72,15 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                 Nome = dto.Nome
             };
 
-            usuario.UsuarioLogin = new UsuarioLogin()
+            if (dto.UsuarioLogin != null)
             {
-                UsuarioId = usuario.Id,
-                Login = dto.UsuarioLogin.Login,
-                Senha = dto.UsuarioLogin.Senha
-            };
+                usuario.UsuarioLogin = new UsuarioLogin()
+                {
+                    UsuarioId = usuario.Id,
+                    Login = dto.UsuarioLogin.Login,
+                    Senha = dto.UsuarioLogin.Senha
+                };
+            }
 
             usuario.UsuarioDados = new UsuarioDados()
             {
@@ -103,17 +106,22 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
         protected void ConverterDtoPerfilEmEntidadePerfil(Usuario usuario, IEnumerable<string> perfisDto)
         {
-
-            if (perfisDto.Count() > 0)
+            if (perfisDto != null)
             {
-                perfisDto
-                    .ToList()
-                    .ForEach(p =>
-                    {
-                        usuario.Perfis.Add(new UsuarioPerfil() { UsuarioId = usuario.Id, Perfil = p });
-                    });
+
+                if (perfisDto.Count() > 0)
+                {
+                    perfisDto
+                        .ToList()
+                        .ForEach(p =>
+                        {
+                            usuario.Perfis.Add(new UsuarioPerfil() { UsuarioId = usuario.Id, Perfil = p });
+                        });
+
+                }
 
             }
+
         }
 
         protected override UsuarioDto ConverterEntidadeEmDto(Usuario usuario)
@@ -281,6 +289,58 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                         statusCode = StatusCodes.Status200OK;
 
                     }
+
+                }
+
+            }
+
+        }
+
+        /// <summary>
+        /// Alterar o cadastro de um colaborador
+        /// </summary>
+        /// <param name="dto">Objeto Data-Transport</param>
+        /// <param name="statusCode">Variável de saído do código de status</param>
+        /// <param name="dados">Variável de saída da mensagem</param>
+        public void AlterarColaborador(UsuarioDto dto, out int statusCode, out object dados)
+        {
+
+            // Verificar se o usuário já está cadastrado
+            Usuario usuario = _dmn.ObterPorId(dto.Id);
+            if (usuario == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dados = new { sucesso = false, mensagem = "Usuário não encontrado" };
+            }
+            else
+            {
+
+                usuario.Nome = dto.Nome;
+                usuario.UsuarioDados.DataNascimento = dto.UsuarioDados.DataNascimento;
+                usuario.UsuarioDados.Logradouro = dto.UsuarioDados.Logradouro;
+                usuario.UsuarioDados.Numero = dto.UsuarioDados.Numero;
+                usuario.UsuarioDados.Complemento = dto.UsuarioDados.Complemento;
+                usuario.UsuarioDados.Bairro = dto.UsuarioDados.Bairro;
+                usuario.UsuarioDados.Cidade = dto.UsuarioDados.Cidade;
+                usuario.UsuarioDados.UF = dto.UsuarioDados.UF;
+                usuario.UsuarioDados.CEP = dto.UsuarioDados.CEP;
+                usuario.UsuarioDados.TelefoneFixo = dto.UsuarioDados.TelefoneFixo;
+                usuario.UsuarioDados.TelefoneCelular = dto.UsuarioDados.TelefoneCelular;
+                usuario.UsuarioDados.Email = dto.UsuarioDados.Email;
+
+                if (!usuario.EstaValido())
+                {
+                    dados = new { sucesso = false, mensagem = usuario.ValidationResult.ToString() };
+                    statusCode = StatusCodes.Status400BadRequest;
+                }
+                else
+                {
+
+                    _dmn.Atualizar(usuario);
+                    _uow.Efetivar();
+
+                    dados = new { sucesso = true, mensagem = "Registro alterado com sucesso" };
+                    statusCode = StatusCodes.Status200OK;
 
                 }
 
