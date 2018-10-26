@@ -33,6 +33,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public Guid? DoacaoId { get; set; }
 
+        public Guid? TipoMatchId { get; set; }
+
         #endregion
 
         #region Navigation (Lazy)
@@ -42,6 +44,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
         public Item ItemDoacao { get; set; }
 
         public Item ItemNecessidade { get; set; }
+
+        public TipoMatch TipoMatch { get; set; }
 
         #endregion
 
@@ -61,6 +65,9 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
             RuleFor(c => c.DoacaoId)
                 .NotNull().WithMessage("O item de doação deve ser informado");
+
+            RuleFor(c => c.TipoMatchId)
+                .NotNull().WithMessage("O tipo de match deve ser informado");
 
         }
 

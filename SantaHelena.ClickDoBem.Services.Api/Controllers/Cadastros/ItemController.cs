@@ -705,7 +705,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         }
 
-        /*
         /// <summary>
         /// Efetua o match de um determinado item de doação ou necessidade criando um item oposto correspondente e fazendo o match
         /// </summary>
@@ -713,9 +712,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// Contrato
         ///     
         ///     Requisição
-        ///     {
-        ///         "itemId": "guid"
-        ///     }
+        ///     url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006
         ///     
         ///     Respostas
         ///     {
@@ -729,12 +726,15 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     O campo 'idItemRelacionado' será informado somente no caso de sucesso e corresponde ao id o item criado para efetuar o match
         /// 
         /// </remarks>
-        [HttpPost("match-simples")]
-        public IActionResult EfetuarMatchUnilateral([FromBody]MatchUnilateralRequest request)
+        [HttpPost("match/{id:guid}")]
+        public IActionResult EfetuarMatchUnilateral(Guid? id)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { sucesso = false, mensagem = "Não implementado ainda" });
+            if (!id.HasValue)
+                return BadRequest(new { sucesso = false, mensagem = "O id do item inválido ou não informado" });
+
+            _appService.ExecutarMatch(id.Value, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
         }
-        */
 
         /// <summary>
         /// Desfaz um match realizado

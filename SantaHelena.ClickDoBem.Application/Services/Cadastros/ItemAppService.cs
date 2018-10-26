@@ -38,6 +38,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         protected readonly IItemImagemDomainService _imagemDomain;
         protected readonly IItemMatchDomainService _matchDomain;
         protected readonly IUsuarioDomainService _usuarioDomain;
+        protected readonly ITipoMatchDomainService _tipoMatchDomain;
         protected readonly IAppUser _usuario;
 
         #endregion
@@ -56,6 +57,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             IItemImagemDomainService imagemDomain,
             IItemMatchDomainService matchDomain,
             IUsuarioDomainService usuarioDomain,
+            ITipoMatchDomainService tipoMatchDomain,
             IAppUser usuario
         )
         {
@@ -66,6 +68,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             _imagemDomain = imagemDomain;
             _matchDomain = matchDomain;
             _usuarioDomain = usuarioDomain;
+            _tipoMatchDomain = tipoMatchDomain;
             _usuario = usuario;
         }
 
@@ -699,7 +702,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             {
                 UsuarioId = _usuario.Id,
                 DoacaoId = doacaoId,
-                NecessidadeId = necessidadeId
+                NecessidadeId = necessidadeId,
+                TipoMatchId = Guid.Parse("a3412363-d87d-11e8-abfa-0e0e947bb2d6")
             };
             _matchDomain.Adicionar(match);
             _uow.Efetivar();
@@ -748,6 +752,97 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     Mensagem = $"Match excluído com sucesso"
                 };
 
+            }
+
+        }
+
+        public void ExecutarMatch(Guid id, out int statusCode, out object dadosRetorno)
+        {
+
+            // Buscando item
+            Item itemAlvo = _dmn.ObterPorId(id);
+            if (itemAlvo == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"O item '{id.ToString()}' não foi encontrado"
+                };
+                return;
+            }
+            CarregaRelacoes(itemAlvo);
+
+            // Verificando se existe match para o Item
+            ItemMatch match = _matchDomain.Obter(x => x.DoacaoId.Equals(id) || x.NecessidadeId.Equals(id)).FirstOrDefault();
+            if (match != null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"Já existe match para esse item"
+                };
+                return;
+            }
+
+            // Buscando tipo de item relacionado
+            string tipoItemOpostoDescricao = itemAlvo.TipoItem.Descricao.ToLower().Equals("necessidade") ? "Doação" : "Necessidade";
+            TipoItem tipoItemOposto = _tipoItemDomain.ObterPorDescricao(tipoItemOpostoDescricao);
+            if (tipoItemOposto == null)
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = "Falha ao identificar tipo de item oposto"
+                };
+                return;
+            }
+
+            // Criando item oposto (relacionado)
+            Item itemOposto = new Item()
+            {
+                Titulo = $"[{tipoItemOpostoDescricao.ToUpper()}] {itemAlvo.Titulo}",
+                Descricao = itemAlvo.Descricao,
+                TipoItemId = tipoItemOposto.Id,
+                CategoriaId = itemAlvo.CategoriaId,
+                UsuarioId = _usuario.Id,
+                Anonimo = itemAlvo.Anonimo
+            };
+
+            _dmn.Adicionar(itemOposto);
+
+            // Gravando match
+            Guid doacaoId = tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? itemOposto.Id : itemAlvo.Id;
+            Guid necessidadeId = tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? itemAlvo.Id : itemOposto.Id;
+            Guid tipoMatchId = Guid.Parse(tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? "b69eed4f-d87c-11e8-abfa-0e0e947bb2d6" : "b69eed41-d87c-11e8-abfa-0e0e947bb2d6");
+
+            match = new ItemMatch()
+            {
+                DoacaoId = doacaoId,
+                NecessidadeId = necessidadeId,
+                UsuarioId = _usuario.Id,
+                TipoMatchId = tipoMatchId
+            };
+            _matchDomain.Adicionar(match);
+
+            try
+            {
+
+                _uow.Efetivar();
+                statusCode = StatusCodes.Status200OK;
+                dadosRetorno = new
+                {
+                    MatchId = match.Id,
+                    ItemRelacaoId = itemOposto.Id.ToString()
+                };
+
+            }
+            catch (Exception ex)
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+                dadosRetorno = $"Falha na operação - [{ex.Message} - {ex.StackTrace}]";
             }
 
         }

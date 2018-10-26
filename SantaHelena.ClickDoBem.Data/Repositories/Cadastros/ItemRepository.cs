@@ -141,7 +141,8 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                             INNER JOIN Usuario u ON i.UsuarioId = u.Id
                             WHERE
                               (i.DataInclusao BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
-                              AND c.Id = _CATEGORIAID_";
+                              AND c.Id = _CATEGORIAID_
+                              AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE i.Id = im.DoacaoId OR i.Id = im.NecessidadeId)";
 
             //TODO: Revisitar após efetivar doação
 

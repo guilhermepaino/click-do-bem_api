@@ -45,6 +45,7 @@ namespace SantaHelena.ClickDoBem.Data.Context
             modelBuilder.ApplyConfiguration(new ItemMapping());
             modelBuilder.ApplyConfiguration(new ItemImagemMapping());
             modelBuilder.ApplyConfiguration(new ItemMatchMapping());
+            modelBuilder.ApplyConfiguration(new TipoMatchMapping());
 
         }
 
@@ -95,6 +96,8 @@ namespace SantaHelena.ClickDoBem.Data.Context
         public virtual DbSet<ItemImagem> ItemImagem { get; set; }
 
         public virtual DbSet<ItemMatch> ItemMatch { get; set; }
+
+        public virtual DbSet<TipoMatch> TipoMatch { get; set; }
 
         #endregion
 
