@@ -160,6 +160,38 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         }
 
         /// <summary>
+        /// Realizar a troca de senha do colaborador
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição:
+        ///     {
+        ///         "cpfCnpj": "string",
+        ///         "dataNascimento": "AAAA-MM-DD",
+        ///         "novaSenha": "string",
+        ///         "confirmarSenha": "string"
+        ///     }
+        ///     
+        ///     Resposta:
+        ///     {
+        ///         "sucesso" : bool,
+        ///         "mensagem": "mensagem do resultado da operação"
+        ///     }
+        ///     
+        /// </remarks>
+        [HttpPost("esquecisenha")]
+        [AllowAnonymous]
+        public IActionResult EsqueciSenha([FromBody] EsqueciSenha request)
+        {
+            if (!ModelState.IsValid)
+                return Response<EsqueciSenha>(request);
+
+            bool sucesso = _appService.EsqueciSenha(request.CpfCnpj, request.DataNascimento, request.NovaSenha, request.ConfirmarSenha, out int statusCode, out string mensagem);
+            return StatusCode(statusCode, new { Sucesso = sucesso, Mensagem = mensagem });
+        }
+
+        /// <summary>
         /// Listar todos os registros
         /// </summary>
         /// <remarks>

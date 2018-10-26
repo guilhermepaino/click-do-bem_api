@@ -14,6 +14,7 @@ using System.Net.Http.Headers;
 using System.IO;
 using SantaHelena.ClickDoBem.Domain.Core.Tools;
 using SantaHelena.ClickDoBem.Domain.Core.Enums;
+using SantaHelena.ClickDoBem.Domain.Core.Security;
 
 namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 {
@@ -28,7 +29,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
         protected readonly IUnitOfWork _uow;
         protected readonly IUsuarioDomainService _dmn;
+        protected readonly IUsuarioDadosDomainService _dadosDomain;
         protected readonly IDocumentoHabilitadoDomainService _docHabDomain;
+        protected readonly IUsuarioLoginDomainService _loginDomain;
 
         #endregion
 
@@ -41,12 +44,16 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         (
             IUnitOfWork uow,
             IUsuarioDomainService dmn,
-            IDocumentoHabilitadoDomainService docHabDomain
+            IDocumentoHabilitadoDomainService docHabDomain,
+            IUsuarioLoginDomainService loginDomain,
+            IUsuarioDadosDomainService dadosDomain
         )
         {
             _uow = uow;
             _dmn = dmn;
             _docHabDomain = docHabDomain;
+            _loginDomain = loginDomain;
+            _dadosDomain = dadosDomain;
         }
 
         #endregion
@@ -460,7 +467,60 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             _dmn.VerificarSituacaoDocumento(documento, out situacao, out cadastrado);
         }
 
+        /// <summary>
+        /// Realizar a troca de senha
+        /// </summary>
+        /// <param name="cpfCnpj">Número do cpf/cpf do usuário</param>
+        /// <param name="dataNascimento">Data de nascimento do usuário</param>
+        /// <param name="novaSenha">Nova senha</param>
+        /// <param name="confirmarSenha">Confirmação de senha</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="mensagem">Variável de saída de mensagem com o resultado da operação</param>
+        /// <returns></returns>
+        public bool EsqueciSenha(string cpfCnpj, DateTime? dataNascimento, string novaSenha, string confirmarSenha, out int statusCode, out string mensagem)
+        {
+
+            statusCode = StatusCodes.Status400BadRequest;
+            mensagem = "Dados Inválidos";
+
+            // Localizando usuario
+            Usuario usuario = _dmn.ObterPorDocumento(cpfCnpj);
+            if (usuario == null)
+                return false;
+
+            if (usuario.UsuarioDados == null)
+                return false;
+
+            if (dataNascimento.Value != usuario.UsuarioDados.DataNascimento)
+                return false;
+
+            try
+            {
+
+                UsuarioLogin login = _loginDomain.ObterPorId(usuario.Id);
+                if (login == null)
+                    return false;
+
+                login.Senha = MD5.ByteArrayToString(MD5.HashMD5(novaSenha));
+                _loginDomain.Atualizar(login);
+                _uow.Efetivar();
+
+                statusCode = StatusCodes.Status200OK;
+                mensagem = "Senha recuperada com sucesso";
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+                mensagem = $"Falha na troca de senha [{ex.Message} - {ex.StackTrace}]";
+                return false;
+            }
+
+        }
+
         #endregion
 
     }
+
 }
