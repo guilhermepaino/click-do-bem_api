@@ -43,6 +43,9 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
             builder.Property(c => c.Anonimo)
                .HasColumnType("bit");
 
+            builder.Property(c => c.GeradoPorMatch)
+                .HasColumnType("bit");
+
             builder.HasOne(o => o.TipoItem)
                 .WithMany(d => d.Itens)
                 .HasForeignKey(f => f.TipoItemId)
@@ -60,18 +63,6 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Item_Usuario");
-
-            //builder.HasOne(o => o.MatchDoacao)
-            //    .WithOne(d => d.ItemDoacao)
-            //    .HasForeignKey<ItemMatch>(r => r.DoacaoId)
-            //    .OnDelete(DeleteBehavior.Restrict)
-            //    .HasConstraintName("FK_ItemMatch_Doacao");
-
-            //builder.HasOne(o => o.MatchNecessidade)
-            //    .WithOne(d => d.ItemNecessidade)
-            //    .HasForeignKey<ItemMatch>(r => r.NecessidadeId)
-            //    .OnDelete(DeleteBehavior.Restrict)
-            //    .HasConstraintName("FK_ItemMatch_Necessidade");
 
             builder.HasIndex(i => i.DataInclusao).HasName("IX_Item_DtInclusao");
             builder.HasIndex(i => i.DataAlteracao).HasName("IX_Item_DtAlteracao");

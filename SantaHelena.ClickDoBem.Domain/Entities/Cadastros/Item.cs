@@ -42,6 +42,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public bool Anonimo { get; set; }
 
+        public bool GeradoPorMatch { get; set; }
+
         #endregion
 
         #region Navigation (Lazy)

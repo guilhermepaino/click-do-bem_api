@@ -129,8 +129,33 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             IList<ItemDto> result = new List<ItemDto>();
             foreach (ItemDto item in itensDto)
             {
-                if ((!(item.Categoria.GerenciadaRh || item.Anonimo) || item.Usuario.Id.Equals(usuarioId)) || _usuario.Perfis.Contains("Admin"))
+
+                bool incluir = true;
+                if (item.TipoItem.Descricao.ToLower().Equals("doação"))
+                    if (item.Categoria.GerenciadaRh && !_usuario.Perfis.Contains("Admin") && !item.Usuario.Id.Equals(usuarioId))
+                        incluir = false;
+
+                if (incluir)
+                {
+
+                    if (item.Anonimo && !_usuario.Perfis.Contains("Admin") && !item.Usuario.Id.Equals(usuarioId))
+                    {
+                        item.Usuario.Nome = "** ANONIMO **";
+                        item.Usuario.UsuarioDados.Logradouro = "-";
+                        item.Usuario.UsuarioDados.Numero = "-";
+                        item.Usuario.UsuarioDados.Complemento = "-";
+                        item.Usuario.UsuarioDados.Bairro = "-";
+                        item.Usuario.UsuarioDados.Cidade = "-";
+                        item.Usuario.UsuarioDados.CEP = "00000-000";
+                        item.Usuario.UsuarioDados.TelefoneCelular = "-";
+                        item.Usuario.UsuarioDados.TelefoneFixo = "-";
+                        item.Usuario.UsuarioDados.UF = "-";
+                        item.Usuario.CpfCnpj = "-";
+                    }
                     result.Add(item);
+
+                }
+                    
             }
 
             return result;
@@ -269,13 +294,13 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             switch (tipo)
             {
                 case TipoBuscaRegistros.Necessidade:
-                    result = _dmn.ObterNecessidades(false);
+                    result = _dmn.ObterNecessidades(incluirItensMatches);
                     break;
                 case TipoBuscaRegistros.Doacao:
-                    result = _dmn.ObterDoacoes(false);
+                    result = _dmn.ObterDoacoes(incluirItensMatches);
                     break;
                 default:
-                    result = _dmn.ObterTodos(false);
+                    result = _dmn.ObterTodos(incluirItensMatches);
                     break;
             }
 
@@ -703,7 +728,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 UsuarioId = _usuario.Id,
                 DoacaoId = doacaoId,
                 NecessidadeId = necessidadeId,
-                TipoMatchId = Guid.Parse("a3412363-d87d-11e8-abfa-0e0e947bb2d6")
+                TipoMatchId = Guid.Parse("a3412363-d87d-11e8-abfa-0e0e947bb2d6"),
+                Valor = 0,
+                Efetivado = true
             };
             _matchDomain.Adicionar(match);
             _uow.Efetivar();
@@ -756,7 +783,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         }
 
-        public void ExecutarMatch(Guid id, out int statusCode, out object dadosRetorno)
+        public void ExecutarMatch(Guid id, decimal valor, out int statusCode, out object dadosRetorno)
         {
 
             // Buscando item
@@ -808,7 +835,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 TipoItemId = tipoItemOposto.Id,
                 CategoriaId = itemAlvo.CategoriaId,
                 UsuarioId = _usuario.Id,
-                Anonimo = itemAlvo.Anonimo
+                Anonimo = itemAlvo.Anonimo,
+                GeradoPorMatch = true
             };
 
             _dmn.Adicionar(itemOposto);
@@ -823,7 +851,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 DoacaoId = doacaoId,
                 NecessidadeId = necessidadeId,
                 UsuarioId = _usuario.Id,
-                TipoMatchId = tipoMatchId
+                TipoMatchId = tipoMatchId,
+                Valor = valor,
+                Efetivado = !itemAlvo.Anonimo
             };
             _matchDomain.Adicionar(match);
 

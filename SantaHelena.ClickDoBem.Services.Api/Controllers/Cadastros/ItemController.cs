@@ -713,7 +713,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// Contrato
         ///     
         ///     Requisição
-        ///     url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006?valor=123.75
         ///     
         ///     Respostas
         ///     {
@@ -725,15 +725,19 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     
         ///     O campo 'id' será informado somente no caso de sucesso
         ///     O campo 'idItemRelacionado' será informado somente no caso de sucesso e corresponde ao id o item criado para efetuar o match
+        ///     O campo 'valor' na request é opcional, se não informado será assumido o valor 0 (zero)
         /// 
         /// </remarks>
         [HttpPost("match/{id:guid}")]
-        public IActionResult EfetuarMatchUnilateral(Guid? id)
+        public IActionResult EfetuarMatchUnilateral(Guid? id, [FromQuery] decimal valor)
         {
             if (!id.HasValue)
                 return BadRequest(new { sucesso = false, mensagem = "O id do item inválido ou não informado" });
 
-            _appService.ExecutarMatch(id.Value, out int statusCode, out object dadosRetorno);
+            if (valor < 0)
+                return BadRequest(new { sucesso = false, mensagem = "O valor não pode ser negativo" });
+
+            _appService.ExecutarMatch(id.Value, valor, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
 

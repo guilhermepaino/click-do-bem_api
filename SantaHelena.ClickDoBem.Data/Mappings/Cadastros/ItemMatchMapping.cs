@@ -28,6 +28,17 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
                .HasColumnType("char(36)")
                .IsRequired();
 
+            builder.Property(c => c.TipoMatchId)
+                .HasColumnType("char(36)")
+                .IsRequired();
+
+            builder.Property(c => c.Valor)
+                .HasColumnType("decimal(16,2)")
+                .IsRequired();
+
+            builder.Property(c => c.Efetivado)
+                .HasColumnType("bit");
+
             builder.HasOne(o => o.Usuario)
                 .WithMany(d => d.Matches)
                 .HasForeignKey(f => f.UsuarioId)

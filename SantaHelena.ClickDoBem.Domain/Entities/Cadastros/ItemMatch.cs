@@ -47,6 +47,10 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public TipoMatch TipoMatch { get; set; }
 
+        public decimal Valor { get; set; }
+
+        public bool Efetivado { get; set; }
+
         #endregion
 
         #region Métodos Locais
@@ -68,6 +72,9 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
             RuleFor(c => c.TipoMatchId)
                 .NotNull().WithMessage("O tipo de match deve ser informado");
+
+            RuleFor(c => c.Valor)
+                .GreaterThanOrEqualTo(0).WithMessage("Um valor não negativo deve ser informado");
 
         }
 
