@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Domain.Core.ReportDto
 {
@@ -27,6 +28,8 @@ namespace SantaHelena.ClickDoBem.Domain.Core.ReportDto
         public bool GerenciadaRh { get; set; }
 
         public bool Efetivado { get; set; }
+
+        public string Imagem { get; set; }
 
     }
 

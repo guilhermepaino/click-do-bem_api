@@ -48,14 +48,27 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 im.Valor,
                                 dc.Pontuacao,
                                 dc.GerenciadaRh,
-                                im.Efetivado
+                                im.Efetivado,
+                                IFNULL(imgd.Imagem, imgn.Imagem) Imagem
                             FROM ItemMatch im
                             INNER JOIN Item di ON im.DoacaoId = di.Id
                             INNER JOIN Usuario du ON di.UsuarioId = du.Id
                             INNER JOIN Categoria dc ON di.CategoriaId = dc.Id
                             INNER JOIN Item ni ON im.NecessidadeId = ni.Id
                             INNER JOIN Usuario nu ON ni.UsuarioId = nu.Id
-                            INNER JOIN TipoMatch tm ON im.TipoMatchId = tm.Id";
+                            INNER JOIN TipoMatch tm ON im.TipoMatchId = tm.Id
+                            LEFT JOIN
+                            (
+                                SELECT ii.ItemId, MIN(ii.Caminho) Imagem
+                                FROM ItemImagem ii
+                                GROUP BY ii.ItemId
+                            ) imgd ON di.Id = imgd.ItemId
+                            LEFT JOIN
+                            (
+                                SELECT ii.ItemId, MIN(ii.Caminho) Imagem
+                                FROM ItemImagem ii
+                                GROUP BY ii.ItemId
+                            ) imgn ON ni.Id = imgn.ItemId";
 
             if (filtrarUsuario)
             {

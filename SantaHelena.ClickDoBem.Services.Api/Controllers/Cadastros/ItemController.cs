@@ -742,7 +742,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///             "valor": 999.99,
         ///             "pontuacao": 999,
         ///             "gerenciadaRh": boolean,
-        ///             "efetivado": boolean
+        ///             "efetivado": boolean,
+        ///             "imagem": "string"
         ///         }
         ///     ]
         ///     
