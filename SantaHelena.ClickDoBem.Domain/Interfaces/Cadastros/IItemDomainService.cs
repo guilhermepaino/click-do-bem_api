@@ -16,5 +16,6 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
         bool RemoverImagem(Guid id, string caminho, out object dadosRetorno);
         IEnumerable<Item> PesquisarParaMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId);
         IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados);
+        IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId);
     }
 }

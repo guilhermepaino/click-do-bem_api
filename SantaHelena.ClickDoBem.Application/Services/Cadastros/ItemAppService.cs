@@ -613,6 +613,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         }
 
         /// <summary>
+        /// Listar os matches realizados do usuário logado
+        /// </summary>
+        public IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId)
+            => _dmn.ListarMatches(usuarioId);
+
+        /// <summary>
         /// Carregar uma imagem para um item
         /// </summary>
         /// <param name="itemId">Id do item</param>

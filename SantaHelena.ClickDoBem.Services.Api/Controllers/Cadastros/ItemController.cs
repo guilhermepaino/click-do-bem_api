@@ -697,6 +697,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///             "titulo": "string",
         ///             "descricao": "string",
         ///             "categoria": "string",
+        ///             "valor": 999.99,
         ///             "pontuacao": 999,
         ///             "gerenciadaRh": boolean,
         ///             "efetivado": boolean
@@ -716,6 +717,46 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (request == null)
                 return BadRequest("Nenhuma informação de requisição");
             return Ok(_appService.ListarMatches(request.DataInicial, request.DataFinal, request.CategoriaId, request.Efetivados));
+        }
+
+        /// <summary>
+        /// Listar todos os registros de matches do usuário
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/match/listar
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "data": "AAAA-MM-DD",
+        ///             "tipoMatch": "string",
+        ///             "nomeDoador": "string",
+        ///             "nomeReceptor": "string",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "categoria": "string",
+        ///             "valor": 999.99,
+        ///             "pontuacao": 999,
+        ///             "gerenciadaRh": boolean,
+        ///             "efetivado": boolean
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+        /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("match")]
+        public IActionResult ListarMatches()
+        {
+            return Ok(_appService.ListarMatches(_appUser.Id));
         }
 
         /// <summary>

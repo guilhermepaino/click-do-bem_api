@@ -23,6 +23,88 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         #endregion
 
+        #region Métodos Locais
+
+        protected IEnumerable<ItemMatchReportDto> ListagemMatch(Guid usuarioId, DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados, bool filtrarUsuario)
+        {
+
+            string sql = $@"SELECT
+                                im.Id,
+                                im.Data,
+                                tm.Descricao TipoMatch,
+                                (CASE WHEN im.Efetivado = 0 AND di.Anonimo = 1 AND du.Id <> @puid THEN 
+                                    '** ANONIMO **'
+                                ELSE
+                                    du.Nome
+                                END) NomeDoador,
+                                (CASE WHEN im.Efetivado = 0 AND ni.Anonimo = 1 AND nu.Id <> @puid THEN 
+                                    '** ANONIMO **'
+                                ELSE
+                                    nu.Nome
+                                END) NomeReceptor,
+                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN di.Titulo ELSE ni.Titulo END) Titulo,
+                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN di.Descricao ELSE ni.Descricao END) Descricao,
+                                dc.Descricao Categoria,
+                                im.Valor,
+                                dc.Pontuacao,
+                                dc.GerenciadaRh,
+                                im.Efetivado
+                            FROM ItemMatch im
+                            INNER JOIN Item di ON im.DoacaoId = di.Id
+                            INNER JOIN Usuario du ON di.UsuarioId = du.Id
+                            INNER JOIN Categoria dc ON di.CategoriaId = dc.Id
+                            INNER JOIN Item ni ON im.NecessidadeId = ni.Id
+                            INNER JOIN Usuario nu ON ni.UsuarioId = nu.Id
+                            INNER JOIN TipoMatch tm ON im.TipoMatchId = tm.Id";
+
+            if (filtrarUsuario)
+            {
+                sql = $@"{sql}
+                            WHERE
+                                du.Id = @puid OR nu.Id = @puid
+                            ORDER BY im.Data DESC";
+            }
+            else
+            {
+
+
+                sql = $@"{sql} 
+                            WHERE
+                                (im.Data BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
+                                AND dc.Id = _CATEGORIAID_
+                                AND im.Efetivado = _EFETIVADO_";
+
+                if (dataInicial.HasValue && dataFinal.HasValue)
+                {
+                    sql = sql
+                        .Replace("_DATAINICIAL_", $"'{dataInicial.Value.ToString("yyyy-MM-dd")} 00:00:00'")
+                        .Replace("_DATAFINAL_", $"'{dataFinal.Value.ToString("yyyy-MM-dd")} 23:59:59'");
+                }
+                else
+                    sql = sql
+                        .Replace("_DATAINICIAL_", "im.Data")
+                        .Replace("_DATAFINAL_", "im.Data");
+
+                if (categoriaId.HasValue)
+                    sql = sql.Replace("_CATEGORIAID_", $"'{categoriaId.ToString()}'");
+                else
+                    sql = sql.Replace("_CATEGORIAID_", "dc.Id");
+
+                if (efetivados.HasValue)
+                    sql = sql.Replace("_EFETIVADO_", $"{(efetivados.Value ? 1 : 0)}");
+                else
+                    sql = sql.Replace("_EFETIVADO_", "im.Efetivado");
+
+                sql = $"{sql} ORDER BY im.Data ASC";
+
+            }
+
+            return _ctx.Database.GetDbConnection().Query<ItemMatchReportDto>(sql, new { puid = usuarioId.ToString() }).ToList();
+
+        }
+
+        #endregion
+
         #region Métodos Públicos
 
         public IEnumerable<Item> ObterTodos(bool incluirMatches)
@@ -208,58 +290,14 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         }
 
-        public IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados)
+        public IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId)
         {
+            return ListagemMatch(usuarioId, null, null, null, null, true);
+        }
 
-            string sql = $@"SELECT
-                                im.Id,
-                                im.Data,
-                                tm.Descricao TipoMatch,
-                                du.Nome NomeDoador,
-                                nu.Nome NomeReceptor,
-                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN di.Titulo ELSE ni.Titulo END) Titulo,
-                                di.Descricao,
-                                dc.Descricao Categoria,
-                                dc.Pontuacao,
-                                dc.GerenciadaRh,
-                                im.Efetivado
-                            FROM ItemMatch im
-                            INNER JOIN Item di ON im.DoacaoId = di.Id
-                            INNER JOIN Usuario du ON di.UsuarioId = du.Id
-                            INNER JOIN Categoria dc ON di.CategoriaId = dc.Id
-                            INNER JOIN Item ni ON im.NecessidadeId = ni.Id
-                            INNER JOIN Usuario nu ON ni.UsuarioId = nu.Id
-                            INNER JOIN TipoMatch tm ON im.TipoMatchId = tm.Id
-                            WHERE
-                                (im.Data BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
-                                AND dc.Id = _CATEGORIAID_
-                                AND im.Efetivado = _EFETIVADO_";
-
-            if (dataInicial.HasValue && dataFinal.HasValue)
-            {
-                sql = sql
-                    .Replace("_DATAINICIAL_", $"'{dataInicial.Value.ToString("yyyy-MM-dd")} 00:00:00'")
-                    .Replace("_DATAFINAL_", $"'{dataFinal.Value.ToString("yyyy-MM-dd")} 23:59:59'");
-            }
-            else
-                sql = sql
-                    .Replace("_DATAINICIAL_", "im.Data")
-                    .Replace("_DATAFINAL_", "im.Data");
-
-            if (categoriaId.HasValue)
-                sql = sql.Replace("_CATEGORIAID_", $"'{categoriaId.ToString()}'");
-            else
-                sql = sql.Replace("_CATEGORIAID_", "dc.Id");
-
-            if (efetivados.HasValue)
-                sql = sql.Replace("_EFETIVADO_", $"{(efetivados.Value ? 1 : 0)}");
-            else
-                sql = sql.Replace("_EFETIVADO_", "im.Efetivado");
-
-            sql = $"{sql} ORDER BY im.Data ASC";
-
-            return _ctx.Database.GetDbConnection().Query<ItemMatchReportDto>(sql).ToList();
-
+        public IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId, DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados)
+        {
+            return ListagemMatch(usuarioId, dataInicial, dataFinal, categoriaId, efetivados, false);
         }
 
         #endregion

@@ -17,6 +17,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
 
         protected readonly IUnitOfWork _uow;
         protected readonly IItemImagemDomainService _imgDomain;
+        protected readonly IAppUser _usuario;
 
         #endregion
 
@@ -30,11 +31,13 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
         (
             IUnitOfWork uow,
             IItemRepository repository,
-            IItemImagemDomainService imgDomain
+            IItemImagemDomainService imgDomain,
+            IAppUser usuario
         ) : base(repository)
         {
             _uow = uow;
             _imgDomain = imgDomain;
+            _usuario = usuario;
         }
 
         #endregion
@@ -77,7 +80,13 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
         /// <param name="categoriaId">Id da categoria</param>
         /// <param name="efetivados">Boolean indicando se é para listar efetivados ou não efetivados (null = lista todos)</param>
         public IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados)
-            => _repository.ListarMatches(dataInicial, dataFinal, categoriaId, efetivados);
+            => _repository.ListarMatches(_usuario.Id, dataInicial, dataFinal, categoriaId, efetivados);
+
+        /// <summary>
+        /// Listar os matches realizados do usuário logado
+        /// </summary>
+        public IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId)
+            => _repository.ListarMatches(usuarioId);
 
         /// <summary>
         /// Pesquisar itens livres para matches com base nos filtros informados
