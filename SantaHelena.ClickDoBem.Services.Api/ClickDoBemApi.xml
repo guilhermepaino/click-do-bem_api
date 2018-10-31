@@ -109,14 +109,14 @@
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Editar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorUpdateRequest)">
             <summary>
-            Cadastrar um novo colaborador
+            Alterar os dados de um colaborador
             </summary>
             <remarks>
             
             Contrato
             
                 Requisição
-                ColaboradorInsertRequest
+                ColaboradorUpdateRequest
                 
                 Exemplo:
                 {
@@ -593,6 +593,83 @@
                              "nomeImagem": "string",
                              "arquivo": "string"
                          ]
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+             <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ListarMatches(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ListagemMatchRequest)">
+             <summary>
+             Listar todos os registros de matches que atendam os critérios de pesquisa
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 {
+                     "dataInicial": "YYYY-MM-DD",
+                     "dataFinal": "YYYY-MM-DD",
+                     "categoriaId": "Guid",
+                     "efetivados": bool (null = todos)
+                 }
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "data": "AAAA-MM-DD",
+                         "tipoMatch": "string",
+                         "nomeDoador": "string",
+                         "nomeReceptor": "string",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "categoria": "string",
+                         "valor": 999.99,
+                         "pontuacao": 999,
+                         "gerenciadaRh": boolean,
+                         "efetivado": boolean
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+             <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ListarMatches">
+             <summary>
+             Listar todos os registros de matches do usuário
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/item/match/listar
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "data": "AAAA-MM-DD",
+                         "tipoMatch": "string",
+                         "nomeDoador": "string",
+                         "nomeReceptor": "string",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "categoria": "string",
+                         "valor": 999.99,
+                         "pontuacao": 999,
+                         "gerenciadaRh": boolean,
+                         "efetivado": boolean
                      }
                  ]
                  
@@ -1139,6 +1216,31 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest.ImgExcluir">
             <summary>
             Lista de Ids de imagens a serem excluídas
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ListagemMatchRequest">
+            <summary>
+            Modelo de requisição de listagem de matches
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ListagemMatchRequest.DataInicial">
+            <summary>
+            Data inicial do período
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ListagemMatchRequest.DataFinal">
+            <summary>
+            Data final do período
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ListagemMatchRequest.CategoriaId">
+            <summary>
+            Id da categoria
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ListagemMatchRequest.Efetivados">
+            <summary>
+            Flag indicando se serão exibidos matches efetivados ou não (null = exibe todos)
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.MatchRequest">
