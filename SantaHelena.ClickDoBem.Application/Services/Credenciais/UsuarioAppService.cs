@@ -545,7 +545,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
             // Localizando usuario
             Usuario usuario = _dmn.ObterPorDocumento(cpfCnpj);
-            if (usuario == null)
+            DocumentoHabilitado doc = _docHabDomain.ObterPorDocumento(cpfCnpj);
+            if (usuario == null || doc == null)
                 return false;
 
             if (usuario.UsuarioDados == null)
@@ -556,6 +557,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
             try
             {
+
+                if (!doc.Ativo)
+                {
+                    mensagem = "Documento não encontrado ou inativo! Entre em contato com o RH";
+                    return false;
+                }
 
                 UsuarioLogin login = _loginDomain.ObterPorId(usuario.Id);
                 if (login == null)
@@ -593,10 +600,11 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
             // Localizando usuario
             Usuario usuario = _dmn.ObterPorLogin(usuarioLogado.Login, senhaAtual);
+
             if (usuario == null)
             {
                 statusCode = StatusCodes.Status400BadRequest;
-                mensagem = "Usuário não localizado";
+                mensagem = "Usuário e/ou senha inválidos!";
                 return false;
             }
 
@@ -605,6 +613,24 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                 statusCode = StatusCodes.Status400BadRequest;
                 mensagem = "Dados do usuário não localizado";
                 return false;
+            }
+
+            DocumentoHabilitado doc = _docHabDomain.ObterPorDocumento(usuario.CpfCnpj);
+            if (doc == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                mensagem = "Dados do usuário não localizado";
+                return false;
+            }
+            else
+            {
+                if (!doc.Ativo)
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    mensagem = "Documento não encontrado ou inativo! Entre em contato com o RH";
+                    return false;
+                }
+                 
             }
 
             try
