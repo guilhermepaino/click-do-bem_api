@@ -42,7 +42,6 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public override IEnumerable<Item> ObterTodos()
         {
-            //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT * FROM Item ORDER BY DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
@@ -61,7 +60,6 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public IEnumerable<Item> ObterNecessidades(bool incluirMatches)
         {
-            //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Necessidade'";
             if (!incluirMatches)
                 sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
@@ -71,7 +69,6 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public IEnumerable<Item> ObterDoacoes(bool incluirMatches)
         {
-            //TODO: Verificar questão de Gerido pelo RH
             string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Doação'";
             if (!incluirMatches)
                 sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
@@ -84,26 +81,71 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
         {
 
             string sql = $@"SELECT
-                              ti.Descricao TipoItem,
-                              i.DataInclusao,
-                              NULL DataEfetivacao,
-                              (CASE WHEN i.Anonimo THEN '- ANÔNIMO -' ELSE u.Nome END) Doador,
-                              '<//TODO: Apos Doacao concluida>' Receptor,
-                              i.Titulo,
-                              i.Descricao,
-                              c.Descricao Categoria,
-                              c.Pontuacao Peso,
-                              c.GerenciadaRh
-                            FROM Item i
-                            INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
-                            INNER JOIN Categoria c ON i.CategoriaId = c.Id
-                            INNER JOIN Usuario u ON i.UsuarioId = u.Id
-                            WHERE
-                              (i.DataInclusao BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
-                              AND ti.Id = _TIPOITEMID_
-                              AND c.Id = _CATEGORIAID_";
-
-            //TODO: Revisitar após efetivar doação
+                              s.Id,
+                              s.TipoItem,
+                              s.DataInclusao,
+                              s.DataEfetivacao,
+                              s.Doador,
+                              s.Receptor,
+                              s.Titulo,
+                              s.Descricao,
+                              s.Categoria,
+                              s.Pontuacao,
+                              s.GerenciadaRh
+                            FROM
+                            (
+                              SELECT
+                                i.Id,
+                                ti.Descricao TipoItem,
+                                i.DataInclusao,
+                                im.Data DataEfetivacao,
+                                u.Nome Doador,
+                                un.Nome Receptor,
+                                i.Titulo,
+                                i.Descricao,
+                                c.Descricao Categoria,
+                                c.Pontuacao,
+                                c.GerenciadaRh
+                              FROM Item i
+                                  INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
+                                  INNER JOIN Categoria c ON i.CategoriaId = c.Id
+                                  INNER JOIN Usuario u ON i.UsuarioId = u.Id
+                                  LEFT JOIN ItemMatch im ON i.Id = im.DoacaoId
+                                  LEFT JOIN Usuario un ON im.UsuarioId = un.Id
+                              WHERE 
+                                ti.Descricao = 'Doação' 
+                                AND i.GeradoPorMatch = 0
+                                AND (i.DataInclusao BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
+                                AND ti.Id = _TIPOITEMID_
+                                AND c.Id = _CATEGORIAID_
+  
+                              UNION ALL
+  
+                              SELECT
+                                i.Id,
+                                ti.Descricao TipoItem,
+                                i.DataInclusao,
+                                im.Data DataEfetivacao,
+                                ud.Nome Doador,
+                                u.Nome Receptor,
+                                i.Titulo,
+                                i.Descricao,
+                                c.Descricao Categoria,
+                                c.Pontuacao,
+                                c.GerenciadaRh
+                              FROM Item i
+                                  INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
+                                  INNER JOIN Categoria c ON i.CategoriaId = c.Id
+                                  INNER JOIN Usuario u ON i.UsuarioId = u.Id
+                                  LEFT JOIN ItemMatch im ON i.Id = im.NecessidadeId
+                                  LEFT JOIN Usuario ud ON im.UsuarioId = ud.Id
+                              WHERE 
+                                ti.Descricao = 'Necessidade' 
+                                AND i.GeradoPorMatch = 0
+                                AND (i.DataInclusao BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
+                                AND ti.Id = _TIPOITEMID_
+                                AND c.Id = _CATEGORIAID_
+                            ) s";
 
             if (dataInicial != null && dataFinal != null)
             {
@@ -126,7 +168,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             else
                 sql = sql.Replace("_CATEGORIAID_", "c.Id");
 
-            sql = $"{sql} ORDER BY i.DataInclusao DESC";
+            sql = $"{sql} ORDER BY s.DataInclusao DESC";
 
             return _ctx.Database.GetDbConnection().Query<ItemListaReportDto>(sql).ToList();
 
@@ -143,8 +185,6 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                               (i.DataInclusao BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
                               AND c.Id = _CATEGORIAID_
                               AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE i.Id = im.DoacaoId OR i.Id = im.NecessidadeId)";
-
-            //TODO: Revisitar após efetivar doação
 
             if (dataInicial != null && dataFinal != null)
             {
@@ -165,6 +205,60 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             sql = $"{sql} ORDER BY i.DataInclusao DESC";
 
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
+
+        }
+
+        public IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados)
+        {
+
+            string sql = $@"SELECT
+                                im.Id,
+                                im.Data,
+                                tm.Descricao TipoMatch,
+                                du.Nome NomeDoador,
+                                nu.Nome NomeReceptor,
+                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN di.Titulo ELSE ni.Titulo END) Titulo,
+                                di.Descricao,
+                                dc.Descricao Categoria,
+                                dc.Pontuacao,
+                                dc.GerenciadaRh,
+                                im.Efetivado
+                            FROM ItemMatch im
+                            INNER JOIN Item di ON im.DoacaoId = di.Id
+                            INNER JOIN Usuario du ON di.UsuarioId = du.Id
+                            INNER JOIN Categoria dc ON di.CategoriaId = dc.Id
+                            INNER JOIN Item ni ON im.NecessidadeId = ni.Id
+                            INNER JOIN Usuario nu ON ni.UsuarioId = nu.Id
+                            INNER JOIN TipoMatch tm ON im.TipoMatchId = tm.Id
+                            WHERE
+                                (im.Data BETWEEN _DATAINICIAL_ AND _DATAFINAL_)
+                                AND dc.Id = _CATEGORIAID_
+                                AND im.Efetivado = _EFETIVADO_";
+
+            if (dataInicial.HasValue && dataFinal.HasValue)
+            {
+                sql = sql
+                    .Replace("_DATAINICIAL_", $"'{dataInicial.Value.ToString("yyyy-MM-dd")} 00:00:00'")
+                    .Replace("_DATAFINAL_", $"'{dataFinal.Value.ToString("yyyy-MM-dd")} 23:59:59'");
+            }
+            else
+                sql = sql
+                    .Replace("_DATAINICIAL_", "im.Data")
+                    .Replace("_DATAFINAL_", "im.Data");
+
+            if (categoriaId.HasValue)
+                sql = sql.Replace("_CATEGORIAID_", $"'{categoriaId.ToString()}'");
+            else
+                sql = sql.Replace("_CATEGORIAID_", "dc.Id");
+
+            if (efetivados.HasValue)
+                sql = sql.Replace("_EFETIVADO_", $"{(efetivados.Value ? 1 : 0)}");
+            else
+                sql = sql.Replace("_EFETIVADO_", "im.Efetivado");
+
+            sql = $"{sql} ORDER BY im.Data ASC";
+
+            return _ctx.Database.GetDbConnection().Query<ItemMatchReportDto>(sql).ToList();
 
         }
 

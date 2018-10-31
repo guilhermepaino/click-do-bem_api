@@ -70,13 +70,23 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
             => _repository.Pesquisar(dataInicial, dataFinal, tipoItemId, categoriaId);
 
         /// <summary>
+        /// Listar os matches realizados com base nos filtros informados
+        /// </summary>
+        /// <param name="dataInicial">Data inicial do período</param>
+        /// <param name="dataFinal">Data final do período</param>
+        /// <param name="categoriaId">Id da categoria</param>
+        /// <param name="efetivados">Boolean indicando se é para listar efetivados ou não efetivados (null = lista todos)</param>
+        public IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados)
+            => _repository.ListarMatches(dataInicial, dataFinal, categoriaId, efetivados);
+
+        /// <summary>
         /// Pesquisar itens livres para matches com base nos filtros informados
         /// </summary>
         /// <param name="dataInicial">Data inicial do período</param>
         /// <param name="dataFinal">Data final do período</param>
         /// <param name="tipoItemId">Id do tipo de item</param>
         /// <param name="categoriaId">Id da categoria</param>
-        public IEnumerable<Item> PesquisarParaMatche(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId)
+        public IEnumerable<Item> PesquisarParaMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId)
             => _repository.PesquisarParaMatche(dataInicial, dataFinal, categoriaId);
 
         /// <summary>

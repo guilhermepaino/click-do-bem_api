@@ -595,9 +595,21 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <param name="categoriaId">Id da categoria</param>
         public IEnumerable<ItemDto> ListarLivresParaMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId)
         {
-            IEnumerable<Item> itens = _dmn.PesquisarParaMatche(dataInicial, dataFinal, categoriaId);
+            IEnumerable<Item> itens = _dmn.PesquisarParaMatches(dataInicial, dataFinal, categoriaId);
             CarregaRelacoes(itens);
             return ConverterEntidadeEmDto(itens);
+        }
+
+        /// <summary>
+        /// Listar os matches realizados com base nos filtros informados
+        /// </summary>
+        /// <param name="dataInicial">Data inicial do período</param>
+        /// <param name="dataFinal">Data final do período</param>
+        /// <param name="categoriaId">Id da categoria</param>
+        /// <param name="efetivados">Boolean indicando se é para listar efetivados ou não efetivados (null = lista todos)</param>
+        public IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados)
+        {
+            return _dmn.ListarMatches(dataInicial, dataFinal, categoriaId, efetivados);
         }
 
         /// <summary>
@@ -842,8 +854,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             _dmn.Adicionar(itemOposto);
 
             // Gravando match
-            Guid doacaoId = tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? itemOposto.Id : itemAlvo.Id;
-            Guid necessidadeId = tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? itemAlvo.Id : itemOposto.Id;
+            Guid doacaoId = tipoItemOpostoDescricao.ToLower().Equals("doação") ? itemOposto.Id : itemAlvo.Id;
+            Guid necessidadeId = tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? itemOposto.Id : itemAlvo.Id;
             Guid tipoMatchId = Guid.Parse(tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? "b69eed4f-d87c-11e8-abfa-0e0e947bb2d6" : "b69eed41-d87c-11e8-abfa-0e0e947bb2d6");
 
             match = new ItemMatch()

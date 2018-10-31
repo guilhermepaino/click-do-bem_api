@@ -137,14 +137,14 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
-        /// Cadastrar um novo colaborador
+        /// Alterar os dados de um colaborador
         /// </summary>
         /// <remarks>
         /// 
         /// Contrato
         /// 
         ///     Requisição
-        ///     ColaboradorInsertRequest
+        ///     ColaboradorUpdateRequest
         ///     
         ///     Exemplo:
         ///     {

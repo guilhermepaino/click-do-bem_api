@@ -673,6 +673,52 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
+        /// Listar todos os registros de matches que atendam os critérios de pesquisa
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     {
+        ///         "dataInicial": "YYYY-MM-DD",
+        ///         "dataFinal": "YYYY-MM-DD",
+        ///         "categoriaId": "Guid",
+        ///         "efetivados": bool (null = todos)
+        ///     }
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "data": "AAAA-MM-DD",
+        ///             "tipoMatch": "string",
+        ///             "nomeDoador": "string",
+        ///             "nomeReceptor": "string",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "categoria": "string",
+        ///             "pontuacao": 999,
+        ///             "gerenciadaRh": boolean,
+        ///             "efetivado": boolean
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+        /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPost("match/listar")]
+        public IActionResult ListarMatches([FromBody]ListagemMatchRequest request)
+        {
+            if (request == null)
+                return BadRequest("Nenhuma informação de requisição");
+            return Ok(_appService.ListarMatches(request.DataInicial, request.DataFinal, request.CategoriaId, request.Efetivados));
+        }
+
+        /// <summary>
         /// Efetua o match entre um item de doação e um item de necessidade
         /// </summary>
         /// <remarks>

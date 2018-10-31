@@ -14,6 +14,7 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
         IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId);
         bool CarregarImagem(Item item, string nomeImagem, string imagemBase64, string caminho, out object dadosRetorno);
         bool RemoverImagem(Guid id, string caminho, out object dadosRetorno);
-        IEnumerable<Item> PesquisarParaMatche(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId);
+        IEnumerable<Item> PesquisarParaMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId);
+        IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados);
     }
 }
