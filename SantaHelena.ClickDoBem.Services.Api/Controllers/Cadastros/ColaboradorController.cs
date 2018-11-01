@@ -12,6 +12,7 @@ using System.IO;
 using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
+using System;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 {
@@ -206,6 +207,90 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             return StatusCode(statusCode, dados);
 
+        }
+
+        /// <summary>
+        /// Listar todos os registros de usuários
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     url: [URI]/api/versao/colaborador
+        ///     
+        ///     Exemplo:
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "nome": "JOAO DA SILVA",
+        ///             "dataNascimento": "1976-11-13",
+        ///             "endereco": {
+        ///                 "logradouro": "RUA DOS BOBOS",
+        ///                 "numero": "0",
+        ///                 "complemento": "BLOCO A - APTO 00",
+        ///                 "bairro": "PARQUE DOS DESORIENTADOS",
+        ///                 "cidade": "ARARAQUARA",
+        ///                 "uf": "SP",
+        ///                 "cep": "16123789"
+        ///             },
+        ///             "telefoneFixo": "",
+        ///             "telefoneCelular": "(16)91234-1234",
+        ///             "email": "usuario.teste@s2it.com.br"
+        ///         }
+        ///     ]
+        /// 
+        /// </remarks>
+        /// <response code="200">Retorno de dados com sucesso</response>
+        /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet]
+        public IActionResult Listar()
+        {
+            return Ok(_appService.ObterTodos());
+        }
+
+        /// <summary>
+        /// Pesquisar usuário pelo Id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     url: [URI]/api/versao/colaborador/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     
+        ///     Exemplo:
+        ///     {
+        ///         "id": "guid",
+        ///         "nome": "JOAO DA SILVA",
+        ///         "dataNascimento": "1976-11-13",
+        ///         "endereco": {
+        ///             "logradouro": "RUA DOS BOBOS",
+        ///             "numero": "0",
+        ///             "complemento": "BLOCO A - APTO 00",
+        ///             "bairro": "PARQUE DOS DESORIENTADOS",
+        ///             "cidade": "ARARAQUARA",
+        ///             "uf": "SP",
+        ///             "cep": "16123789"
+        ///         },
+        ///         "telefoneFixo": "",
+        ///         "telefoneCelular": "(16)91234-1234",
+        ///         "email": "usuario.teste@s2it.com.br"
+        ///     }
+        /// 
+        /// </remarks>
+        /// <response code="200">Retorno de dados com sucesso</response>
+        /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("{id:guid}")]
+        public IActionResult Pesquisar(Guid id)
+        {
+            return Ok(_appService.ObterPorId(id));
         }
 
         /// <summary>

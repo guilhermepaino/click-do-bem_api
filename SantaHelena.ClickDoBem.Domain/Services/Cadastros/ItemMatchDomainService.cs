@@ -22,6 +22,13 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
 
         public ItemMatch BuscarPorMatch(Guid doacaoId, Guid necessidadeId) => _repository.BuscarPorMatch(doacaoId, necessidadeId);
 
+        public void EfetivarMatch(ItemMatch match)
+        {
+
+            _repository.Atualizar(match);
+
+        }
+
         #endregion
 
     }

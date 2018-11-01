@@ -155,7 +155,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     result.Add(item);
 
                 }
-                    
+
             }
 
             return result;
@@ -277,7 +277,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 result.Add(ConverterEntidadeEmDto(item));
 
             return result;
-            
+
 
         }
 
@@ -563,7 +563,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 _dmn.Excluir(id);
                 _uow.Efetivar();
 
-                Task.Factory.StartNew(() => {
+                Task.Factory.StartNew(() =>
+                {
                     Thread.Sleep(2000);
                     RemoverArquivosItemExcluido(pastaWwwRoot, arquivosRemover);
                 });
@@ -891,6 +892,51 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             {
                 statusCode = StatusCodes.Status500InternalServerError;
                 dadosRetorno = $"Falha na operação - [{ex.Message} - {ex.StackTrace}]";
+            }
+
+        }
+
+        public void EfetivarMatch(Guid matchId, out int statusCode, out string mensagem)
+        {
+
+            if (!_usuario.Perfis.Contains("Administrador"))
+            {
+                statusCode = StatusCodes.Status401Unauthorized;
+                mensagem = "Ação permitida apenas para administradores";
+            }
+            else
+            {
+
+                ItemMatch match = _matchDomain.ObterPorId(matchId);
+                if (match == null)
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    mensagem = $"O match de id '{matchId}' não foi localizado";
+                }
+                else
+                {
+                    if (match.Efetivado)
+                    {
+                        statusCode = StatusCodes.Status400BadRequest;
+                        mensagem = $"Esse match já foi efetivado";
+                    }
+                    else
+                    {
+                        try
+                        {
+                            _matchDomain.EfetivarMatch(match);
+                            _uow.Efetivar();
+                            statusCode = StatusCodes.Status200OK;
+                            mensagem = "Match efetivado com sucesso";
+                        }
+                        catch (Exception ex)
+                        {
+                            statusCode = StatusCodes.Status500InternalServerError;
+                            mensagem = $"Falha na operação de efetivação do match [{ex.Message} - {ex.StackTrace}]";
+                        }
+                    }
+                }
+
             }
 
         }

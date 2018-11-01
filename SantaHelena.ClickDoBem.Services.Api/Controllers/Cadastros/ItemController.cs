@@ -761,6 +761,36 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
+        /// Efetivar um match pendente
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/match/efetivar/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "sucesso": boolean,
+        ///             "mensagem": "detalhe do resultado da operação"
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <response code="200">Operação realizada com sucesso</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPost("match/efetivar/{id:guid}")]
+        public IActionResult EfetivarMatchRh(Guid matchId)
+        {
+            _appService.EfetivarMatch(matchId, out int statusCode, out string mensagem);
+            return StatusCode(statusCode, new { Sucesso = (statusCode.Equals(StatusCodes.Status200OK)), Mensagem = mensagem });
+        }
+
+        /// <summary>
         /// Efetua o match entre um item de doação e um item de necessidade
         /// </summary>
         /// <remarks>

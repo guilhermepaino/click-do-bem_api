@@ -7,5 +7,6 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
     public interface IItemMatchDomainService : IDomainServiceBase<ItemMatch>
     {
         ItemMatch BuscarPorMatch(Guid doacaoId, Guid necessidadeId);
+        void EfetivarMatch(ItemMatch match);
     }
 }
