@@ -145,6 +145,82 @@
             <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
             <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Listar">
+            <summary>
+            Listar todos os registros de usuários
+            </summary>
+            <remarks>
+            
+            Contrato
+            
+                Requisição
+                url: [URI]/api/versao/colaborador
+                
+                Exemplo:
+                [
+                    {
+                        "id": "guid",
+                        "nome": "JOAO DA SILVA",
+                        "dataNascimento": "1976-11-13",
+                        "endereco": {
+                            "logradouro": "RUA DOS BOBOS",
+                            "numero": "0",
+                            "complemento": "BLOCO A - APTO 00",
+                            "bairro": "PARQUE DOS DESORIENTADOS",
+                            "cidade": "ARARAQUARA",
+                            "uf": "SP",
+                            "cep": "16123789"
+                        },
+                        "telefoneFixo": "",
+                        "telefoneCelular": "(16)91234-1234",
+                        "email": "usuario.teste@s2it.com.br"
+                    }
+                ]
+            
+            </remarks>
+            <response code="200">Retorno de dados com sucesso</response>
+            <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Pesquisar(System.Guid)">
+            <summary>
+            Pesquisar usuário pelo Id
+            </summary>
+            <remarks>
+            
+            Contrato
+            
+                Requisição
+                url: [URI]/api/versao/colaborador/2ef307a6-c4a5-11e8-8776-0242ac110006
+                
+                Exemplo:
+                {
+                    "id": "guid",
+                    "nome": "JOAO DA SILVA",
+                    "dataNascimento": "1976-11-13",
+                    "endereco": {
+                        "logradouro": "RUA DOS BOBOS",
+                        "numero": "0",
+                        "complemento": "BLOCO A - APTO 00",
+                        "bairro": "PARQUE DOS DESORIENTADOS",
+                        "cidade": "ARARAQUARA",
+                        "uf": "SP",
+                        "cep": "16123789"
+                    },
+                    "telefoneFixo": "",
+                    "telefoneCelular": "(16)91234-1234",
+                    "email": "usuario.teste@s2it.com.br"
+                }
+            
+            </remarks>
+            <response code="200">Retorno de dados com sucesso</response>
+            <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Upload">
             <summary>
             Recepciona arquivo de carga de colaboradores
@@ -677,6 +753,31 @@
              </remarks>
              <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
              <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.EfetivarMatchRh(System.Guid)">
+             <summary>
+             Efetivar um match pendente
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/item/match/efetivar/2ef307a6-c4a5-11e8-8776-0242ac110006
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "sucesso": boolean,
+                         "mensagem": "detalhe do resultado da operação"
+                     }
+                 ]
+                 
+             </remarks>
+             <response code="200">Operação realizada com sucesso</response>
              <response code="400">Requisição inválida, veja detalhes na mensagem</response>
              <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
              <response code="403">Acesso-Negado (Perfil não autorizado)</response>
