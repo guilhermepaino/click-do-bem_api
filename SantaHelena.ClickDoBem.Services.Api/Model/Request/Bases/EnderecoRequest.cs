@@ -12,8 +12,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases
         /// <summary>
         /// Logradouro do endereço (rua, avenida, etc)
         /// </summary>
-        [Required(ErrorMessage = "O logradouro deve ser informado")]
-        [MaxLength(100, ErrorMessage = "O logradouro deve conter no máximo 100 caracteres")]
+        [Required(ErrorMessage = "O endereço deve ser informado")]
+        [MaxLength(100, ErrorMessage = "O endereço deve conter no máximo 100 caracteres")]
         public string Logradouro { get; set; }
 
         /// <summary>
@@ -39,15 +39,15 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Bases
         /// <summary>
         /// Cidade do endereço
         /// </summary>
-        [Required(ErrorMessage = "A cidade deve ser informado")]
+        [Required(ErrorMessage = "A cidade deve ser informada")]
         [MaxLength(100, ErrorMessage = "A cidade deve conter no máximo 100 caracteres")]
         public string Cidade { get; set; }
 
         /// <summary>
         /// Uf do endereço
         /// </summary>
-        [Required(ErrorMessage = "A Uf deve ser informada")]
-        [StringLength(2, ErrorMessage = "A uf deve conter 2 posições")]
+        [Required(ErrorMessage = "O estado deve ser informado")]
+        [StringLength(2, ErrorMessage = "O estado deve conter 2 posições")]
         public string Uf { get; set; }
 
         /// <summary>
