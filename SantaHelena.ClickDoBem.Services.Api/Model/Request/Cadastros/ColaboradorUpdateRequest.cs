@@ -22,7 +22,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         /// Nome do colaborador
         /// </summary>
         [Required(ErrorMessage = "O nome deve ser informado")]
-        [StringLength(254, MinimumLength = 5, ErrorMessage = "O nome deve conter entre 3 e 150 caracteres")]
+        [StringLength(150, MinimumLength = 2, ErrorMessage = "O nome deve conter entre 2 e 150 caracteres")]
         public string Nome { get; set; }
 
         /// <summary>
