@@ -180,7 +180,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ColaboradorUpdateRequest>(request);
 
-            if (!request.Id.Equals(_usuario.Id) && !_usuario.Perfis.Contains("Administrador"))
+            if (!request.Id.Equals(_usuario.Id) && !_usuario.Perfis.Contains("Admin"))
                 return BadRequest(new { Sucesso = false, Mensagem = "Não é permitido alterar dados de outro usuário" });
 
             UsuarioDto dto = new UsuarioDto()

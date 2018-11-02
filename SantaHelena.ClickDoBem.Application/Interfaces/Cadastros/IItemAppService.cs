@@ -15,7 +15,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId);
         IEnumerable<ItemDto> ListarLivresParaMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId);
         IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados);
-        IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId);
+        void ListarMatches(Guid usuarioId, out int statusCode, out object dadosRetorno);
         void Inserir(ItemDto dto, out int statusCode, out string mensagem);
         void Atualizar(ItemDto dto, out int statusCode, out string mensagem);
         void Excluir(Guid id, string pastaWwwRoot, out int statusCode, out object dados);

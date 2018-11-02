@@ -28,16 +28,18 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
         protected IEnumerable<ItemMatchReportDto> ListagemMatch(Guid usuarioId, DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados, bool filtrarUsuario)
         {
 
+            string adm = filtrarUsuario ? "0" : "1";
+
             string sql = $@"SELECT
                                 im.Id,
                                 im.Data,
                                 tm.Descricao TipoMatch,
-                                (CASE WHEN im.Efetivado = 0 AND di.Anonimo = 1 AND du.Id <> @puid THEN 
+                                (CASE WHEN im.Efetivado = 0 AND di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN 
                                     '** ANONIMO **'
                                 ELSE
                                     du.Nome
                                 END) NomeDoador,
-                                (CASE WHEN im.Efetivado = 0 AND ni.Anonimo = 1 AND nu.Id <> @puid THEN 
+                                (CASE WHEN im.Efetivado = 0 AND ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN 
                                     '** ANONIMO **'
                                 ELSE
                                     nu.Nome

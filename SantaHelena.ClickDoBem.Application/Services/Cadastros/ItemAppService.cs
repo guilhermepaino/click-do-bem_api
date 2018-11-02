@@ -616,8 +616,28 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// <summary>
         /// Listar os matches realizados do usuário logado
         /// </summary>
-        public IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId)
-            => _dmn.ListarMatches(usuarioId);
+        public void ListarMatches(Guid usuarioId, out int statusCode, out object dadosRetorno)
+        {
+
+            try
+            {
+                statusCode = StatusCodes.Status200OK;
+                dadosRetorno = new
+                {
+                    Sucesso = true,
+                    Mensagem = _dmn.ListarMatches(usuarioId)
+                };
+            }
+            catch (Exception ex)
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"Falha ao executar operação [{ex.Message} - {ex.StackTrace}]"
+                };
+            }
+        }
 
         /// <summary>
         /// Carregar uma imagem para um item
@@ -863,7 +883,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             // Gravando match
             Guid doacaoId = tipoItemOpostoDescricao.ToLower().Equals("doação") ? itemOposto.Id : itemAlvo.Id;
             Guid necessidadeId = tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? itemOposto.Id : itemAlvo.Id;
-            Guid tipoMatchId = Guid.Parse(tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? "b69eed4f-d87c-11e8-abfa-0e0e947bb2d6" : "b69eed41-d87c-11e8-abfa-0e0e947bb2d6");
+            Guid tipoMatchId = Guid.Parse(tipoItemOpostoDescricao.ToLower().Equals("necessidade") ? "b69eed41-d87c-11e8-abfa-0e0e947bb2d6" : "b69eed4f-d87c-11e8-abfa-0e0e947bb2d6");
 
             match = new ItemMatch()
             {
@@ -883,15 +903,23 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 statusCode = StatusCodes.Status200OK;
                 dadosRetorno = new
                 {
-                    MatchId = match.Id,
-                    ItemRelacaoId = itemOposto.Id.ToString()
+                    Sucesso = true,
+                    Mensagem = new
+                    {
+                        MatchId = match.Id,
+                        ItemRelacaoId = itemOposto.Id.ToString()
+                    }
                 };
 
             }
             catch (Exception ex)
             {
                 statusCode = StatusCodes.Status500InternalServerError;
-                dadosRetorno = $"Falha na operação - [{ex.Message} - {ex.StackTrace}]";
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"Falha na operação - [{ex.Message} - {ex.StackTrace}]"
+                };
             }
 
         }
@@ -899,7 +927,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         public void EfetivarMatch(Guid matchId, out int statusCode, out string mensagem)
         {
 
-            if (!_usuario.Perfis.Contains("Administrador"))
+            if (!_usuario.Perfis.Contains("Admin"))
             {
                 statusCode = StatusCodes.Status401Unauthorized;
                 mensagem = "Ação permitida apenas para administradores";

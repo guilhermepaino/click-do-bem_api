@@ -25,8 +25,8 @@ ALTER TABLE Item ADD GeradoPorMatch BIT NOT NULL DEFAULT 0;
 -- Dados
 -- ------------------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO TipoMatch (Id, DataInclusao, Descricao) VALUES ('b69eed41-d87c-11e8-abfa-0e0e947bb2d6', NOW(), 'Pela Doação');
-INSERT INTO TipoMatch (Id, DataInclusao, Descricao) VALUES ('b69eed4f-d87c-11e8-abfa-0e0e947bb2d6', NOW(), 'Pela Necessidade');
+INSERT INTO TipoMatch (Id, DataInclusao, Descricao) VALUES ('b69eed41-d87c-11e8-abfa-0e0e947bb2d6', NOW(), 'Doação');
+INSERT INTO TipoMatch (Id, DataInclusao, Descricao) VALUES ('b69eed4f-d87c-11e8-abfa-0e0e947bb2d6', NOW(), 'Necessidade');
 INSERT INTO TipoMatch (Id, DataInclusao, Descricao) VALUES ('a3412363-d87d-11e8-abfa-0e0e947bb2d6', NOW(), 'Escolha Combinada');
 
 UPDATE ItemMatch SET TipoMatchId = 'a3412363-d87d-11e8-abfa-0e0e947bb2d6' WHERE TipoMatchId IS NULL;

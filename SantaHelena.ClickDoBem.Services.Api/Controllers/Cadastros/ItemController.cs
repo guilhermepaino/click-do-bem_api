@@ -715,7 +715,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public IActionResult ListarMatches([FromBody]ListagemMatchRequest request)
         {
             if (request == null)
-                return BadRequest("Nenhuma informação de requisição");
+                return BadRequest(new { Sucesso = false, Mensagem = "Nenhuma informação de requisição" });
+            if (!_appUser.Perfis.Contains("Admin"))
+                return BadRequest(new { Sucesso = false, Mensagem = "Operação permitida apenas para administradores" });
+
             return Ok(_appService.ListarMatches(request.DataInicial, request.DataFinal, request.CategoriaId, request.Efetivados));
         }
 
@@ -757,7 +760,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpGet("match")]
         public IActionResult ListarMatches()
         {
-            return Ok(_appService.ListarMatches(_appUser.Id));
+            _appService.ListarMatches(_appUser.Id, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
         }
 
         /// <summary>
