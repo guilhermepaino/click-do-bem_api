@@ -952,6 +952,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     {
                         try
                         {
+                            match.Efetivado = true;
                             _matchDomain.EfetivarMatch(match);
                             _uow.Efetivar();
                             statusCode = StatusCodes.Status200OK;

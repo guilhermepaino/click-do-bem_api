@@ -788,9 +788,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost("match/efetivar/{id:guid}")]
-        public IActionResult EfetivarMatchRh(Guid matchId)
+        public IActionResult EfetivarMatchRh(Guid id)
         {
-            _appService.EfetivarMatch(matchId, out int statusCode, out string mensagem);
+            _appService.EfetivarMatch(id, out int statusCode, out string mensagem);
             return StatusCode(statusCode, new { Sucesso = (statusCode.Equals(StatusCodes.Status200OK)), Mensagem = mensagem });
         }
 

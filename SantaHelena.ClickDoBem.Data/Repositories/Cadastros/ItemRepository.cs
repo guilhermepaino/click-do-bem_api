@@ -44,8 +44,8 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 ELSE
                                     nu.Nome
                                 END) NomeReceptor,
-                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN di.Titulo ELSE ni.Titulo END) Titulo,
-                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN di.Descricao ELSE ni.Descricao END) Descricao,
+                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN ni.Titulo ELSE di.Titulo END) Titulo,
+                                (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN ni.Descricao ELSE di.Descricao END) Descricao,
                                 dc.Descricao Categoria,
                                 im.Valor,
                                 dc.Pontuacao,
