@@ -225,6 +225,36 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             }
             mensagem = "Usuário autenticado";
             return true;
+
+        }
+
+        /// <summary>
+        /// Autenticar usuário através do documento
+        /// </summary>
+        /// <param name="documento">Número do documento</param>
+        /// <param name="mensagem">Mensagem de saída do resultado da autenticação</param>
+        /// <param name="usuarioDto">Objeto Dto para saida do usuário</param>
+        public bool Autenticar(string documento, out string mensagem, out UsuarioDto usuarioDto)
+        {
+
+            Usuario usr = _dmn.ObterPorDocumento(documento);
+            DocumentoHabilitado doc = _docHabDomain.ObterPorDocumento(documento);
+            usuarioDto = ConverterEntidadeEmDto(usr);
+            if (usr == null || doc == null)
+            {
+                mensagem = "Usuário e/ou senha inválido!";
+                return false;
+            }
+
+            if (!doc.Ativo)
+            {
+                mensagem = "Usuário inativo!";
+                return false;
+            }
+
+            mensagem = "Usuário autenticado";
+            return true;
+
         }
 
         /// <summary>
