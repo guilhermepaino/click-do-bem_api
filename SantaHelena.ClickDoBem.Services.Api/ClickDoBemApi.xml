@@ -901,6 +901,25 @@
             Cria uma nova instância da API
             </summary>
         </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Configuration">
+            <summary>
+            Propriedade de configuração
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.GeraToken(SantaHelena.ClickDoBem.Application.Dto.Credenciais.UsuarioDto,System.Collections.Generic.IList{System.String},System.Nullable{System.DateTime}@)">
+            <summary>
+            Gerar token
+            </summary>
+            <returns>string contendo o token</returns>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.ObterCpfToken(System.String,System.String@,System.DateTime@)">
+            <summary>
+            Obter o cpf do token
+            </summary>
+            <param name="token">token enviado</param>
+            <param name="cpf">Variável de saída do cpf</param>
+            <param name="validade">Variável de saída da data de validade do token</param>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Autenticar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.AutenticacaoRequest)">
              <summary>
              Autenticar usuário no sistema / gera chave (token) de acesso
@@ -1006,6 +1025,32 @@
                 }
             
             </remarks>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.AtualizarToken(SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.RefreshTokenRequest)">
+             <summary>
+             Realizar a atualização (refresh) de um token expirado
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 {
+                    "token": "string",
+                 }
+                 
+                 Resposta
+                 { 
+                     "sucesso" : "true",
+                     "mensagem" : {
+                         "token": "string"
+                     }
+                 }
+                 
+             </remarks>
+             <param name="request">Informações da requisição</param>
+             <response code="200">Sucesso na geraçãod de novo token</response>
+             <response code="403">Falha na autenticação/Acesso Negado</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais.UsuarioController.Listar(System.String)">
              <summary>
@@ -1438,6 +1483,16 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.EsqueciSenhaRequest.ConfirmarSenha">
             <summary>
             Confirmação de senha
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.RefreshTokenRequest">
+            <summary>
+            Request de Refresh de Autenticação (Token)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.RefreshTokenRequest.Token">
+            <summary>
+            Token expirado para renovação
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais.TrocaSenhaRequest">
