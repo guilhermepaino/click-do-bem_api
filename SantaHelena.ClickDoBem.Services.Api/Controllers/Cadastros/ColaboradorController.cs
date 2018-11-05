@@ -138,6 +138,74 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
+        /// Recepciona arquivo de carga de colaboradores
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     Content-Type: multipart/form-data
+        ///     Enviar arquivo através de FormFile
+        ///     
+        ///     Resposta
+        ///     {
+        ///         "sucesso" : "boolean",
+        ///         "mensagem" : "mensagem do resultado do processamento",
+        ///         "resultado" : 
+        ///         [
+        ///             { 
+        ///                 "linha": "1",
+        ///                 "situacao": "Ok"
+        ///             },
+        ///             { 
+        ///                "linha": "2",
+        ///               "situacao": "Cpf/Cnpj inválido"
+        ///             }
+        ///         ]
+        ///     }
+        /// 
+        /// </remarks>
+        /// <response code="200">Processamento do arquivo realizado com sucesso</response>
+        /// <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Ocorreu alguma falha no processamento da request</response>
+        [HttpPost("upload"), DisableRequestSizeLimit]
+        [AllowAnonymous]
+        public IActionResult Upload()
+        {
+
+            IFormFile file = null;
+
+            try { file = Request.Form.Files.FirstOrDefault(); }
+            catch { return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" }); }
+
+            if (file == null)
+                return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" });
+
+            if (file.Length.Equals(0))
+                return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
+
+
+            ArquivoDocumentoDto adt = _appService.ImportarArquivoColaborador(file, _caminho, out int statusCode);
+            ArquivoDocumentoResponse result = new ArquivoDocumentoResponse()
+            {
+                NomeArquivo = adt.NomeArquivo,
+                Detalhe = adt.Detalhe,
+                Sucesso = adt.Sucesso
+            };
+            if (adt.Linhas != null)
+                adt.Linhas
+                    .ToList()
+                    .ForEach(l =>
+                    {
+                        result.Linhas.Add(new LinhaArquivoDocumentoResponse() { Linha = l.Linha, Conteudo = l.Conteudo, Sucesso = l.Sucesso, Detalhe = l.Detalhe });
+                    });
+
+            return StatusCode(statusCode, result);
+
+        }
+
+        /// <summary>
         /// Alterar os dados de um colaborador
         /// </summary>
         /// <remarks>
@@ -291,74 +359,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public IActionResult Pesquisar(Guid id)
         {
             return Ok(_appService.ObterPorId(id));
-        }
-
-        /// <summary>
-        /// Recepciona arquivo de carga de colaboradores
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        /// 
-        ///     Requisição
-        ///     Content-Type: multipart/form-data
-        ///     Enviar arquivo através de FormFile
-        ///     
-        ///     Resposta
-        ///     {
-        ///         "sucesso" : "boolean",
-        ///         "mensagem" : "mensagem do resultado do processamento",
-        ///         "resultado" : 
-        ///         [
-        ///             { 
-        ///                 "linha": "1",
-        ///                 "situacao": "Ok"
-        ///             },
-        ///             { 
-        ///                "linha": "2",
-        ///               "situacao": "Cpf/Cnpj inválido"
-        ///             }
-        ///         ]
-        ///     }
-        /// 
-        /// </remarks>
-        /// <response code="200">Processamento do arquivo realizado com sucesso</response>
-        /// <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Ocorreu alguma falha no processamento da request</response>
-        [HttpPost("upload"), DisableRequestSizeLimit]
-        [AllowAnonymous]
-        public IActionResult Upload()
-        { 
-
-            IFormFile file = null;
-
-            try { file = Request.Form.Files.FirstOrDefault(); }
-            catch { return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" }); }
-
-            if (file == null)
-                return BadRequest(new { sucesso = false, mensagem = "Nenhum arquivo foi enviado" });
-
-            if (file.Length.Equals(0))
-                return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
-
-            
-            ArquivoDocumentoDto adt = _appService.ImportarArquivoColaborador(file, _caminho, out int statusCode);
-            ArquivoDocumentoResponse result = new ArquivoDocumentoResponse()
-            {
-                NomeArquivo = adt.NomeArquivo,
-                Detalhe = adt.Detalhe,
-                Sucesso = adt.Sucesso
-            };
-            if(adt.Linhas != null)
-                adt.Linhas
-                    .ToList()
-                    .ForEach(l =>
-                    {
-                        result.Linhas.Add(new LinhaArquivoDocumentoResponse() { Linha = l.Linha, Conteudo = l.Conteudo, Sucesso = l.Sucesso, Detalhe = l.Detalhe });
-                    });
-
-            return StatusCode(statusCode, result);
-
         }
 
         #endregion

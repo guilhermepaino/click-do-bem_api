@@ -184,6 +184,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         #region Métodos/EndPoints Api
 
+        // ----- POSTS ------------------------------------------------------------
+        // ------------------------------------------------------------------------
+
         /// <summary>
         /// Inserir um novo registro de item
         /// </summary>
@@ -268,194 +271,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
-        /// Inserir um novo registro de item
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        /// 
-        ///     Requisição: ItemRequest
-        ///     {
-        ///         "id": "Id do item (guid)",
-        ///         "titulo": "Fralda Descartável Infantil",
-        ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
-        ///         "tipoItem": "Necessidade",
-        ///         "categoria": "Higiene e limpeza",
-        ///         "anonimo": false,
-        ///         "Imagens": [
-        ///             {
-        ///                 "NomeImagem": "string",
-        ///                 "ImagemBase64": "string-base64"
-        ///             }
-        ///         ],
-        ///         "ImgExcluir": [
-        ///             "guid1",
-        ///             "guid2"
-        ///         ]
-        ///      }
-        ///      
-        ///     Resposta:
-        ///     {
-        ///         "sucesso": true,
-        ///         "mensagem": "Registro alterado com sucesso",
-        ///         "imagens": [
-        ///             {
-        ///                 "id": "guid",
-        ///                 "nomeImagem": "string",
-        ///                 "arquivo": "string"
-        ///             }
-        ///         ]
-        ///     }
-        /// 
-        ///     Validações apresentadas em array, exemplo:
-        ///     {
-        ///         "sucesso": false,
-        ///         "mensagem": [
-        ///             "Critica1,
-        ///             "Critica2"
-        ///         ]
-        ///     }
-        ///     
-        /// </remarks>
-        /// <response code="200">Sucesso na gravação</response>
-        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpPut]
-        public IActionResult Atualizar([FromBody]ItemUpdateRequest req)
-        {
-
-            if (!ModelState.IsValid)
-                return Response<ItemUpdateRequest>(req);
-
-            // Validando quanidade de imagens
-            if (!ValidaQuantidadeImagens(req.Id, req.ImgExcluir, req.Imagens, out string criticas))
-                return BadRequest(new { sucess = false, mensagem = criticas });
-
-            var dto = new ItemDto()
-            {
-                Id = req.Id,
-                Titulo = req.Titulo,
-                Descricao = req.Descricao,
-                TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
-                Categoria = new CategoriaDto() { Descricao = req.Categoria },
-                Usuario = new UsuarioDto() { Id = _appUser.Id },
-                Anonimo = req.Anonimo
-            };
-
-            _appService.Atualizar(dto, out int statusCode, out string mensagem);
-
-            var respExclusao = ExcluirImagens(req.ImgExcluir);
-
-            IEnumerable<object> respImage = CarregarImagens(dto.Id, req.Imagens);
-
-            return StatusCode(statusCode, new { sucesso = statusCode.Equals(StatusCodes.Status200OK), mensagem, imagens = respImage, imgExclusao = respExclusao });
-
-        }
-
-        /// <summary>
-        /// Excluir o registro
-        /// </summary>
-        /// <param name="id">Id do registro</param>
-        /// <remarks>
-        /// 
-        ///     Requisição: DELETE
-        ///     url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
-        /// 
-        ///     Resposta:
-        ///     {
-        ///         "sucesso": true,
-        ///         "mensagem": "Item excluído com sucesso"
-        ///     }
-        ///     
-        /// </remarks>
-        /// <response code="200">Sucesso na exclusão</response>
-        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpDelete("{id:guid}")]
-        public IActionResult Excluir(Guid id)
-        {
-            _appService.Excluir(id, _hostingEnvironment.WebRootPath, out int statusCode, out object dados);
-            return StatusCode(statusCode, dados);
-        }
-
-        /// <summary>
-        /// Listar todos os registros
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        ///
-        ///     Requisição (parâmetro tipoItem = opcional)
-        ///     [ tipoItem=N ]
-        ///     
-        ///     onde N pode ser:
-        ///     
-        ///         1 = Necessidade
-        ///         2 = Doação
-        ///     
-        ///     Resposta (array)
-        ///     [
-        ///         {
-        ///             "id": "guid",
-        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
-        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
-        ///             "titulo": "string",
-        ///             "descricao": "string",
-        ///             "tipoItem": "string",
-        ///             "categoria": {
-        ///                 "id": "guid",
-        ///                 "descricao": "string",
-        ///                 "pontuacao": int,
-        ///                 "gerenciadaRh": bool
-        ///             },
-        ///             "usuario": {
-        ///                 "id": "guid",
-        ///                 "nome": "string",
-        ///                 "cpfCnpj": "string"
-        ///             },
-        ///             "anonimo": bool,
-        ///             "imagens":
-        ///             [
-        ///                 "id": "guid",
-        ///                 "nomeImagem": "string",
-        ///                 "arquivo": "string"
-        ///             ]
-        ///         }
-        ///     ]
-        ///     
-        /// </remarks>
-        /// <returns>Lista dos registros cadastrados</returns>
-        /// <response code="200">Retorna a lista de registros cadastrados</response>
-        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpGet]
-        public IActionResult Listar([FromQuery]int? tipoItem)
-        {
-            IEnumerable<ItemDto> registros = null;
-            if (tipoItem == null)
-            {
-                registros = _appService.ObterTodos(false);
-            }
-            else
-            {
-                switch (tipoItem.Value)
-                {
-                    case 1:
-                        registros = _appService.ObterNecessidades();
-                        break;
-                    case 2:
-                        registros = _appService.ObterDoacoes();
-                        break;
-                    default:
-                        return BadRequest(new { sucesso = "false", mensagem = "O tipo de item deve ser 1=Necessidade ou 2=Doação" });
-                }
-            }
-
-            return Ok(ConverterDtoEmResponse(registros));
-        }
-
-        /// <summary>
         /// Listar todos os registros que atendam os critérios de pesquisa
         /// </summary>
         /// <remarks>
@@ -515,48 +330,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
-        /// Buscar registro de item pelo Id (guid)
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        ///
-        ///     Requisição
-        ///     url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
-        ///     
-        ///     Resposta
-        ///         {
-        ///             "id": "guid",
-        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
-        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
-        ///             "titulo": "string",
-        ///             "descricao": "string",
-        ///             "tipoItem": "string",
-        ///             "categoria": {
-        ///                 "id": "guid",
-        ///                 "descricao": "string",
-        ///                 "pontuacao": int,
-        ///                 "gerenciadaRh": bool
-        ///             },
-        ///             "usuario": {
-        ///                 "id": "guid",
-        ///                 "nome": "string",
-        ///                 "cpfCnpj": "string"
-        ///             },
-        ///             "anonimo": bool
-        ///         }
-        ///     
-        /// </remarks>
-        /// <returns>Dados do registro localizado ou null se não encontrado</returns>
-        /// <response code="200">Sucesso na operação de busca</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpGet("{id:guid}")]
-        public IActionResult BuscarPorId(Guid id)
-        {
-            return Ok(ConverterDtoEmResponse(_appService.ObterPorId(id)));
-        }
-
-        /// <summary>
         /// Carregar uma imagem de um item
         /// </summary>
         /// <remarks>
@@ -585,31 +358,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public IActionResult CarregarImagem([FromBody]ItemImagemRequest request)
         {
             _appService.CarregarImagem(request.ItemId, request.NomeImagem, request.ImagemBase64, _caminho, out int statusCode, out object dadosRetorno);
-            return StatusCode(statusCode, dadosRetorno);
-        }
-
-        /// <summary>
-        /// Remover uma imagem de um item
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        /// 
-        ///     Requisição
-        ///     {
-        ///         "id": "guid"
-        ///     }
-        ///     
-        ///     Respostas
-        ///     {
-        ///         "sucesso": boolean,
-        ///         "mensagem": "mensagem de sucesso ou crítica"
-        ///     }
-        /// 
-        /// </remarks>
-        [HttpDelete("imagem/{id:guid}")]
-        public IActionResult ApagarImagem(Guid id)
-        {
-            _appService.RemoverImagem(id, _caminho, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
 
@@ -723,48 +471,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
-        /// Listar todos os registros de matches do usuário
-        /// </summary>
-        /// <remarks>
-        /// Contrato
-        ///
-        ///     Requisição
-        ///     url: [URI]/api/versao/item/match/listar
-        ///     
-        ///     Resposta (array)
-        ///     [
-        ///         {
-        ///             "id": "guid",
-        ///             "data": "AAAA-MM-DD",
-        ///             "tipoMatch": "string",
-        ///             "nomeDoador": "string",
-        ///             "nomeReceptor": "string",
-        ///             "titulo": "string",
-        ///             "descricao": "string",
-        ///             "categoria": "string",
-        ///             "valor": 999.99,
-        ///             "pontuacao": 999,
-        ///             "gerenciadaRh": boolean,
-        ///             "efetivado": boolean,
-        ///             "imagem": "string"
-        ///         }
-        ///     ]
-        ///     
-        /// </remarks>
-        /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
-        /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
-        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
-        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        [HttpGet("match")]
-        public IActionResult ListarMatches()
-        {
-            _appService.ListarMatches(_appUser.Id, out int statusCode, out object dadosRetorno);
-            return StatusCode(statusCode, dadosRetorno);
-        }
-
-        /// <summary>
         /// Efetivar um match pendente
         /// </summary>
         /// <remarks>
@@ -863,6 +569,149 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             return StatusCode(statusCode, dadosRetorno);
         }
 
+        // ----- PUT --------------------------------------------------------------
+        // ------------------------------------------------------------------------
+
+        /// <summary>
+        /// Inserir um novo registro de item
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição: ItemRequest
+        ///     {
+        ///         "id": "Id do item (guid)",
+        ///         "titulo": "Fralda Descartável Infantil",
+        ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
+        ///         "tipoItem": "Necessidade",
+        ///         "categoria": "Higiene e limpeza",
+        ///         "anonimo": false,
+        ///         "Imagens": [
+        ///             {
+        ///                 "NomeImagem": "string",
+        ///                 "ImagemBase64": "string-base64"
+        ///             }
+        ///         ],
+        ///         "ImgExcluir": [
+        ///             "guid1",
+        ///             "guid2"
+        ///         ]
+        ///      }
+        ///      
+        ///     Resposta:
+        ///     {
+        ///         "sucesso": true,
+        ///         "mensagem": "Registro alterado com sucesso",
+        ///         "imagens": [
+        ///             {
+        ///                 "id": "guid",
+        ///                 "nomeImagem": "string",
+        ///                 "arquivo": "string"
+        ///             }
+        ///         ]
+        ///     }
+        /// 
+        ///     Validações apresentadas em array, exemplo:
+        ///     {
+        ///         "sucesso": false,
+        ///         "mensagem": [
+        ///             "Critica1,
+        ///             "Critica2"
+        ///         ]
+        ///     }
+        ///     
+        /// </remarks>
+        /// <response code="200">Sucesso na gravação</response>
+        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPut]
+        public IActionResult Atualizar([FromBody]ItemUpdateRequest req)
+        {
+
+            if (!ModelState.IsValid)
+                return Response<ItemUpdateRequest>(req);
+
+            // Validando quanidade de imagens
+            if (!ValidaQuantidadeImagens(req.Id, req.ImgExcluir, req.Imagens, out string criticas))
+                return BadRequest(new { sucess = false, mensagem = criticas });
+
+            var dto = new ItemDto()
+            {
+                Id = req.Id,
+                Titulo = req.Titulo,
+                Descricao = req.Descricao,
+                TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
+                Categoria = new CategoriaDto() { Descricao = req.Categoria },
+                Usuario = new UsuarioDto() { Id = _appUser.Id },
+                Anonimo = req.Anonimo
+            };
+
+            _appService.Atualizar(dto, out int statusCode, out string mensagem);
+
+            var respExclusao = ExcluirImagens(req.ImgExcluir);
+
+            IEnumerable<object> respImage = CarregarImagens(dto.Id, req.Imagens);
+
+            return StatusCode(statusCode, new { sucesso = statusCode.Equals(StatusCodes.Status200OK), mensagem, imagens = respImage, imgExclusao = respExclusao });
+
+        }
+
+        // ----- DELETE -----------------------------------------------------------
+        // ------------------------------------------------------------------------
+
+        /// <summary>
+        /// Excluir o registro
+        /// </summary>
+        /// <param name="id">Id do registro</param>
+        /// <remarks>
+        /// 
+        ///     Requisição: DELETE
+        ///     url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
+        /// 
+        ///     Resposta:
+        ///     {
+        ///         "sucesso": true,
+        ///         "mensagem": "Item excluído com sucesso"
+        ///     }
+        ///     
+        /// </remarks>
+        /// <response code="200">Sucesso na exclusão</response>
+        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpDelete("{id:guid}")]
+        public IActionResult Excluir(Guid id)
+        {
+            _appService.Excluir(id, _hostingEnvironment.WebRootPath, out int statusCode, out object dados);
+            return StatusCode(statusCode, dados);
+        }
+
+        /// <summary>
+        /// Remover uma imagem de um item
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     {
+        ///         "id": "guid"
+        ///     }
+        ///     
+        ///     Respostas
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "mensagem de sucesso ou crítica"
+        ///     }
+        /// 
+        /// </remarks>
+        [HttpDelete("imagem/{id:guid}")]
+        public IActionResult ApagarImagem(Guid id)
+        {
+            _appService.RemoverImagem(id, _caminho, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
+        }
+
         /// <summary>
         /// Desfaz um match realizado
         /// </summary>
@@ -885,6 +734,170 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             _appService.DesfazerMatch(id, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
+
+        // ----- GET --------------------------------------------------------------
+        // ------------------------------------------------------------------------
+
+        /// <summary>
+        /// Listar todos os registros
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição (parâmetro tipoItem = opcional)
+        ///     [ tipoItem=N ]
+        ///     
+        ///     onde N pode ser:
+        ///     
+        ///         1 = Necessidade
+        ///         2 = Doação
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": "string",
+        ///             "categoria": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string",
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "guid",
+        ///                 "nome": "string",
+        ///                 "cpfCnpj": "string"
+        ///             },
+        ///             "anonimo": bool,
+        ///             "imagens":
+        ///             [
+        ///                 "id": "guid",
+        ///                 "nomeImagem": "string",
+        ///                 "arquivo": "string"
+        ///             ]
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros cadastrados</returns>
+        /// <response code="200">Retorna a lista de registros cadastrados</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet]
+        public IActionResult Listar([FromQuery]int? tipoItem)
+        {
+            IEnumerable<ItemDto> registros = null;
+            if (tipoItem == null)
+            {
+                registros = _appService.ObterTodos(false);
+            }
+            else
+            {
+                switch (tipoItem.Value)
+                {
+                    case 1:
+                        registros = _appService.ObterNecessidades();
+                        break;
+                    case 2:
+                        registros = _appService.ObterDoacoes();
+                        break;
+                    default:
+                        return BadRequest(new { sucesso = "false", mensagem = "O tipo de item deve ser 1=Necessidade ou 2=Doação" });
+                }
+            }
+
+            return Ok(ConverterDtoEmResponse(registros));
+        }
+
+        /// <summary>
+        /// Buscar registro de item pelo Id (guid)
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     
+        ///     Resposta
+        ///         {
+        ///             "id": "guid",
+        ///             "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+        ///             "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "tipoItem": "string",
+        ///             "categoria": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string",
+        ///                 "pontuacao": int,
+        ///                 "gerenciadaRh": bool
+        ///             },
+        ///             "usuario": {
+        ///                 "id": "guid",
+        ///                 "nome": "string",
+        ///                 "cpfCnpj": "string"
+        ///             },
+        ///             "anonimo": bool
+        ///         }
+        ///     
+        /// </remarks>
+        /// <returns>Dados do registro localizado ou null se não encontrado</returns>
+        /// <response code="200">Sucesso na operação de busca</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("{id:guid}")]
+        public IActionResult BuscarPorId(Guid id)
+        {
+            return Ok(ConverterDtoEmResponse(_appService.ObterPorId(id)));
+        }
+
+        /// <summary>
+        /// Listar todos os registros de matches do usuário
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/match/listar
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "data": "AAAA-MM-DD",
+        ///             "tipoMatch": "string",
+        ///             "nomeDoador": "string",
+        ///             "nomeReceptor": "string",
+        ///             "titulo": "string",
+        ///             "descricao": "string",
+        ///             "categoria": "string",
+        ///             "valor": 999.99,
+        ///             "pontuacao": 999,
+        ///             "gerenciadaRh": boolean,
+        ///             "efetivado": boolean,
+        ///             "imagem": "string"
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+        /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+        /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("match")]
+        public IActionResult ListarMatches()
+        {
+            _appService.ListarMatches(_appUser.Id, out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
+        }
+
 
         #endregion
 

@@ -107,6 +107,40 @@
             <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
             <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Upload">
+            <summary>
+            Recepciona arquivo de carga de colaboradores
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                Content-Type: multipart/form-data
+                Enviar arquivo através de FormFile
+                
+                Resposta
+                {
+                    "sucesso" : "boolean",
+                    "mensagem" : "mensagem do resultado do processamento",
+                    "resultado" : 
+                    [
+                        { 
+                            "linha": "1",
+                            "situacao": "Ok"
+                        },
+                        { 
+                           "linha": "2",
+                          "situacao": "Cpf/Cnpj inválido"
+                        }
+                    ]
+                }
+            
+            </remarks>
+            <response code="200">Processamento do arquivo realizado com sucesso</response>
+            <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Ocorreu alguma falha no processamento da request</response>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Editar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ColaboradorUpdateRequest)">
             <summary>
             Alterar os dados de um colaborador
@@ -221,40 +255,6 @@
             <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
             <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ColaboradorController.Upload">
-            <summary>
-            Recepciona arquivo de carga de colaboradores
-            </summary>
-            <remarks>
-            Contrato
-            
-                Requisição
-                Content-Type: multipart/form-data
-                Enviar arquivo através de FormFile
-                
-                Resposta
-                {
-                    "sucesso" : "boolean",
-                    "mensagem" : "mensagem do resultado do processamento",
-                    "resultado" : 
-                    [
-                        { 
-                            "linha": "1",
-                            "situacao": "Ok"
-                        },
-                        { 
-                           "linha": "2",
-                          "situacao": "Cpf/Cnpj inválido"
-                        }
-                    ]
-                }
-            
-            </remarks>
-            <response code="200">Processamento do arquivo realizado com sucesso</response>
-            <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
-            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-            <response code="500">Ocorreu alguma falha no processamento da request</response>
-        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController">
             <summary>
             API de Item
@@ -360,135 +360,6 @@
             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
             <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Atualizar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest)">
-            <summary>
-            Inserir um novo registro de item
-            </summary>
-            <remarks>
-            Contrato
-            
-                Requisição: ItemRequest
-                {
-                    "id": "Id do item (guid)",
-                    "titulo": "Fralda Descartável Infantil",
-                    "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
-                    "tipoItem": "Necessidade",
-                    "categoria": "Higiene e limpeza",
-                    "anonimo": false,
-                    "Imagens": [
-                        {
-                            "NomeImagem": "string",
-                            "ImagemBase64": "string-base64"
-                        }
-                    ],
-                    "ImgExcluir": [
-                        "guid1",
-                        "guid2"
-                    ]
-                 }
-                 
-                Resposta:
-                {
-                    "sucesso": true,
-                    "mensagem": "Registro alterado com sucesso",
-                    "imagens": [
-                        {
-                            "id": "guid",
-                            "nomeImagem": "string",
-                            "arquivo": "string"
-                        }
-                    ]
-                }
-            
-                Validações apresentadas em array, exemplo:
-                {
-                    "sucesso": false,
-                    "mensagem": [
-                        "Critica1,
-                        "Critica2"
-                    ]
-                }
-                
-            </remarks>
-            <response code="200">Sucesso na gravação</response>
-            <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
-            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-            <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Excluir(System.Guid)">
-            <summary>
-            Excluir o registro
-            </summary>
-            <param name="id">Id do registro</param>
-            <remarks>
-            
-                Requisição: DELETE
-                url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
-            
-                Resposta:
-                {
-                    "sucesso": true,
-                    "mensagem": "Item excluído com sucesso"
-                }
-                
-            </remarks>
-            <response code="200">Sucesso na exclusão</response>
-            <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
-            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-            <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(System.Nullable{System.Int32})">
-             <summary>
-             Listar todos os registros
-             </summary>
-             <remarks>
-             Contrato
-            
-                 Requisição (parâmetro tipoItem = opcional)
-                 [ tipoItem=N ]
-                 
-                 onde N pode ser:
-                 
-                     1 = Necessidade
-                     2 = Doação
-                 
-                 Resposta (array)
-                 [
-                     {
-                         "id": "guid",
-                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
-                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
-                         "titulo": "string",
-                         "descricao": "string",
-                         "tipoItem": "string",
-                         "categoria": {
-                             "id": "guid",
-                             "descricao": "string",
-                             "pontuacao": int,
-                             "gerenciadaRh": bool
-                         },
-                         "usuario": {
-                             "id": "guid",
-                             "nome": "string",
-                             "cpfCnpj": "string"
-                         },
-                         "anonimo": bool,
-                         "imagens":
-                         [
-                             "id": "guid",
-                             "nomeImagem": "string",
-                             "arquivo": "string"
-                         ]
-                     }
-                 ]
-                 
-             </remarks>
-             <returns>Lista dos registros cadastrados</returns>
-             <response code="200">Retorna a lista de registros cadastrados</response>
-             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-             <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.PesquisaItemRequest)">
              <summary>
              Listar todos os registros que atendam os critérios de pesquisa
@@ -542,44 +413,6 @@
              <response code="403">Acesso-Negado (Perfil não autorizado)</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.BuscarPorId(System.Guid)">
-             <summary>
-             Buscar registro de item pelo Id (guid)
-             </summary>
-             <remarks>
-             Contrato
-            
-                 Requisição
-                 url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
-                 
-                 Resposta
-                     {
-                         "id": "guid",
-                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
-                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
-                         "titulo": "string",
-                         "descricao": "string",
-                         "tipoItem": "string",
-                         "categoria": {
-                             "id": "guid",
-                             "descricao": "string",
-                             "pontuacao": int,
-                             "gerenciadaRh": bool
-                         },
-                         "usuario": {
-                             "id": "guid",
-                             "nome": "string",
-                             "cpfCnpj": "string"
-                         },
-                         "anonimo": bool
-                     }
-                 
-             </remarks>
-             <returns>Dados do registro localizado ou null se não encontrado</returns>
-             <response code="200">Sucesso na operação de busca</response>
-             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-             <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.CarregarImagem(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemImagemRequest)">
             <summary>
             Carregar uma imagem de um item
@@ -604,26 +437,6 @@
                 
                 o campo 'id' somente é retornado em caso de sucesso na operação
                 o campo 'arquivo' somente é retornado em caso de sucesso na operação
-            
-            </remarks>
-        </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ApagarImagem(System.Guid)">
-            <summary>
-            Remover uma imagem de um item
-            </summary>
-            <remarks>
-            Contrato
-            
-                Requisição
-                {
-                    "id": "guid"
-                }
-                
-                Respostas
-                {
-                    "sucesso": boolean,
-                    "mensagem": "mensagem de sucesso ou crítica"
-                }
             
             </remarks>
         </member>
@@ -721,43 +534,6 @@
              <response code="403">Acesso-Negado (Perfil não autorizado)</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ListarMatches">
-             <summary>
-             Listar todos os registros de matches do usuário
-             </summary>
-             <remarks>
-             Contrato
-            
-                 Requisição
-                 url: [URI]/api/versao/item/match/listar
-                 
-                 Resposta (array)
-                 [
-                     {
-                         "id": "guid",
-                         "data": "AAAA-MM-DD",
-                         "tipoMatch": "string",
-                         "nomeDoador": "string",
-                         "nomeReceptor": "string",
-                         "titulo": "string",
-                         "descricao": "string",
-                         "categoria": "string",
-                         "valor": 999.99,
-                         "pontuacao": 999,
-                         "gerenciadaRh": boolean,
-                         "efetivado": boolean,
-                         "imagem": "string"
-                     }
-                 ]
-                 
-             </remarks>
-             <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
-             <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
-             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
-             <response code="500">Se ocorrer alguma falha no processamento da request</response>
-        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.EfetivarMatchRh(System.Guid)">
              <summary>
              Efetivar um match pendente
@@ -831,6 +607,103 @@
             
             </remarks>
         </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Atualizar(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemUpdateRequest)">
+            <summary>
+            Inserir um novo registro de item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição: ItemRequest
+                {
+                    "id": "Id do item (guid)",
+                    "titulo": "Fralda Descartável Infantil",
+                    "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
+                    "tipoItem": "Necessidade",
+                    "categoria": "Higiene e limpeza",
+                    "anonimo": false,
+                    "Imagens": [
+                        {
+                            "NomeImagem": "string",
+                            "ImagemBase64": "string-base64"
+                        }
+                    ],
+                    "ImgExcluir": [
+                        "guid1",
+                        "guid2"
+                    ]
+                 }
+                 
+                Resposta:
+                {
+                    "sucesso": true,
+                    "mensagem": "Registro alterado com sucesso",
+                    "imagens": [
+                        {
+                            "id": "guid",
+                            "nomeImagem": "string",
+                            "arquivo": "string"
+                        }
+                    ]
+                }
+            
+                Validações apresentadas em array, exemplo:
+                {
+                    "sucesso": false,
+                    "mensagem": [
+                        "Critica1,
+                        "Critica2"
+                    ]
+                }
+                
+            </remarks>
+            <response code="200">Sucesso na gravação</response>
+            <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Excluir(System.Guid)">
+            <summary>
+            Excluir o registro
+            </summary>
+            <param name="id">Id do registro</param>
+            <remarks>
+            
+                Requisição: DELETE
+                url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
+            
+                Resposta:
+                {
+                    "sucesso": true,
+                    "mensagem": "Item excluído com sucesso"
+                }
+                
+            </remarks>
+            <response code="200">Sucesso na exclusão</response>
+            <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+            <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+            <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ApagarImagem(System.Guid)">
+            <summary>
+            Remover uma imagem de um item
+            </summary>
+            <remarks>
+            Contrato
+            
+                Requisição
+                {
+                    "id": "guid"
+                }
+                
+                Respostas
+                {
+                    "sucesso": boolean,
+                    "mensagem": "mensagem de sucesso ou crítica"
+                }
+            
+            </remarks>
+        </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.DesfazerMatch(System.Guid)">
             <summary>
             Desfaz um match realizado
@@ -848,6 +721,133 @@
                 }
             
             </remarks>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Listar(System.Nullable{System.Int32})">
+             <summary>
+             Listar todos os registros
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição (parâmetro tipoItem = opcional)
+                 [ tipoItem=N ]
+                 
+                 onde N pode ser:
+                 
+                     1 = Necessidade
+                     2 = Doação
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool,
+                         "imagens":
+                         [
+                             "id": "guid",
+                             "nomeImagem": "string",
+                             "arquivo": "string"
+                         ]
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros cadastrados</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.BuscarPorId(System.Guid)">
+             <summary>
+             Buscar registro de item pelo Id (guid)
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006
+                 
+                 Resposta
+                     {
+                         "id": "guid",
+                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
+                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "tipoItem": "string",
+                         "categoria": {
+                             "id": "guid",
+                             "descricao": "string",
+                             "pontuacao": int,
+                             "gerenciadaRh": bool
+                         },
+                         "usuario": {
+                             "id": "guid",
+                             "nome": "string",
+                             "cpfCnpj": "string"
+                         },
+                         "anonimo": bool
+                     }
+                 
+             </remarks>
+             <returns>Dados do registro localizado ou null se não encontrado</returns>
+             <response code="200">Sucesso na operação de busca</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ListarMatches">
+             <summary>
+             Listar todos os registros de matches do usuário
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/item/match/listar
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "data": "AAAA-MM-DD",
+                         "tipoMatch": "string",
+                         "nomeDoador": "string",
+                         "nomeReceptor": "string",
+                         "titulo": "string",
+                         "descricao": "string",
+                         "categoria": "string",
+                         "valor": 999.99,
+                         "pontuacao": 999,
+                         "gerenciadaRh": boolean,
+                         "efetivado": boolean,
+                         "imagem": "string"
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
+             <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
+             <response code="400">Requisição inválida, veja detalhes na mensagem</response>
+             <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.TipoItemController">
             <summary>
@@ -1122,7 +1122,7 @@
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.ValidFor">
             <summary>
-            Set the timespan the token will be valid for (default is 120 min)
+            Set the timespan the token will be valid for
             </summary>
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Identity.JwtTokenOptions.JtiGenerator">
