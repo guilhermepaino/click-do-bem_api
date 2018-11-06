@@ -298,9 +298,20 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             _appService.Inserir(dto, out int statusCode, out string mensagem);
 
-            IEnumerable<object> respImage = CarregarImagens(dto.Id, req.Imagens);
+            IEnumerable<object> respImage = null;
+            object dados = null;
+            if (statusCode.Equals(StatusCodes.Status200OK))
+            {
+                respImage = CarregarImagens(dto.Id, req.Imagens);
+                dados = new { Sucesso = statusCode.Equals(StatusCodes.Status200OK), Mensagem = new { Id = dto.Id.ToString(), Imagens = respImage } };
+            }
+            else
+            {
+                dados = new { Sucesso = false, Mensagem = mensagem };
+            }
 
-            return StatusCode(statusCode, new { Sucesso = statusCode.Equals(StatusCodes.Status200OK), Mensagem = new { Id = dto.Id.ToString(), Imagens = respImage } });
+
+            return StatusCode(statusCode, dados);
 
         }
 
