@@ -79,6 +79,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Descricao = dto.Descricao,
                 TipoItem = dto.TipoItem.Descricao,
                 Anonimo = dto.Anonimo,
+                Valor = dto.Valor,
                 Categoria = new CategoriaSimpleResponse()
                 {
                     Id = dto.Categoria.Id,
@@ -166,6 +167,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         protected object ExcluirImagens(IEnumerable<Guid> imgExcluir)
         {
 
+            if (imgExcluir == null || imgExcluir.Count().Equals(0))
+                return null;
+
             IList<object> respExclusao = new List<object>();
 
             imgExcluir
@@ -178,6 +182,32 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             return respExclusao;
 
+        }
+
+        /// <summary>
+        /// Validar o valor informado no post/put de item
+        /// </summary>
+        /// <param name="tipoItem">Tipo de item</param>
+        /// <param name="valor">Valor de referência do item</param>
+        /// <param name="result">Variável de saída IActionResult para caso de falha</param>
+        protected bool ValidaValor(int? tipoItem, decimal? valor, out IActionResult result)
+        {
+
+            if (tipoItem.Equals(1))
+            {
+                if (!valor.HasValue || valor.Value < 0)
+                {
+                    result = BadRequest(new
+                    {
+                        sucesso = false,
+                        mensagem = "Um valor (não negativo) deve ser informado para necessidades"
+                    });
+                    return false;
+                }
+            }
+
+            result = null;
+            return true;
         }
 
         #endregion
@@ -252,6 +282,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemInsertRequest>(req);
 
+            if (!ValidaValor(req.TipoItem, req.Valor, out IActionResult result))
+                return result;
+
             ItemDto dto = new ItemDto()
             {
                 Titulo = req.Titulo,
@@ -259,7 +292,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
                 Categoria = new CategoriaDto() { Descricao = req.Categoria },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
-                Anonimo = req.Anonimo
+                Anonimo = req.Anonimo,
+                Valor = (req.TipoItem.Equals(1) ? (req.Valor ?? 0) : 0)
             };
 
             _appService.Inserir(dto, out int statusCode, out string mensagem);
@@ -557,12 +591,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// 
         /// </remarks>
         [HttpPost("match/{id:guid}")]
-        public IActionResult EfetuarMatchUnilateral(Guid? id, [FromQuery] decimal valor)
+        public IActionResult EfetuarMatchUnilateral(Guid? id, [FromQuery] decimal? valor)
         {
             if (!id.HasValue)
                 return BadRequest(new { sucesso = false, mensagem = "O id do item inválido ou não informado" });
 
-            if (valor < 0)
+            if (valor.HasValue && valor < 0)
                 return BadRequest(new { sucesso = false, mensagem = "O valor não pode ser negativo" });
 
             _appService.ExecutarMatch(id.Value, valor, out int statusCode, out object dadosRetorno);
@@ -632,6 +666,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemUpdateRequest>(req);
 
+            if (!ValidaValor(req.TipoItem, req.Valor, out IActionResult result))
+                return result;
+
             // Validando quanidade de imagens
             if (!ValidaQuantidadeImagens(req.Id, req.ImgExcluir, req.Imagens, out string criticas))
                 return BadRequest(new { sucess = false, mensagem = criticas });
@@ -644,7 +681,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
                 Categoria = new CategoriaDto() { Descricao = req.Categoria },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
-                Anonimo = req.Anonimo
+                Anonimo = req.Anonimo,
+                Valor = (req.TipoItem.Equals(1) ? (req.Valor ?? 0) : 0)
             };
 
             _appService.Atualizar(dto, out int statusCode, out string mensagem);

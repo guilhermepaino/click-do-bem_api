@@ -44,6 +44,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public bool GeradoPorMatch { get; set; }
 
+        public decimal Valor { get; set; }
+
         #endregion
 
         #region Navigation (Lazy)
@@ -75,6 +77,9 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
             RuleFor(c => c.Descricao)
                 .MaximumLength(1000).WithMessage("A descrição deve conter no máximo 1000 caracteres");
+
+            RuleFor(c => c.Valor)
+                .GreaterThanOrEqualTo(0).WithMessage("O valor não pode ser negativo");
 
         }
 

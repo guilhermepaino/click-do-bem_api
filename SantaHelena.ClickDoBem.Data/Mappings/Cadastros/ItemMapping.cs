@@ -46,6 +46,9 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
             builder.Property(c => c.GeradoPorMatch)
                 .HasColumnType("bit");
 
+            builder.Property(c => c.Valor)
+                .HasColumnType("decimal(16,2)");
+
             builder.HasOne(o => o.TipoItem)
                 .WithMany(d => d.Itens)
                 .HasForeignKey(f => f.TipoItemId)

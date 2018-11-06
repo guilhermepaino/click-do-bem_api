@@ -198,6 +198,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 Titulo = item.Titulo,
                 Descricao = item.Descricao,
                 Anonimo = item.Anonimo,
+                Valor = item.Valor,
                 Categoria = new CategoriaDto()
                 {
                     Id = item.Categoria.Id,
@@ -436,7 +437,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     TipoItemId = tipoItem.Id,
                     CategoriaId = categoria.Id,
                     UsuarioId = _usuario.Id,
-                    Anonimo = dto.Anonimo
+                    Anonimo = dto.Anonimo,
+                    Valor = dto.Valor
                 };
 
                 if (!entidade.EstaValido())
@@ -507,6 +509,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     entidade.CategoriaId = categoria.Id;
                     entidade.UsuarioId = _usuario.Id;
                     entidade.Anonimo = dto.Anonimo;
+                    entidade.Valor = dto.Valor;
 
                     if (!entidade.EstaValido())
                     {
@@ -671,6 +674,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
 
         }
+
         /// <summary>
         /// Remover uma imagem de um item
         /// </summary>
@@ -822,7 +826,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         }
 
-        public void ExecutarMatch(Guid id, decimal valor, out int statusCode, out object dadosRetorno)
+        public void ExecutarMatch(Guid id, decimal? valor, out int statusCode, out object dadosRetorno)
         {
 
             // Buscando item
@@ -839,6 +843,34 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             }
             CarregaRelacoes(itemAlvo);
 
+            if (itemAlvo.TipoItemId.Equals(new Guid("0acd2bb5-c5a5-11e8-ab80-0242ac110006")))
+            {
+
+                // Se o item alvo for doação,
+                // então está sendo solicitado o item, 
+                // então deve-se informar o valor
+                // pois será GERADO UMA NECESSIDADE
+
+                if (valor == null)
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    dadosRetorno = new
+                    {
+                        Sucesso = false,
+                        Mensagem = "Um valor (não negativo) deve ser informado para match de item de necessidade"
+                    };
+                    return;
+                }
+            }
+            else
+            {
+
+                // Se o item alvo for necessidade,
+                // então capturar o valor dessa necessidade
+                valor = itemAlvo.Valor;
+
+            }
+
             // Verificando se existe match para o Item
             ItemMatch match = _matchDomain.Obter(x => x.DoacaoId.Equals(id) || x.NecessidadeId.Equals(id)).FirstOrDefault();
             if (match != null)
@@ -854,6 +886,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
             // Buscando tipo de item relacionado
             string tipoItemOpostoDescricao = itemAlvo.TipoItem.Descricao.ToLower().Equals("necessidade") ? "Doação" : "Necessidade";
+            decimal valorOposto = itemAlvo.TipoItem.Descricao.ToLower().Equals("necessidade") ? 0 : valor.Value;
             TipoItem tipoItemOposto = _tipoItemDomain.ObterPorDescricao(tipoItemOpostoDescricao);
             if (tipoItemOposto == null)
             {
@@ -875,6 +908,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 CategoriaId = itemAlvo.CategoriaId,
                 UsuarioId = _usuario.Id,
                 Anonimo = itemAlvo.Anonimo,
+                Valor = valorOposto,
                 GeradoPorMatch = true
             };
 
@@ -891,7 +925,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 NecessidadeId = necessidadeId,
                 UsuarioId = _usuario.Id,
                 TipoMatchId = tipoMatchId,
-                Valor = valor,
+                Valor = valor ?? 0,
                 Efetivado = !itemAlvo.Anonimo
             };
             _matchDomain.Adicionar(match);

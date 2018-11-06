@@ -25,6 +25,8 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Cadastros
 
         public bool Anonimo { get; set; }
 
+        public decimal Valor { get; set; }
+
         public IEnumerable<ItemImagemDto> Imagens { get; set; }
 
     }

@@ -188,6 +188,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                               s.Descricao,
                               s.Categoria,
                               s.Pontuacao,
+                              s.Valor,
                               s.GerenciadaRh
                             FROM
                             (
@@ -202,6 +203,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 i.Descricao,
                                 c.Descricao Categoria,
                                 c.Pontuacao,
+                                im.Valor,
                                 c.GerenciadaRh
                               FROM Item i
                                   INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
@@ -229,6 +231,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 i.Descricao,
                                 c.Descricao Categoria,
                                 c.Pontuacao,
+                                im.Valor,
                                 c.GerenciadaRh
                               FROM Item i
                                   INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id

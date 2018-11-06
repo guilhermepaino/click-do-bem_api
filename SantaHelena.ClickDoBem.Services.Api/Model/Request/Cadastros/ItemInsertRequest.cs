@@ -46,6 +46,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         public bool Anonimo { get; set; }
 
         /// <summary>
+        /// Valor estimado do item (obrigatório para necessidades)
+        /// </summary>
+        public decimal? Valor { get; set; }
+
+        /// <summary>
         /// Lista de Imagens do item
         /// </summary>
         [ImagensValidation]

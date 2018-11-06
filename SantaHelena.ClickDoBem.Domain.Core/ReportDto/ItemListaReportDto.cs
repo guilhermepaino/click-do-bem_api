@@ -23,6 +23,8 @@ namespace SantaHelena.ClickDoBem.Domain.Core.ReportDto
 
         public int Peso { get; set; }
 
+        public decimal Valor { get; set; }
+
         public bool GerenciadaRh { get; set; }
 
     }
