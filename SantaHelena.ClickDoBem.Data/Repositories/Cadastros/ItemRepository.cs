@@ -318,6 +318,26 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             return ListagemMatch(usuarioId, dataInicial, dataFinal, categoriaId, efetivados, false);
         }
 
+        public IEnumerable<RankingIndividualReportDto> RankingIndividual()
+        {
+
+            string sql = $@"SELECT s.UsuarioId, s.Nome, s.Pontuacao
+                            FROM
+                            (
+                                SELECT u.Id UsuarioId, u.Nome, SUM(c.Pontuacao) Pontuacao, COUNT(im.Id) QtdDoacoes
+                                FROM ItemMatch im
+                                INNER JOIN Item i ON im.DoacaoId = i.Id
+                                INNER JOIN Usuario u ON i.UsuarioId = u.Id
+                                INNER JOIN Categoria c ON i.CategoriaId = c.Id
+                                GROUP BY u.Id, u.Nome
+                            ) s
+                            ORDER BY s.Pontuacao DESC, s.QtdDoacoes ASC, s.Nome ASC
+                            LIMIT 100";
+
+            return _ctx.Database.GetDbConnection().Query<RankingIndividualReportDto>(sql).ToList();
+
+        }
+
         #endregion
 
 

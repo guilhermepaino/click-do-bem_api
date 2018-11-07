@@ -15,5 +15,6 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
         IEnumerable<Item> PesquisarParaMatche(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId);
         IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId, DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados);
         IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId);
+        IEnumerable<RankingIndividualReportDto> RankingIndividual();
     }
 }

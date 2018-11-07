@@ -273,7 +273,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Sucesso na gravação - retornará o Id do registro no campo mensagem</response>
         /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost]
         public IActionResult Inserir([FromBody]ItemInsertRequest req)
@@ -363,8 +363,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
         /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
         /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="401">Acesso-Negado (Perfil não autorizado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost("pesquisar")]
         public IActionResult Listar([FromBody]PesquisaItemRequest request)
@@ -454,7 +454,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
         /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
         /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost("livres")]
@@ -501,8 +501,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
         /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
         /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost("match/listar")]
         public IActionResult ListarMatches([FromBody]ListagemMatchRequest request)
@@ -535,8 +534,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Operação realizada com sucesso</response>
         /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost("match/efetivar/{id:guid}")]
         public IActionResult EfetivarMatchRh(Guid id)
@@ -668,7 +666,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Sucesso na gravação</response>
         /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPut]
         public IActionResult Atualizar([FromBody]ItemUpdateRequest req)
@@ -727,7 +725,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Sucesso na exclusão</response>
         /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpDelete("{id:guid}")]
         public IActionResult Excluir(Guid id)
@@ -835,7 +833,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <returns>Lista dos registros cadastrados</returns>
         /// <response code="200">Retorna a lista de registros cadastrados</response>
         /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet]
         public IActionResult Listar([FromQuery]int? tipoItem)
@@ -897,7 +895,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <returns>Dados do registro localizado ou null se não encontrado</returns>
         /// <response code="200">Sucesso na operação de busca</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet("{id:guid}")]
         public IActionResult BuscarPorId(Guid id)
@@ -937,14 +935,49 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <returns>Lista dos registros que atenderam o(s) critério(s)</returns>
         /// <response code="200">Retorna a lista de registros cadastrados que atendam os critérios de pesquisa</response>
         /// <response code="400">Requisição inválida, veja detalhes na mensagem</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
-        /// <response code="403">Acesso-Negado (Perfil não autorizado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet("match")]
         public IActionResult ListarMatches()
         {
             _appService.ListarMatches(_appUser.Id, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
+        }
+
+        /// <summary>
+        /// Obter o ranking individual de doações
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/ranking/individual
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "nome": "AAAA-MM-DD",
+        ///             "pontuacao": int
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>A lista do ranking individual de doações</returns>
+        /// <response code="200">Retorna os dados</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("ranking/individual")]
+        public IActionResult RankingIndividual()
+        {
+            try
+            {
+                return Ok(_appService.RankingIndividual());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"{ex.Message} - {ex.StackTrace}");
+            }
         }
 
 

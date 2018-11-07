@@ -94,7 +94,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <param name="req">Modelo de requisição de cadastro de usuário</param>
         /// <response code="200">Cadastro realizado com sucesso</response>
         /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost]
@@ -167,7 +167,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Processamento do arquivo realizado com sucesso</response>
         /// <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Ocorreu alguma falha no processamento da request</response>
         [HttpPost("upload"), DisableRequestSizeLimit]
         [AllowAnonymous]
@@ -238,7 +238,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <param name="request">Modelo de requisição de alteração de usuário</param>
         /// <response code="200">Cadastro realizado com sucesso</response>
         /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPut]
@@ -311,7 +311,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Retorno de dados com sucesso</response>
         /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet]
@@ -352,7 +352,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Retorno de dados com sucesso</response>
         /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet("{id:guid}")]

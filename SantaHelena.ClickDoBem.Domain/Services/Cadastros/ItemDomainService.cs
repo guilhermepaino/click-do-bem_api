@@ -267,6 +267,11 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
 
         }
 
+        /// <summary>
+        /// Obter o ranking individual
+        /// </summary>
+        public IEnumerable<RankingIndividualReportDto> RankingIndividual() => _repository.RankingIndividual();
+
         #endregion
 
     }

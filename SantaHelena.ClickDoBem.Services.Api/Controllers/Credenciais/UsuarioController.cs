@@ -417,7 +417,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// </remarks>
         /// <returns>Lista dos registros cadastrados</returns>
         /// <response code="200">Retorna a lista de registros cadastrados</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet]
         public IActionResult Listar([FromQuery]string perfil)
@@ -454,7 +454,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// </remarks>
         /// <returns>Situação de cadastro do documento</returns>
         /// <response code="200">Sucesso na busca</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet("verificadocumento/{documento}")]
         [AllowAnonymous]

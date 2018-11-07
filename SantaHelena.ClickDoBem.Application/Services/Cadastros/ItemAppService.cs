@@ -617,6 +617,11 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         }
 
         /// <summary>
+        /// Obter o ranking individual de docações
+        /// </summary>
+        public IEnumerable<RankingIndividualReportDto> RankingIndividual() => _dmn.RankingIndividual();
+
+        /// <summary>
         /// Listar os matches realizados do usuário logado
         /// </summary>
         public void ListarMatches(Guid usuarioId, out int statusCode, out object dadosRetorno)
