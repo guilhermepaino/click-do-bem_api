@@ -46,6 +46,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public Guid? ValorFaixaId { get; set; }
 
+        public Guid? CampanhaId { get; set; }
+
         #endregion
 
         #region Navigation (Lazy)
@@ -64,6 +66,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public ItemMatch MatchNecessidade { get; set; }
 
+        public Campanha Campanha { get; set; }
+
         #endregion
 
         #region Métodos Locais
@@ -79,6 +83,18 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
             RuleFor(c => c.Descricao)
                 .MaximumLength(1000).WithMessage("A descrição deve conter no máximo 1000 caracteres");
+
+            RuleFor(c => c.TipoItemId)
+                .NotNull().WithMessage("O id do tipo de item deve ser informado");
+
+            RuleFor(c => c.CategoriaId)
+                .NotNull().WithMessage("O id da categoria deve ser informado");
+
+            RuleFor(c => c.CampanhaId)
+                .NotNull().WithMessage("O id da campanha deve ser informado");
+
+            RuleFor(c => c.UsuarioId)
+                .NotNull().WithMessage("O id do usuário deve ser informado");
 
         }
 

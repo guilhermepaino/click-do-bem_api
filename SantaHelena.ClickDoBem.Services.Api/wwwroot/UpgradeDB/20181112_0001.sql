@@ -21,9 +21,9 @@ CREATE TABLE `Campanha` (
   `DataInicial` datetime NOT NULL,
   `DataFinal` datetime NOT NULL,
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `UK_Campanha_Descricao` (`Descricao`),
   KEY `IX_Campanha_DtInclusao` (`DataInclusao`),
   KEY `IX_Campanha_DtAlteracao` (`DataAlteracao`),
-  KEY `IX_Campanha_Descricao` (`Descricao`),
   KEY `IX_Campanha_DtInicial` (`DataInicial`),
   KEY `IX_Campanha_DtFinal` (`DataFinal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
