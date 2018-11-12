@@ -44,7 +44,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public bool GeradoPorMatch { get; set; }
 
-        public decimal Valor { get; set; }
+        public Guid? ValorFaixaId { get; set; }
 
         #endregion
 
@@ -55,6 +55,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
         public Categoria Categoria { get; set; }
 
         public Usuario Usuario { get; set; }
+
+        public ValorFaixa ValorFaixa { get; set; }
 
         public ICollection<ItemImagem> Imagens { get; set; }
 
@@ -77,9 +79,6 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
             RuleFor(c => c.Descricao)
                 .MaximumLength(1000).WithMessage("A descrição deve conter no máximo 1000 caracteres");
-
-            RuleFor(c => c.Valor)
-                .GreaterThanOrEqualTo(0).WithMessage("O valor não pode ser negativo");
 
         }
 

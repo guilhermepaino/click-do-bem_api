@@ -57,9 +57,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros
         public bool Anonimo { get; set; }
 
         /// <summary>
-        /// Valor estimado do item
+        /// ValorFaixa estimado do item
         /// </summary>
-        public decimal Valor { get; set; }
+        public ValorFaixaSimpleResponse ValorFaixa { get; set; }
 
         /// <summary>
         /// Lista das imagens do item

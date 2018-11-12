@@ -35,6 +35,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public Guid? TipoMatchId { get; set; }
 
+        public Guid? ValorFaixaId { get; set; }
+
         #endregion
 
         #region Navigation (Lazy)
@@ -47,7 +49,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public TipoMatch TipoMatch { get; set; }
 
-        public decimal Valor { get; set; }
+        public ValorFaixa ValorFaixa { get; set; }
 
         public bool Efetivado { get; set; }
 
@@ -72,9 +74,6 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
             RuleFor(c => c.TipoMatchId)
                 .NotNull().WithMessage("O tipo de match deve ser informado");
-
-            RuleFor(c => c.Valor)
-                .GreaterThanOrEqualTo(0).WithMessage("Um valor não negativo deve ser informado");
 
         }
 

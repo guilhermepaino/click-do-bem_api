@@ -79,7 +79,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Descricao = dto.Descricao,
                 TipoItem = dto.TipoItem.Descricao,
                 Anonimo = dto.Anonimo,
-                Valor = dto.Valor,
+                ValorFaixa = (dto.ValorFaixa != null ?
+                new ValorFaixaSimpleResponse()
+                {
+                    Id = dto.ValorFaixa.Id,
+                    Descricao = dto.ValorFaixa.Descricao
+                } : null),
                 Categoria = new CategoriaSimpleResponse()
                 {
                     Id = dto.Categoria.Id,
@@ -185,25 +190,27 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
-        /// Validar o valor informado no post/put de item
+        /// Validar a faixa de valor informado no post/put de item
         /// </summary>
         /// <param name="tipoItem">Tipo de item</param>
-        /// <param name="valor">Valor de referência do item</param>
+        /// <param name="valorFaixaId">Id da faixa de valor de referência do item</param>
         /// <param name="result">Variável de saída IActionResult para caso de falha</param>
-        protected bool ValidaValor(int? tipoItem, decimal? valor, out IActionResult result)
+        protected bool ValidarFaixaValor(int? tipoItem, Guid? valorFaixaId, out IActionResult result)
         {
 
             if (tipoItem.Equals(1))
             {
-                if (!valor.HasValue || valor.Value < 0)
-                {
-                    result = BadRequest(new
-                    {
-                        sucesso = false,
-                        mensagem = "Um valor (não negativo) deve ser informado para necessidades"
-                    });
-                    return false;
-                }
+                //TODO: Implementar busca do registro de ValorFaixa
+
+                //if (!valorFaixaId.HasValue || valorFaixaId.Value < 0)
+                //{
+                //    result = BadRequest(new
+                //    {
+                //        sucesso = false,
+                //        mensagem = "Um valor (não negativo) deve ser informado para necessidades"
+                //    });
+                //    return false;
+                //}
             }
 
             result = null;
@@ -228,8 +235,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///         "titulo": "Fralda Descartável",
         ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
         ///         "tipoItem": "1",
-        ///         "categoria": "Higiene e limpeza",
+        ///         "categoriaId": "guid",
         ///         "anonimo": false,
+        ///         "valorFaixaId": "guid",
         ///         "Imagens":
         ///         [
         ///             "NomeImagem": "string",
@@ -282,19 +290,23 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemInsertRequest>(req);
 
-            if (!ValidaValor(req.TipoItem, req.Valor, out IActionResult result))
+            if (!ValidarFaixaValor(req.TipoItem, req.ValorFaixaId, out IActionResult result))
                 return result;
+
+            //TODO: Implementar validação de CategoriaId
 
             ItemDto dto = new ItemDto()
             {
                 Titulo = req.Titulo,
                 Descricao = req.Descricao,
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
-                Categoria = new CategoriaDto() { Descricao = req.Categoria },
+                Categoria = new CategoriaDto() { Id = req.CategoriaId },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
-                Anonimo = req.Anonimo,
-                Valor = (req.TipoItem.Equals(1) ? (req.Valor ?? 0) : 0)
+                Anonimo = req.Anonimo
             };
+
+            if (req.TipoItem.Equals(1))
+                dto.ValorFaixa = new ValorFaixaDto() { Id = req.ValorFaixaId.Value };
 
             _appService.Inserir(dto, out int statusCode, out string mensagem);
 
@@ -348,6 +360,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                 "id": "guid",
         ///                 "nome": "string",
         ///                 "cpfCnpj": "string"
+        ///             },
+        ///             "valorFaixa": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string",
         ///             },
         ///             "anonimo": bool,
         ///             "imagens":
@@ -440,6 +456,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                 "nome": "string",
         ///                 "cpfCnpj": "string"
         ///             },
+        ///             "valorFaixa": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string",
+        ///             },
         ///             "anonimo": bool,
         ///             "imagens":
         ///             [
@@ -490,7 +510,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///             "titulo": "string",
         ///             "descricao": "string",
         ///             "categoria": "string",
-        ///             "valor": 999.99,
+        ///             "valor": "string",
         ///             "pontuacao": 999,
         ///             "gerenciadaRh": boolean,
         ///             "efetivado": boolean
@@ -584,7 +604,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// Contrato
         ///     
         ///     Requisição
-        ///     url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006?valor=123.75
+        ///     url: [URI]/api/versao/item/match/guid?valorFaixaId=guid
         ///     
         ///     Respostas
         ///     {
@@ -600,15 +620,16 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// 
         /// </remarks>
         [HttpPost("match/{id:guid}")]
-        public IActionResult EfetuarMatchUnilateral(Guid? id, [FromQuery] decimal? valor)
+        public IActionResult EfetuarMatchUnilateral(Guid? id, [FromQuery] Guid? valorFaixaId)
         {
             if (!id.HasValue)
                 return BadRequest(new { sucesso = false, mensagem = "O id do item inválido ou não informado" });
 
-            if (valor.HasValue && valor < 0)
-                return BadRequest(new { sucesso = false, mensagem = "O valor não pode ser negativo" });
+            //if (valorFaixaId.HasValue && valorFaixaId < 0)
+            //    return BadRequest(new { sucesso = false, mensagem = "O valor não pode ser negativo" });
+            //TODO: Incluir validação de id de faixa de valor
 
-            _appService.ExecutarMatch(id.Value, valor, out int statusCode, out object dadosRetorno);
+            _appService.ExecutarMatch(id.Value, valorFaixaId, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
 
@@ -627,7 +648,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///         "titulo": "Fralda Descartável Infantil",
         ///         "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
         ///         "tipoItem": "Necessidade",
-        ///         "categoria": "Higiene e limpeza",
+        ///         "categoriaId": "guid",
+        ///         "valorFaixaId": "guid",
         ///         "anonimo": false,
         ///         "Imagens": [
         ///             {
@@ -675,7 +697,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemUpdateRequest>(req);
 
-            if (!ValidaValor(req.TipoItem, req.Valor, out IActionResult result))
+            if (!ValidarFaixaValor(req.TipoItem, req.ValorFaixaId, out IActionResult result))
                 return result;
 
             // Validando quanidade de imagens
@@ -688,11 +710,15 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Titulo = req.Titulo,
                 Descricao = req.Descricao,
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
-                Categoria = new CategoriaDto() { Descricao = req.Categoria },
+                Categoria = new CategoriaDto() { Id = req.CategoriaId },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
-                Anonimo = req.Anonimo,
-                Valor = (req.TipoItem.Equals(1) ? (req.Valor ?? 0) : 0)
+                Anonimo = req.Anonimo
             };
+
+            if (req.TipoItem.Equals(1))
+                dto.ValorFaixa = new ValorFaixaDto() { Id = req.ValorFaixaId.Value };
+            else
+                dto.ValorFaixa = null;
 
             _appService.Atualizar(dto, out int statusCode, out string mensagem);
 
@@ -889,6 +915,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                 "nome": "string",
         ///                 "cpfCnpj": "string"
         ///             },
+        ///             "valorFaixa": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string"
+        ///             },
         ///             "anonimo": bool
         ///         }
         ///     
@@ -923,7 +953,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///             "titulo": "string",
         ///             "descricao": "string",
         ///             "categoria": "string",
-        ///             "valor": 999.99,
+        ///             "valorFaixa": string,
         ///             "pontuacao": 999,
         ///             "gerenciadaRh": boolean,
         ///             "efetivado": boolean,

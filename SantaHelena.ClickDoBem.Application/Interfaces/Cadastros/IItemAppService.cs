@@ -24,7 +24,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         void RemoverImagem(Guid id, string caminho, out int statusCode, out object dadosRetorno);
         void ExecutarMatch(Guid doacaoId, Guid necessidadeId, out int statusCode, out object dadosRetorno);
         void DesfazerMatch(Guid id, out int statusCode, out object dadosRetorno);
-        void ExecutarMatch(Guid id, decimal? valor, out int statusCode, out object dadosRetorno);
+        void ExecutarMatch(Guid id, Guid? valorFaixaId, out int statusCode, out object dadosRetorno);
         void EfetivarMatch(Guid matchId, out int statusCode, out string mensagem);
     }
 }

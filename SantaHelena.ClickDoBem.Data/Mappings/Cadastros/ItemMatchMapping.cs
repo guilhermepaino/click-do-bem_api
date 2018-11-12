@@ -32,8 +32,8 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
                 .HasColumnType("char(36)")
                 .IsRequired();
 
-            builder.Property(c => c.Valor)
-                .HasColumnType("decimal(16,2)")
+            builder.Property(c => c.ValorFaixaId)
+                .HasColumnType("char(36)")
                 .IsRequired();
 
             builder.Property(c => c.Efetivado)
