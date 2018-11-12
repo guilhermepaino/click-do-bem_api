@@ -34,12 +34,12 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 im.Id,
                                 im.Data,
                                 tm.Descricao TipoMatch,
-                                (CASE WHEN im.Efetivado = 0 AND di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN 
+                                (CASE WHEN di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN 
                                     '** ANONIMO **'
                                 ELSE
                                     du.Nome
                                 END) NomeDoador,
-                                (CASE WHEN im.Efetivado = 0 AND ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN 
+                                (CASE WHEN ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN 
                                     '** ANONIMO **'
                                 ELSE
                                     nu.Nome
