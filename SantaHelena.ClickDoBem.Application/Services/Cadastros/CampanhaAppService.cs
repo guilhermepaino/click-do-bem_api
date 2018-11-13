@@ -76,6 +76,24 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 ).ToList();
         }
 
+        public IEnumerable<CampanhaDto> ObterAtivas()
+        {
+            IEnumerable<Campanha> result = _dmn.Obter(x => 
+                x.DataInicial <= DateTime.Now &&
+                x.DataFinal >= new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+            ).ToList();
+
+            if (result == null)
+                return null;
+
+            return
+                (
+                    from r in result
+                    select ConverterEntidadeEmDto(r)
+
+                ).ToList();
+        }
+
         /// <summary>
         /// Obter registro pelo id
         /// </summary>

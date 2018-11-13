@@ -7,6 +7,7 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
     public interface ICampanhaAppService : IAppServiceBase
     {
         IEnumerable<CampanhaDto> ObterTodos();
+        IEnumerable<CampanhaDto> ObterAtivas();
         CampanhaDto ObterPorId(Guid id);
     }
 }
