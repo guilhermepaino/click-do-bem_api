@@ -62,6 +62,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros
         public ValorFaixaSimpleResponse ValorFaixa { get; set; }
 
         /// <summary>
+        /// Campanha do item
+        /// </summary>
+        public CampanhaSimpleResponse Campanha { get; set; }
+
+        /// <summary>
         /// Lista das imagens do item
         /// </summary>
         public IEnumerable<ItemImagenResponse> Imagens { get; set; }

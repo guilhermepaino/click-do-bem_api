@@ -3,6 +3,7 @@ using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Domain.Entities.Cadastros;
 using SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,6 +74,18 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     select ConverterEntidadeEmDto(r)
 
                 ).ToList();
+        }
+
+        /// <summary>
+        /// Obter registro pelo id
+        /// </summary>
+        /// <param name="id">Id do registro</param>
+        public CampanhaDto ObterPorId(Guid id)
+        {
+            Campanha result = _dmn.ObterPorId(id);
+            if (result == null)
+                return null;
+            return ConverterEntidadeEmDto(result);
         }
 
         #endregion

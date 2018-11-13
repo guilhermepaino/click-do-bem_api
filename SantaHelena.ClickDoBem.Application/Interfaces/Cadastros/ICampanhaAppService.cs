@@ -1,4 +1,5 @@
 ﻿using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
+using System;
 using System.Collections.Generic;
 
 namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
@@ -6,5 +7,6 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
     public interface ICampanhaAppService : IAppServiceBase
     {
         IEnumerable<CampanhaDto> ObterTodos();
+        CampanhaDto ObterPorId(Guid id);
     }
 }

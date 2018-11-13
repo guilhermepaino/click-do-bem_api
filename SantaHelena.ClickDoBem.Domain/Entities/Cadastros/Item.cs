@@ -90,9 +90,6 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
             RuleFor(c => c.CategoriaId)
                 .NotNull().WithMessage("O id da categoria deve ser informado");
 
-            RuleFor(c => c.CampanhaId)
-                .NotNull().WithMessage("O id da campanha deve ser informado");
-
             RuleFor(c => c.UsuarioId)
                 .NotNull().WithMessage("O id do usuário deve ser informado");
 

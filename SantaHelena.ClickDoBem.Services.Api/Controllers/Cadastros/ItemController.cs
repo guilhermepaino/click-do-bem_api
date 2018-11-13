@@ -30,6 +30,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
         protected readonly IItemAppService _appService;
+        protected readonly IValorFaixaAppService _faixaService;
+        protected readonly ICategoriaAppService _categoriaAppService;
         protected readonly IHostingEnvironment _hostingEnvironment;
         protected readonly IAppUser _appUser;
         protected readonly string _caminho;
@@ -46,11 +48,15 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public ItemController
         (
             IItemAppService appService,
+            IValorFaixaAppService faixaService,
+            ICategoriaAppService categoriaAppService,
             IHostingEnvironment hostingEnvironment,
             IAppUser appUser
         )
         {
             _appService = appService;
+            _faixaService = faixaService;
+            _categoriaAppService = categoriaAppService;
             _hostingEnvironment = hostingEnvironment;
             _appUser = appUser;
             _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("images")).SingleOrDefault();
@@ -98,6 +104,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                     Nome = dto.Usuario.Nome,
                     CpfCnpj = dto.Usuario.CpfCnpj
                 },
+                Campanha = (dto.Campanha != null ?
+                new CampanhaSimpleResponse()
+                {
+                    Id = dto.Campanha.Id,
+                    Descricao = dto.Campanha.Descricao
+                } : null),
                 Imagens = dto.Imagens.Select(i => new ItemImagenResponse() { Id = i.Id, NomeImagem = i.NomeOriginal, Arquivo = i.Caminho })
             };
 
@@ -195,26 +207,50 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <param name="tipoItem">Tipo de item</param>
         /// <param name="valorFaixaId">Id da faixa de valor de referência do item</param>
         /// <param name="result">Variável de saída IActionResult para caso de falha</param>
-        protected bool ValidarFaixaValor(int? tipoItem, Guid? valorFaixaId, out IActionResult result)
+        protected bool ValidarPreenchimentoFaixaValor(int? tipoItem, Guid? valorFaixaId, out IActionResult result)
         {
 
             if (tipoItem.Equals(1))
             {
-                //TODO: Implementar busca do registro de ValorFaixa
 
-                //if (!valorFaixaId.HasValue || valorFaixaId.Value < 0)
-                //{
-                //    result = BadRequest(new
-                //    {
-                //        sucesso = false,
-                //        mensagem = "Um valor (não negativo) deve ser informado para necessidades"
-                //    });
-                //    return false;
-                //}
+                if (valorFaixaId == null)
+                {
+                    result = BadRequest(new
+                    {
+                        sucesso = false,
+                        mensagem = "A faixa de valores deve ser informada!"
+                    });
+                    return false;
+                }
+
             }
 
             result = null;
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categoriaId"></param>
+        /// <param name="result"></param>
+        protected bool CheckCategoria(Guid categoriaId, out IActionResult result)
+        {
+
+            var categoria = _categoriaAppService.ObterPorId(categoriaId);
+            if (categoria == null)
+            {
+                result = BadRequest(new
+                {
+                    sucesso = false,
+                    mensagem = "A categoria informada não foi localizada!"
+                });
+                return false;
+            }
+
+            result = null;
+            return true;
+
         }
 
         #endregion
@@ -290,10 +326,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemInsertRequest>(req);
 
-            if (!ValidarFaixaValor(req.TipoItem, req.ValorFaixaId, out IActionResult result))
+            if (!ValidarPreenchimentoFaixaValor(req.TipoItem, req.ValorFaixaId, out IActionResult result))
                 return result;
-
-            //TODO: Implementar validação de CategoriaId
 
             ItemDto dto = new ItemDto()
             {
@@ -302,6 +336,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
                 Categoria = new CategoriaDto() { Id = req.CategoriaId },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
+                Campanha = (req.CampanhaId.HasValue ? new CampanhaDto() { Id = req.CampanhaId.Value } : null),
                 Anonimo = req.Anonimo
             };
 
@@ -697,7 +732,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!ModelState.IsValid)
                 return Response<ItemUpdateRequest>(req);
 
-            if (!ValidarFaixaValor(req.TipoItem, req.ValorFaixaId, out IActionResult result))
+            if (!ValidarPreenchimentoFaixaValor(req.TipoItem, req.ValorFaixaId, out IActionResult result))
                 return result;
 
             // Validando quanidade de imagens
@@ -712,6 +747,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
                 Categoria = new CategoriaDto() { Id = req.CategoriaId },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
+                Campanha = (req.CampanhaId.HasValue ? new CampanhaDto() { Id = req.CampanhaId.Value } : null),
                 Anonimo = req.Anonimo
             };
 
@@ -845,6 +881,14 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                 "nome": "string",
         ///                 "cpfCnpj": "string"
         ///             },
+        ///             "valorFaixa": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string"
+        ///             },
+        ///             "campanha": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string"
+        ///             },
         ///             "anonimo": bool,
         ///             "imagens":
         ///             [
@@ -916,6 +960,10 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                 "cpfCnpj": "string"
         ///             },
         ///             "valorFaixa": {
+        ///                 "id": "guid",
+        ///                 "descricao": "string"
+        ///             },
+        ///             "campanha": {
         ///                 "id": "guid",
         ///                 "descricao": "string"
         ///             },

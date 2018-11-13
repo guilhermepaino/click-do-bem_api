@@ -63,6 +63,12 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_ItemMatch_TipoMatch");
 
+            builder.HasOne(o => o.ValorFaixa)
+                .WithMany(d => d.Matches)
+                .HasForeignKey(f => f.ValorFaixaId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_ItemMatch_ValorFaixa");
+
             builder.HasIndex(i => new { i.NecessidadeId, i.DoacaoId }).HasName("UK_ItemMatch_ND").IsUnique();
             builder.HasIndex(i => i.Data).HasName("IX_ItemMatch_Data");
             builder.HasIndex(i => i.UsuarioId).HasName("IX_ItemMatch_Usuario");

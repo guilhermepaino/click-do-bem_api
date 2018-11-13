@@ -51,6 +51,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         public Guid? ValorFaixaId { get; set; }
 
         /// <summary>
+        /// Id da campanha
+        /// </summary>
+        public Guid? CampanhaId { get; set; }
+
+        /// <summary>
         /// Lista de Imagens do item
         /// </summary>
         [ImagensValidation]

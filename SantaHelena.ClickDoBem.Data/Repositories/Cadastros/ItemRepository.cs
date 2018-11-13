@@ -47,7 +47,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN ni.Titulo ELSE di.Titulo END) Titulo,
                                 (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN ni.Descricao ELSE di.Descricao END) Descricao,
                                 dc.Descricao Categoria,
-                                im.Valor,
+                                vf.Descricao ValorFaixa,
                                 dc.Pontuacao,
                                 dc.GerenciadaRh,
                                 im.Efetivado,
@@ -70,7 +70,8 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 SELECT ii.ItemId, MIN(ii.Caminho) Imagem
                                 FROM ItemImagem ii
                                 GROUP BY ii.ItemId
-                            ) imgn ON ni.Id = imgn.ItemId";
+                            ) imgn ON ni.Id = imgn.ItemId
+                            LEFT JOIN ValorFaixa vf ON im.ValorFaixaId = vf.Id ";
 
             if (filtrarUsuario)
             {
@@ -124,9 +125,9 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public IEnumerable<Item> ObterTodos(bool incluirMatches)
         {
-            string sql = @"SELECT i.* FROM Item i";
+            string sql = @"SELECT i.* FROM Item i WHERE i.GeradoPorMatch = 0";
             if (!incluirMatches)
-                sql = $"{sql} WHERE NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
+                sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
             sql = $"{sql} ORDER BY i.DataInclusao DESC";
             return _ctx.Database.GetDbConnection().Query<Item>(sql).ToList();
         }
@@ -157,7 +158,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public IEnumerable<Item> ObterNecessidades(bool incluirMatches)
         {
-            string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Necessidade'";
+            string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Necessidade' AND i.GeradoPorMatch = 0";
             if (!incluirMatches)
                 sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
             sql = $"{sql} ORDER BY i.DataInclusao DESC";
@@ -166,7 +167,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public IEnumerable<Item> ObterDoacoes(bool incluirMatches)
         {
-            string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Doação'";
+            string sql = @"SELECT i.* FROM Item i INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id WHERE ti.Descricao = 'Doação' AND i.GeradoPorMatch = 0";
             if (!incluirMatches)
                 sql = $"{sql} AND NOT EXISTS(SELECT 1 FROM ItemMatch im WHERE im.NecessidadeId = i.Id || im.DoacaoId = i.Id)";
             sql = $"{sql} ORDER BY i.DataInclusao DESC";
@@ -188,7 +189,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                               s.Descricao,
                               s.Categoria,
                               s.Pontuacao,
-                              s.Valor,
+                              s.ValorFaixa,
                               s.GerenciadaRh
                             FROM
                             (
@@ -203,7 +204,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 i.Descricao,
                                 c.Descricao Categoria,
                                 c.Pontuacao,
-                                im.Valor,
+                                vf.Descricao ValorFaixa,
                                 c.GerenciadaRh
                               FROM Item i
                                   INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
@@ -211,6 +212,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                   INNER JOIN Usuario u ON i.UsuarioId = u.Id
                                   LEFT JOIN ItemMatch im ON i.Id = im.DoacaoId
                                   LEFT JOIN Usuario un ON im.UsuarioId = un.Id
+                                  LEFT JOIN ValorFaixa vf ON im.ValorFaixaId = vf.Id
                               WHERE 
                                 ti.Descricao = 'Doação' 
                                 AND i.GeradoPorMatch = 0
@@ -231,7 +233,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 i.Descricao,
                                 c.Descricao Categoria,
                                 c.Pontuacao,
-                                im.Valor,
+                                vf.Descricao ValorFaixa,
                                 c.GerenciadaRh
                               FROM Item i
                                   INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
@@ -239,6 +241,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                   INNER JOIN Usuario u ON i.UsuarioId = u.Id
                                   LEFT JOIN ItemMatch im ON i.Id = im.NecessidadeId
                                   LEFT JOIN Usuario ud ON im.UsuarioId = ud.Id
+                                  LEFT JOIN ValorFaixa vf ON im.ValorFaixaId = vf.Id
                               WHERE 
                                 ti.Descricao = 'Necessidade' 
                                 AND i.GeradoPorMatch = 0

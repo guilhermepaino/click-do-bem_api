@@ -27,6 +27,8 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Cadastros
 
         public ValorFaixaDto ValorFaixa { get; set; }
 
+        public CampanhaDto Campanha { get; set; }
+
         public IEnumerable<ItemImagemDto> Imagens { get; set; }
 
     }

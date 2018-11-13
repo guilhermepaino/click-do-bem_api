@@ -39,6 +39,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         protected readonly IItemMatchDomainService _matchDomain;
         protected readonly IUsuarioDomainService _usuarioDomain;
         protected readonly ITipoMatchDomainService _tipoMatchDomain;
+        protected readonly IValorFaixaDomainService _faixaDomain;
+        protected readonly ICampanhaDomainService _campanhaDomain;
         protected readonly IAppUser _usuario;
 
         #endregion
@@ -58,6 +60,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             IItemMatchDomainService matchDomain,
             IUsuarioDomainService usuarioDomain,
             ITipoMatchDomainService tipoMatchDomain,
+            IValorFaixaDomainService faixaDomain,
+            ICampanhaDomainService campanhaDomain,
             IAppUser usuario
         )
         {
@@ -69,6 +73,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             _matchDomain = matchDomain;
             _usuarioDomain = usuarioDomain;
             _tipoMatchDomain = tipoMatchDomain;
+            _faixaDomain = faixaDomain;
+            _campanhaDomain = campanhaDomain;
             _usuario = usuario;
         }
 
@@ -91,7 +97,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             IEnumerable<TipoItem> tiposItem = _tipoItemDomain.ObterTodos();
             IEnumerable<Usuario> usuarios = _usuarioDomain.ObterPorLista(itens.Select(x => x.UsuarioId.Value).Distinct().ToList());
             IEnumerable<ItemImagem> imagens = _imagemDomain.ObterPorLista(itens.Select(x => x.Id).Distinct().ToList());
-
+            IEnumerable<ValorFaixa> faixas = _faixaDomain.ObterTodos();
+            IEnumerable<Campanha> campanhas = _campanhaDomain.ObterTodos();
 
             itens
                 .ToList()
@@ -101,6 +108,10 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     i.TipoItem = tiposItem.Where(f => f.Id.Equals(i.TipoItemId)).FirstOrDefault();
                     i.Usuario = usuarios.Where(f => f.Id.Equals(i.UsuarioId)).FirstOrDefault();
                     i.Imagens = imagens.Where(f => f.ItemId.Equals(i.Id)).ToList();
+                    if (i.ValorFaixaId != null)
+                        i.ValorFaixa = faixas.Where(f => f.Id.Equals(i.ValorFaixaId.Value)).FirstOrDefault();
+                    if (i.CampanhaId != null)
+                        i.Campanha = campanhas.Where(f => f.Id.Equals(i.CampanhaId)).FirstOrDefault();
                 });
 
         }
@@ -205,6 +216,15 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     ValorInicial = item.ValorFaixa.ValorInicial,
                     ValorFinal = item.ValorFaixa.ValorFinal,
                     Inativo = item.ValorFaixa.Inativo
+                } : null),
+                Campanha = (item.Campanha != null ? new CampanhaDto()
+                {
+                    Id = item.Campanha.Id,
+                    Descricao = item.Campanha.Descricao,
+                    DataInclusao = item.Campanha.DataInclusao,
+                    DataAlteracao = item.Campanha.DataAlteracao,
+                    DataInicial = item.Campanha.DataInicial,
+                    DataFinal = item.Campanha.DataFinal
                 } : null),
                 Categoria = new CategoriaDto()
                 {
@@ -423,11 +443,29 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             if (tipoItem == null)
                 criticas.Append("Tipo de Item inválido|");
 
-
             // Verificando Categoria
-            Categoria categoria = _categoriaDomain.ObterPorDescricao(dto.Categoria.Descricao);
+            Categoria categoria = _categoriaDomain.ObterPorId(dto.Categoria.Id);
             if (categoria == null)
                 criticas.Append("Categoria inválida|");
+
+            // Verificando faixa de valor
+            if (dto.ValorFaixa != null)
+            {
+                ValorFaixa faixa = _faixaDomain.ObterPorId(dto.ValorFaixa.Id);
+                if (faixa == null)
+                    criticas.Append("Faixa de valor inválida|");
+            }
+
+            // Verificando Campanha
+            if (dto.Campanha != null)
+            {
+                Campanha campanha = _campanhaDomain.ObterPorId(dto.Campanha.Id);
+                if (campanha == null)
+                    criticas.Append("Campanha inválida|");
+                else
+                    if (campanha.DataFinal < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day))
+                        criticas.Append("Campanha expirada|");
+            }
 
             if (criticas.Length > 0)
             {
@@ -449,6 +487,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
                 if (dto.ValorFaixa != null)
                     entidade.ValorFaixaId = dto.ValorFaixa.Id;
+
+                if (dto.Campanha != null)
+                    entidade.CampanhaId = dto.Campanha.Id;
 
                 if (!entidade.EstaValido())
                 {
@@ -500,9 +541,28 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
 
                 // Verificando Categoria
-                Categoria categoria = _categoriaDomain.ObterPorDescricao(dto.Categoria.Descricao);
+                Categoria categoria = _categoriaDomain.ObterPorId(dto.Categoria.Id);
                 if (categoria == null)
                     criticas.Append("Categoria inválida|");
+
+                // Verificando faixa de valor
+                if (dto.ValorFaixa != null)
+                {
+                    ValorFaixa faixa = _faixaDomain.ObterPorId(dto.ValorFaixa.Id);
+                    if (faixa == null)
+                        criticas.Append("Faixa de valor inválida|");
+                }
+
+                // Verificando Campanha
+                if (dto.Campanha != null)
+                {
+                    Campanha campanha = _campanhaDomain.ObterPorId(dto.Campanha.Id);
+                    if (campanha == null)
+                        criticas.Append("Campanha inválida|");
+                    else
+                        if (campanha.DataFinal < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day))
+                        criticas.Append("Campanha expirada|");
+                }
 
                 if (criticas.Length > 0)
                 {
@@ -518,10 +578,16 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     entidade.CategoriaId = categoria.Id;
                     entidade.UsuarioId = _usuario.Id;
                     entidade.Anonimo = dto.Anonimo;
+
                     if (dto.ValorFaixa == null)
                         entidade.ValorFaixaId = null;
                     else
                         entidade.ValorFaixaId = dto.ValorFaixa.Id;
+
+                    if (dto.Campanha == null)
+                        entidade.CampanhaId = null;
+                    else
+                        entidade.CampanhaId = dto.Campanha.Id;
 
                     if (!entidade.EstaValido())
                     {
@@ -782,6 +848,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 return;
             }
 
+            // TODO: Informar valor faixa
             // Gravando o match
             match = new ItemMatch()
             {

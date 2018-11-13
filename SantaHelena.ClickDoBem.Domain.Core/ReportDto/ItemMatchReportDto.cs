@@ -24,7 +24,7 @@ namespace SantaHelena.ClickDoBem.Domain.Core.ReportDto
 
         public int Pontuacao { get; set; }
 
-        public decimal Valor { get; set; }
+        public string ValorFaixa { get; set; }
 
         public bool GerenciadaRh { get; set; }
 
