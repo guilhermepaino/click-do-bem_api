@@ -4,6 +4,98 @@
         <name>SantaHelena.ClickDoBem.Services.Api</name>
     </assembly>
     <members>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CampanhaController">
+            <summary>
+            API de Campanha
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CampanhaController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.ICampanhaAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Cria uma nova instância da API
+            </summary>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CampanhaController.ListarAtivas">
+             <summary>
+             Listar todas as campanhas ativas
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 Nenhum parâmetro
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "dataInclusao": "0001-01-01T00:00:00",
+                         "dataAlteracao": "0001-01-01T00:00:00",
+                         "descricao": "string",
+                         "dataInicial": "0001-01-01T00:00:00",
+                         "dataFinal": "0001-01-01T00:00:00"
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros de campanhas ativas</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CampanhaController.ListarTodas">
+             <summary>
+             Listar todas as campanhas ativas
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 Nenhum parâmetro
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "dataInclusao": "0001-01-01T00:00:00",
+                         "dataAlteracao": "0001-01-01T00:00:00",
+                         "descricao": "string",
+                         "dataInicial": "0001-01-01T00:00:00",
+                         "dataFinal": "0001-01-01T00:00:00"
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>Lista dos registros de campanhas ativas</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CampanhaController.LocalizarPorId(System.Guid)">
+             <summary>
+             Localizar uma campanha pelo id
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/campanha/guid
+                 
+                 Resposta (array)
+                 {
+                     "id": "guid",
+                     "dataInclusao": "0001-01-01T00:00:00",
+                     "dataAlteracao": "0001-01-01T00:00:00",
+                     "descricao": "string",
+                     "dataInicial": "0001-01-01T00:00:00",
+                     "dataFinal": "0001-01-01T00:00:00"
+                 }
+                 
+             </remarks>
+             <returns>Lista dos registros de campanhas ativas</returns>
+             <response code="200">Retorna a lista de registros cadastrados</response>
+             <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CategoriaController">
             <summary>
             API de Categoria
@@ -260,7 +352,7 @@
             API de Item
             </summary>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.IItemAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment,SantaHelena.ClickDoBem.Domain.Core.Interfaces.IAppUser)">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.#ctor(SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.IItemAppService,SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.IValorFaixaAppService,SantaHelena.ClickDoBem.Application.Interfaces.Cadastros.ICategoriaAppService,Microsoft.AspNetCore.Hosting.IHostingEnvironment,SantaHelena.ClickDoBem.Domain.Core.Interfaces.IAppUser)">
             <summary>
             Cria uma nova instância da API
             </summary>
@@ -300,13 +392,20 @@
             </summary>
             <param name="imgExcluir"></param>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ValidaValor(System.Nullable{System.Int32},System.Nullable{System.Decimal},Microsoft.AspNetCore.Mvc.IActionResult@)">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ValidarPreenchimentoFaixaValor(System.Nullable{System.Int32},System.Nullable{System.Guid},Microsoft.AspNetCore.Mvc.IActionResult@)">
             <summary>
-            Validar o valor informado no post/put de item
+            Validar a faixa de valor informado no post/put de item
             </summary>
             <param name="tipoItem">Tipo de item</param>
-            <param name="valor">Valor de referência do item</param>
+            <param name="valorFaixaId">Id da faixa de valor de referência do item</param>
             <param name="result">Variável de saída IActionResult para caso de falha</param>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.CheckCategoria(System.Guid,Microsoft.AspNetCore.Mvc.IActionResult@)">
+            <summary>
+            
+            </summary>
+            <param name="categoriaId"></param>
+            <param name="result"></param>
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.Inserir(SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest)">
             <summary>
@@ -320,8 +419,9 @@
                     "titulo": "Fralda Descartável",
                     "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
                     "tipoItem": "1",
-                    "categoria": "Higiene e limpeza",
+                    "categoriaId": "guid",
                     "anonimo": false,
+                    "valorFaixaId": "guid",
                     "Imagens":
                     [
                         "NomeImagem": "string",
@@ -403,6 +503,10 @@
                              "nome": "string",
                              "cpfCnpj": "string"
                          },
+                         "valorFaixa": {
+                             "id": "guid",
+                             "descricao": "string",
+                         },
                          "anonimo": bool,
                          "imagens":
                          [
@@ -483,6 +587,10 @@
                              "nome": "string",
                              "cpfCnpj": "string"
                          },
+                         "valorFaixa": {
+                             "id": "guid",
+                             "descricao": "string",
+                         },
                          "anonimo": bool,
                          "imagens":
                          [
@@ -527,7 +635,7 @@
                          "titulo": "string",
                          "descricao": "string",
                          "categoria": "string",
-                         "valor": 999.99,
+                         "valor": "string",
                          "pontuacao": 999,
                          "gerenciadaRh": boolean,
                          "efetivado": boolean
@@ -589,7 +697,7 @@
             
             </remarks>
         </member>
-        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.EfetuarMatchUnilateral(System.Nullable{System.Guid},System.Nullable{System.Decimal})">
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.EfetuarMatchUnilateral(System.Nullable{System.Guid},System.Nullable{System.Guid})">
             <summary>
             Efetua o match de um determinado item de doação ou necessidade criando um item oposto correspondente e fazendo o match
             </summary>
@@ -597,7 +705,7 @@
             Contrato
                 
                 Requisição
-                url: [URI]/api/versao/item/match/2ef307a6-c4a5-11e8-8776-0242ac110006?valor=123.75
+                url: [URI]/api/versao/item/match/guid?valorFaixaId=guid
                 
                 Respostas
                 {
@@ -626,7 +734,8 @@
                     "titulo": "Fralda Descartável Infantil",
                     "descricao": "Fralda para criança até 5 meses (tamanho RN, P e M)",
                     "tipoItem": "Necessidade",
-                    "categoria": "Higiene e limpeza",
+                    "categoriaId": "guid",
+                    "valorFaixaId": "guid",
                     "anonimo": false,
                     "Imagens": [
                         {
@@ -763,6 +872,14 @@
                              "nome": "string",
                              "cpfCnpj": "string"
                          },
+                         "valorFaixa": {
+                             "id": "guid",
+                             "descricao": "string"
+                         },
+                         "campanha": {
+                             "id": "guid",
+                             "descricao": "string"
+                         },
                          "anonimo": bool,
                          "imagens":
                          [
@@ -809,6 +926,14 @@
                              "nome": "string",
                              "cpfCnpj": "string"
                          },
+                         "valorFaixa": {
+                             "id": "guid",
+                             "descricao": "string"
+                         },
+                         "campanha": {
+                             "id": "guid",
+                             "descricao": "string"
+                         },
                          "anonimo": bool
                      }
                  
@@ -839,7 +964,7 @@
                          "titulo": "string",
                          "descricao": "string",
                          "categoria": "string",
-                         "valor": 999.99,
+                         "valorFaixa": string,
                          "pontuacao": 999,
                          "gerenciadaRh": boolean,
                          "efetivado": boolean,
@@ -1365,7 +1490,7 @@
             Id do tipo de item (obrigatório)
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Categoria">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.CategoriaId">
             <summary>
             Id da categoria (obrigatório)
             </summary>
@@ -1375,9 +1500,14 @@
             Flag indicando se o item deve ser anônimo
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Valor">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.ValorFaixaId">
             <summary>
-            Valor estimado do item (obrigatório para necessidades)
+            Id da faixa de valor estimado do item (obrigatório para necessidades)
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.CampanhaId">
+            <summary>
+            Id da campanha
             </summary>
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros.ItemInsertRequest.Imagens">
@@ -1580,6 +1710,21 @@
             Detalhes das linhas processadas
             </summary>
         </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CampanhaSimpleResponse">
+            <summary>
+            Objeto de resposta de Api de Campanha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CampanhaSimpleResponse.Id">
+            <summary>
+            Id do Campanha
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CampanhaSimpleResponse.Descricao">
+            <summary>
+            Descrição do Campanha
+            </summary>
+        </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.CategoriaSimpleResponse">
             <summary>
             Objeto de resposta de Api de Categoria
@@ -1675,9 +1820,14 @@
             Flag indicando que o usúario quer ser anônimo
             </summary>
         </member>
-        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Valor">
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.ValorFaixa">
             <summary>
-            Valor estimado do item
+            ValorFaixa estimado do item
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Campanha">
+            <summary>
+            Campanha do item
             </summary>
         </member>
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ItemResponse.Imagens">
@@ -1708,6 +1858,21 @@
         <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.LinhaArquivoDocumentoResponse.Detalhe">
             <summary>
             Detalhe do processamento
+            </summary>
+        </member>
+        <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ValorFaixaSimpleResponse">
+            <summary>
+            Objeto de resposta de Api de ValorFaixa
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ValorFaixaSimpleResponse.Id">
+            <summary>
+            Id do ValorFaixa
+            </summary>
+        </member>
+        <member name="P:SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros.ValorFaixaSimpleResponse.Descricao">
+            <summary>
+            Descrição do ValorFaixa
             </summary>
         </member>
         <member name="T:SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais.AutenticacaoResponse">
