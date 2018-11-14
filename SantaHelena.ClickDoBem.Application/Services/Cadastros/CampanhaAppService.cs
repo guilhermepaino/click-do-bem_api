@@ -80,7 +80,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         {
             IEnumerable<Campanha> result = _dmn.Obter(x => 
                 x.DataInicial <= DateTime.Now &&
-                x.DataFinal >= new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+                x.DataFinal >= DateTime.Now
             ).ToList();
 
             if (result == null)

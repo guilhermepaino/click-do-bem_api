@@ -30,7 +30,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         public override IEnumerable<ValorFaixa> ObterTodos()
         {
-            string sql = @"SELECT * FROM ValorFaixa";
+            string sql = @"SELECT * FROM ValorFaixa ORDER BY ValorInicial";
             return _ctx.Database.GetDbConnection().Query<ValorFaixa>(sql).ToList();
         }
 

@@ -463,7 +463,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 if (campanha == null)
                     criticas.Append("Campanha inválida|");
                 else
-                    if (campanha.DataFinal < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day))
+                    if (campanha.DataFinal < DateTime.Now)
                         criticas.Append("Campanha expirada|");
             }
 
@@ -560,7 +560,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     if (campanha == null)
                         criticas.Append("Campanha inválida|");
                     else
-                        if (campanha.DataFinal < new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day))
+                        if (campanha.DataFinal < DateTime.Now)
                         criticas.Append("Campanha expirada|");
                 }
 
@@ -724,6 +724,11 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 };
             }
         }
+
+        /// <summary>
+        /// Obter o ranking de campanhas
+        /// </summary>
+        public IEnumerable<RankingCampanhaReportDto> RankingCampanha() => _dmn.RankingCampanha();
 
         /// <summary>
         /// Carregar uma imagem para um item
@@ -910,6 +915,13 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         }
 
+        /// <summary>
+        /// Executar Match
+        /// </summary>
+        /// <param name="id">Id do item</param>
+        /// <param name="valorFaixaId">Id da faixa de valores</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="dadosRetorno">Variável de saída de objeto de resposta</param>
         public void ExecutarMatch(Guid id, Guid? valorFaixaId, out int statusCode, out object dadosRetorno)
         {
 
@@ -1048,6 +1060,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         }
 
+        /// <summary>
+        /// Efetivar um match
+        /// </summary>
+        /// <param name="matchId">Id do match</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="mensagem">Variável de saída de objeto de resposta</param>
         public void EfetivarMatch(Guid matchId, out int statusCode, out string mensagem)
         {
 
@@ -1092,6 +1110,29 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
             }
 
+        }
+
+        /// <summary>
+        /// Obter as faixas de valores disponíveis
+        /// </summary>
+        public IEnumerable<ValorFaixaDto> ObterFaixas()
+        {
+
+            IList<ValorFaixaDto> result = new List<ValorFaixaDto>();
+            _faixaDomain.ObterAtivos()
+                .ToList()
+                .ForEach(f =>
+                {
+                    result.Add(new ValorFaixaDto()
+                    {
+                        Id = f.Id,
+                        Descricao = f.Descricao,
+                        ValorInicial = f.ValorInicial,
+                        ValorFinal = f.ValorFinal,
+                        Inativo = f.Inativo
+                    });
+                });
+            return result;
         }
 
         #endregion

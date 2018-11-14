@@ -341,6 +341,24 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
 
         }
 
+        public IEnumerable<RankingCampanhaReportDto> RankingCampanha()
+        {
+            string sql = $@"SELECT s.CampanhaId, s.Descricao, s.Pontuacao, s.DataInicial, s.DataFinal
+                            FROM
+                            (
+                                SELECT i.CampanhaId, IFNULL(cmp.Descricao, '-- SEM CAMPANHA -- ') Descricao, SUM(c.Pontuacao) Pontuacao, COUNT(im.Id) QtdDoacoes, cmp.DataInicial, cmp.DataFinal
+                                FROM ItemMatch im
+                                INNER JOIN Item i ON im.DoacaoId = i.Id
+                                INNER JOIN Categoria c ON i.CategoriaId = c.Id
+                                LEFT JOIN Campanha cmp ON i.CampanhaId = cmp.Id
+                                GROUP BY i.CampanhaId, cmp.Descricao, cmp.DataInicial, cmp.DataFinal
+                            ) s
+                            ORDER BY (CASE WHEN s.CampanhaId IS NULL THEN -999 ELSE s.Pontuacao END) DESC, s.QtdDoacoes ASC, 2 ASC
+                            LIMIT 100";
+
+            return _ctx.Database.GetDbConnection().Query<RankingCampanhaReportDto>(sql).ToList();
+        }
+
         #endregion
 
 

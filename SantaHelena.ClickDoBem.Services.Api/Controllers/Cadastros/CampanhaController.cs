@@ -77,7 +77,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         }
 
         /// <summary>
-        /// Listar todas as campanhas ativas
+        /// Listar todas as campanhas ativas, futuras e expiradas
         /// </summary>
         /// <remarks>
         /// Contrato

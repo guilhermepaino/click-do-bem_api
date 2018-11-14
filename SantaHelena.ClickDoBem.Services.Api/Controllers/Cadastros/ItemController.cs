@@ -1035,7 +1035,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///     [
         ///         {
         ///             "id": "guid",
-        ///             "nome": "AAAA-MM-DD",
+        ///             "nome": "string",
         ///             "pontuacao": int
         ///         }
         ///     ]
@@ -1058,6 +1058,79 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             }
         }
 
+        /// <summary>
+        /// Obter o ranking de campanhas
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/ranking/campanha
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "nome": "string",
+        ///             "pontuacao": int
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>A lista do ranking das campanhas de doações</returns>
+        /// <response code="200">Retorna os dados</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("ranking/campanha")]
+        public IActionResult RankingCampanha()
+        {
+            try
+            {
+                return Ok(_appService.RankingCampanha());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"{ex.Message} - {ex.StackTrace}");
+            }
+        }
+
+        /// <summary>
+        /// Obter a lista de faixas ativas
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     url: [URI]/api/versao/item/valor-faixa
+        ///     
+        ///     Resposta (array)
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "descricao": "string",
+        ///             "valorInicial": 999.99,
+        ///             "valorFinal": 999.99,
+        ///             "inativo": boolean
+        ///         }
+        ///     ]
+        ///     
+        /// </remarks>
+        /// <returns>A lista de faixa de valores ativas</returns>
+        /// <response code="200">Retorna os dados</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("valor-faixa")]
+        public IActionResult ObterFaixasAtivas()
+        {
+            try
+            {
+                return Ok(_appService.ObterFaixas());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"{ex.Message} - {ex.StackTrace}");
+            }
+        }
 
         #endregion
 
