@@ -44,7 +44,7 @@
         </member>
         <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.CampanhaController.ListarTodas">
              <summary>
-             Listar todas as campanhas ativas
+             Listar todas as campanhas ativas, futuras e expiradas
              </summary>
              <remarks>
              Contrato
@@ -993,13 +993,65 @@
                  [
                      {
                          "id": "guid",
-                         "nome": "AAAA-MM-DD",
+                         "nome": "string",
                          "pontuacao": int
                      }
                  ]
                  
              </remarks>
              <returns>A lista do ranking individual de doações</returns>
+             <response code="200">Retorna os dados</response>
+             <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.RankingCampanha">
+             <summary>
+             Obter o ranking de campanhas
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/item/ranking/campanha
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "nome": "string",
+                         "pontuacao": int
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>A lista do ranking das campanhas de doações</returns>
+             <response code="200">Retorna os dados</response>
+             <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+             <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        </member>
+        <member name="M:SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros.ItemController.ObterFaixasAtivas">
+             <summary>
+             Obter a lista de faixas ativas
+             </summary>
+             <remarks>
+             Contrato
+            
+                 Requisição
+                 url: [URI]/api/versao/item/valor-faixa
+                 
+                 Resposta (array)
+                 [
+                     {
+                         "id": "guid",
+                         "descricao": "string",
+                         "valorInicial": 999.99,
+                         "valorFinal": 999.99,
+                         "inativo": boolean
+                     }
+                 ]
+                 
+             </remarks>
+             <returns>A lista de faixa de valores ativas</returns>
              <response code="200">Retorna os dados</response>
              <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
              <response code="500">Se ocorrer alguma falha no processamento da request</response>
