@@ -32,6 +32,10 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
                 .HasColumnType("datetime")
                 .IsRequired();
 
+            builder.Property(c => c.Prioridade)
+                .HasColumnType("int(1)")
+                .IsRequired();
+
 
             builder.HasIndex(i => i.DataInclusao).HasName("IX_Campanha_DtInclusao");
             builder.HasIndex(i => i.DataAlteracao).HasName("IX_Campanha_DtAlteracao");

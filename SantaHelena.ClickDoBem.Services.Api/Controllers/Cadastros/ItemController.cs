@@ -660,10 +660,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (!id.HasValue)
                 return BadRequest(new { sucesso = false, mensagem = "O id do item inválido ou não informado" });
 
-            //if (valorFaixaId.HasValue && valorFaixaId < 0)
-            //    return BadRequest(new { sucesso = false, mensagem = "O valor não pode ser negativo" });
-            //TODO: Incluir validação de id de faixa de valor
-
             _appService.ExecutarMatch(id.Value, valorFaixaId, out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
@@ -672,7 +668,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         // ------------------------------------------------------------------------
 
         /// <summary>
-        /// Inserir um novo registro de item
+        /// Alterar um item existente
         /// </summary>
         /// <remarks>
         /// Contrato
@@ -774,6 +770,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </summary>
         /// <param name="id">Id do registro</param>
         /// <remarks>
+        /// Contrato
         /// 
         ///     Requisição: DELETE
         ///     url: [URI]/api/versao/item/2ef307a6-c4a5-11e8-8776-0242ac110006

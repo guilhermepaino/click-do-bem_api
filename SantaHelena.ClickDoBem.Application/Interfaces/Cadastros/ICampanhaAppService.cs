@@ -9,5 +9,9 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         IEnumerable<CampanhaDto> ObterTodos();
         IEnumerable<CampanhaDto> ObterAtivas();
         CampanhaDto ObterPorId(Guid id);
+        void Inserir(CampanhaDto dto, out int statusCode, out object mensagem);
+        void Atualizar(CampanhaDto dto, out int statusCode, out string mensagem);
+        void Excluir(Guid id, string webRootPath, out int statusCode, out object dados);
+        void EncerrarCampanha(Guid id, out int statusCode, out object dados);
     }
 }

@@ -650,7 +650,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                     RemoverArquivosItemExcluido(pastaWwwRoot, arquivosRemover);
                 });
 
-                dados = new { sucesso = true, mensagem = "Item éxcluído com sucesso" };
+                dados = new { sucesso = true, mensagem = "Item excluído com sucesso" };
                 statusCode = StatusCodes.Status200OK;
             }
 
@@ -853,7 +853,6 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 return;
             }
 
-            // TODO: Informar valor faixa
             // Gravando o match
             match = new ItemMatch()
             {
@@ -861,7 +860,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 DoacaoId = doacaoId,
                 NecessidadeId = necessidadeId,
                 TipoMatchId = Guid.Parse("a3412363-d87d-11e8-abfa-0e0e947bb2d6"),
-                ValorFaixaId = null,
+                ValorFaixaId = itemNecessidade.ValorFaixaId,
                 Efetivado = true
             };
             _matchDomain.Adicionar(match);

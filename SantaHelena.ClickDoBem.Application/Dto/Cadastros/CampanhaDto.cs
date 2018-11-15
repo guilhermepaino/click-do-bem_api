@@ -18,5 +18,7 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Cadastros
 
         public DateTime? DataFinal { get; set; }
 
+        public int Prioridade { get; set; }
+
     }
 }

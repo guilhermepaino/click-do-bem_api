@@ -46,6 +46,11 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
             return _ctx.Database.GetDbConnection().Query<Campanha>(sql, new { pdescricao = $"%{descricao}%" }).ToList();
         }
 
+        public void EncerrarCampanha(Guid id)
+        {
+            string sql = $"UPDATE Campanha SET DataFinal = '{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}' WHERE Id = '{id.ToString()}'";
+            _ctx.Database.GetDbConnection().Execute(sql);
+        }
 
         #endregion
 

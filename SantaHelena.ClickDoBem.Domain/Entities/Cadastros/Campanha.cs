@@ -35,6 +35,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
         public DateTime? DataFinal { get; set; }
 
+        public int Prioridade { get; set; }
+
         #endregion
 
         #region Navigation (Lazy)
@@ -59,6 +61,9 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
 
             RuleFor(c => c.DataFinal)
                 .NotNull().WithMessage("A data final deve ser informada");
+
+            RuleFor(c => c.Prioridade)
+                .InclusiveBetween(1, 3).WithMessage("A prioridade deve ser: 0=baixa / 1=Normal / 2=Alta / 3=Altíssima");
 
         }
 

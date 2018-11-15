@@ -20,6 +20,7 @@ CREATE TABLE `Campanha` (
   `Descricao` varchar(150) NOT NULL,
   `DataInicial` datetime NOT NULL,
   `DataFinal` datetime NOT NULL,
+  `Prioridade` int(1) NOT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `UK_Campanha_Descricao` (`Descricao`),
   KEY `IX_Campanha_DtInclusao` (`DataInclusao`),

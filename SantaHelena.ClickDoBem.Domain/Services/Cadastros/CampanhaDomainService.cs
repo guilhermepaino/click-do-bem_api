@@ -35,6 +35,11 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
         /// <returns></returns>
         public IEnumerable<Campanha> ObterPorSemelhanca(string descricao) => _repository.ObterPorSemelhanca(descricao);
 
+        /// <summary>
+        /// Encerrar uma campanha imediatamente
+        /// </summary>
+        public void EncerrarCampanha(Guid id) => _repository.EncerrarCampanha(id);
+
         #endregion
 
     }
