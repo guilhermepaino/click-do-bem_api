@@ -54,7 +54,8 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 DataAlteracao = campanha.DataAlteracao,
                 Descricao = campanha.Descricao,
                 DataInicial = campanha.DataInicial,
-                DataFinal = campanha.DataFinal
+                DataFinal = campanha.DataFinal,
+                Prioridade = campanha.Prioridade
             };
         }
 
@@ -67,7 +68,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         /// </summary>
         public IEnumerable<CampanhaDto> ObterTodos()
         {
-            IEnumerable<Campanha> result = _dmn.ObterTodos();
+            IEnumerable<Campanha> result = _dmn.ObterTodos().OrderBy(x => x.DataInclusao);
             if (result == null)
                 return null;
 
@@ -121,7 +122,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             StringBuilder criticas = new StringBuilder();
 
             // Prioridade
-            if (dto.Prioridade < 1 || dto.Prioridade > 3)
+            if (dto.Prioridade < 0 || dto.Prioridade > 3)
                 criticas.Append("A prioridade deve conter um dos seguintes valores: 0=baixa / 1=Normal / 2=Alta / 3=Altíssima|");
 
             if (dto.DataFinal < dto.DataInicial)
@@ -186,7 +187,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 StringBuilder criticas = new StringBuilder();
 
                 // Prioridade
-                if (dto.Prioridade < 1 || dto.Prioridade > 3)
+                if (dto.Prioridade < 0 || dto.Prioridade > 3)
                     criticas.Append("A prioridade deve conter um dos seguintes valores: 0=baixa / 1=Normal / 2=Alta / 3=Altíssima|");
 
                 if (dto.DataFinal < dto.DataInicial)

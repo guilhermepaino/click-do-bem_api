@@ -63,7 +63,7 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Cadastros
                 .NotNull().WithMessage("A data final deve ser informada");
 
             RuleFor(c => c.Prioridade)
-                .InclusiveBetween(1, 3).WithMessage("A prioridade deve ser: 0=baixa / 1=Normal / 2=Alta / 3=Altíssima");
+                .InclusiveBetween(0, 3).WithMessage("A prioridade deve ser: 0=baixa / 1=Normal / 2=Alta / 3=Altíssima");
 
         }
 
