@@ -2,7 +2,7 @@
 {
 
     /// <summary>
-    /// Request de Upload de Imagens
+    /// Request de upload de imagens de itens
     /// </summary>
     public class SimpleImagemRequest
     {

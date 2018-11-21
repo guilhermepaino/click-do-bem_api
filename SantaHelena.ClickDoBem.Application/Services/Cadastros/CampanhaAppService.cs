@@ -19,6 +19,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         protected readonly IUnitOfWork _uow;
         protected readonly ICampanhaDomainService _dmn;
+        protected readonly ICampanhaImagemDomainService _imgDomain;
 
         #endregion
 
@@ -30,11 +31,13 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
         public CampanhaAppService
         (
             IUnitOfWork uow,
-            ICampanhaDomainService dmn
+            ICampanhaDomainService dmn,
+            ICampanhaImagemDomainService imgDomain
         )
         {
             _uow = uow;
             _dmn = dmn;
+            _imgDomain = imgDomain;
         }
 
         #endregion
@@ -61,6 +64,52 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
         #endregion
 
+        #region Métodos Locais
+
+        /// <summary>
+        /// Valida dos dados de carregamento de imagem
+        /// </summary>
+        /// <param name="imagemBase64">Expressão base64 da imagem</param>
+        /// <param name="campanhaId">Id da campanha</param>
+        /// <param name="campanha">Objeto de saída da campanha</param>
+        /// <returns></returns>
+        protected string ValidaDadosCarregamentoImagem(string imagemBase64, Guid campanhaId, out Campanha campanha)
+        {
+
+            StringBuilder criticas = new StringBuilder();
+
+            if (string.IsNullOrWhiteSpace(imagemBase64))
+                criticas.Append("Expressao Base64 da imagem não informada|");
+
+            campanha = _dmn.ObterPorId(campanhaId);
+            if (campanha == null)
+                criticas.Append($"Campanha \"{campanhaId}\" não necontrado|");
+
+            return criticas.ToString();
+
+        }
+
+        /// <summary>
+        /// Carregar as informações de imagem do resultado
+        /// </summary>
+        /// <param name="campanhas"></param>
+        protected void CarregarInformacoesImagem(IList<CampanhaDto> campanhas)
+        {
+            IEnumerable<CampanhaImagem> imagens = _imgDomain.ObterTodos();
+            campanhas
+                .ToList()
+                .ForEach(c =>
+                {
+
+                    CampanhaImagem img = imagens.Where(x => x.CampanhaId.Equals(c.Id)).FirstOrDefault();
+                    if (img != null)
+                        c.Imagem = img.Caminho;
+
+                });
+        }
+
+        #endregion
+
         #region Métodos Públicos
 
         /// <summary>
@@ -72,12 +121,16 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             if (result == null)
                 return null;
 
-            return
+            IList<CampanhaDto> campanhas = 
                 (
                     from r in result
                     select ConverterEntidadeEmDto(r)
 
                 ).ToList();
+
+            CarregarInformacoesImagem(campanhas);
+
+            return campanhas;
         }
 
         public IEnumerable<CampanhaDto> ObterAtivas()
@@ -90,12 +143,17 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             if (result == null)
                 return null;
 
-            return
+            IList<CampanhaDto> campanhas = 
                 (
                     from r in result
                     select ConverterEntidadeEmDto(r)
 
                 ).ToList();
+
+            CarregarInformacoesImagem(campanhas);
+
+            return campanhas;
+
         }
 
         /// <summary>
@@ -107,7 +165,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             Campanha result = _dmn.ObterPorId(id);
             if (result == null)
                 return null;
-            return ConverterEntidadeEmDto(result);
+            CampanhaDto campanha = ConverterEntidadeEmDto(result);
+            CarregarInformacoesImagem(new List<CampanhaDto> { campanha });
+            return campanha;
         }
 
         /// <summary>
@@ -283,6 +343,29 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 statusCode = StatusCodes.Status200OK;
                 dados = new { Sucesso = false, Mensagem = "Campanha encerrada com sucesso" };
             }
+        }
+
+        public void CarregarImagem(Guid campanhaId, string imagemBase64, string caminho, out int statusCode, out object dadosRetorno)
+        {
+
+            string criticas = ValidaDadosCarregamentoImagem(imagemBase64, campanhaId, out Campanha campanha);
+
+            if (!string.IsNullOrWhiteSpace(criticas))
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dadosRetorno = new
+                {
+                    sucesso = false,
+                    mensagem = criticas.Substring(0, (criticas.Length - 1))
+                };
+            }
+            else
+            {
+                bool sucesso = _dmn.CarregarImagem(campanha, imagemBase64, caminho, out dadosRetorno);
+                statusCode = (sucesso ? StatusCodes.Status200OK : StatusCodes.Status400BadRequest);
+
+            }
+
         }
 
         #endregion

@@ -5,6 +5,8 @@ using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Application.Interfaces.Cadastros;
 using SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros;
 using System;
+using System.IO;
+using System.Linq;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 {
@@ -23,6 +25,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         protected readonly ICampanhaAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly string _caminho;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -41,6 +44,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         {
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
+            _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("images")).SingleOrDefault();
         }
 
         #endregion
@@ -100,7 +104,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///             "dataAlteracao": "0001-01-01T00:00:00",
         ///             "descricao": "string",
         ///             "dataInicial": "0001-01-01T00:00:00",
-        ///             "dataFinal": "0001-01-01T00:00:00"
+        ///             "dataFinal": "0001-01-01T00:00:00",
+        ///             "imagem": "string"
         ///         }
         ///     ]
         ///     
@@ -131,7 +136,8 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///         "dataAlteracao": "0001-01-01T00:00:00",
         ///         "descricao": "string",
         ///         "dataInicial": "0001-01-01T00:00:00",
-        ///         "dataFinal": "0001-01-01T00:00:00"
+        ///         "dataFinal": "0001-01-01T00:00:00",
+        ///         "imagem": "string"
         ///     }
         ///     
         /// </remarks>
@@ -208,6 +214,38 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             return StatusCode(statusCode, dados);
 
+        }
+
+        /// <summary>
+        /// Carregar uma imagem para a campanha (sobrescreve se existir)
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição: ItemInsertRequest
+        ///     {
+        ///         "campanhaId": "guid",
+        ///         "imagemBase64": "string_base64"
+        ///      }
+        /// 
+        ///     Resposta:
+        ///     {
+        ///         "sucesso": true,
+        ///         "mensagem": "imagem carregada com sucesso",
+        ///         "imagem": "caminho/imagem.jpg"
+        ///         }
+        ///     }
+        /// 
+        /// </remarks>
+        /// <response code="200">Sucesso na gravação</response>
+        /// <response code="400">Requisição inválida, detalhes informado no campo mensagem</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPost("imagem")]
+        public IActionResult CarregarImagem([FromBody]CampanhaImagemRequest req)
+        {
+            _appService.CarregarImagem(req.CampanhaId, req.ImagemBase64, Path.Combine(_caminho, "campanha"), out int statusCode, out object dadosRetorno);
+            return StatusCode(statusCode, dadosRetorno);
         }
 
         // ----- PUT --------------------------------------------------------------

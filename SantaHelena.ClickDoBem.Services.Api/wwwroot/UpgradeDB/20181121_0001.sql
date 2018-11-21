@@ -4,9 +4,11 @@
 
 -- Tabela CampanhaImagem
 CREATE TABLE `CampanhaImagem` (
+  `Id` char(36) NOT NULL,
   `CampanhaId` char(36) NOT NULL,
   `Caminho` varchar(2000) NOT NULL,
-  PRIMARY KEY (`CampanhaId`),
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY (`CampanhaId`),
   CONSTRAINT `FK_CampanhaImagem_Campanha` FOREIGN KEY (`CampanhaId`) REFERENCES `Campanha` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

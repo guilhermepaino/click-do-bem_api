@@ -48,6 +48,7 @@ namespace SantaHelena.ClickDoBem.Data.Context
             modelBuilder.ApplyConfiguration(new TipoMatchMapping());
             modelBuilder.ApplyConfiguration(new ValorFaixaMapping());
             modelBuilder.ApplyConfiguration(new CampanhaMapping());
+            modelBuilder.ApplyConfiguration(new CampanhaImagemMapping());
 
         }
 
@@ -104,6 +105,8 @@ namespace SantaHelena.ClickDoBem.Data.Context
         public virtual DbSet<ValorFaixa> ValorFaixa { get; set; }
 
         public virtual DbSet<Campanha> Campanha { get; set; }
+
+        public virtual DbSet<CampanhaImagem> CampanhaImagem { get; set; }
 
         #endregion
 

@@ -13,5 +13,6 @@ namespace SantaHelena.ClickDoBem.Application.Interfaces.Cadastros
         void Atualizar(CampanhaDto dto, out int statusCode, out string mensagem);
         void Excluir(Guid id, string webRootPath, out int statusCode, out object dados);
         void EncerrarCampanha(Guid id, out int statusCode, out object dados);
+        void CarregarImagem(Guid campanhaId, string imagemBase64, string caminho, out int statusCode, out object dadosRetorno);
     }
 }

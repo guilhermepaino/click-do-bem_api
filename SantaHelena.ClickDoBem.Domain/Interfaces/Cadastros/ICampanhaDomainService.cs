@@ -10,5 +10,6 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
         Campanha ObterPorDescricao(string descricao);
         IEnumerable<Campanha> ObterPorSemelhanca(string descricao);
         void EncerrarCampanha(Guid id);
+        bool CarregarImagem(Campanha campanha, string imagemBase64, string caminho, out object dadosRetorno);
     }
 }

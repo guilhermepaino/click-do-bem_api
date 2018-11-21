@@ -20,5 +20,7 @@ namespace SantaHelena.ClickDoBem.Application.Dto.Cadastros
 
         public int Prioridade { get; set; }
 
+        public string Imagem { get; set; }
+
     }
 }
