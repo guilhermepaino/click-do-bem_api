@@ -131,7 +131,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
             };
             string arquivo = $"{imagem.Id.ToString()}.jpg";
             string nomeCompleto = Path.Combine(pastaItem, arquivo);
-            string caminhoUrl = $"/images/{item.Id.ToString()}/{imagem.Id.ToString()}.jpg";
+            string caminhoUrl = $"/images/item/{item.Id.ToString()}/{imagem.Id.ToString()}.jpg";
             imagem.Caminho = caminhoUrl;
 
             try

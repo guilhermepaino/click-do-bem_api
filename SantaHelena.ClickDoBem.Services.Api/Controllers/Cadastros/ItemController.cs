@@ -140,7 +140,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             {
                 foreach (SimpleImagemRequest img in imagens)
                 {
-                    _appService.CarregarImagem(itemId, img.NomeImagem, img.ImagemBase64, _caminho, out int sc, out object retImg);
+                    _appService.CarregarImagem(itemId, img.NomeImagem, img.ImagemBase64, Path.Combine(_caminho, "item"), out int sc, out object retImg);
                     respImage.Add(retImg);
                 }
             }
@@ -193,7 +193,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 .ToList()
                 .ForEach(img =>
                 {
-                    _appService.RemoverImagem(img, _caminho, out int statusCode, out object dadosRetorno);
+                    _appService.RemoverImagem(img, Path.Combine(_caminho, "item"), out int statusCode, out object dadosRetorno);
                     respExclusao.Add(dadosRetorno);
                 });
 
@@ -293,13 +293,13 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         ///                     "sucesso": true,
         ///                     "mensagem": "Imagem carregada com sucesso",
         ///                     "id": "a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed",
-        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.jpg"
+        ///                     "arquivo": "/images/item/289fbf37-eb30-4a18-ab28-ee394aa10e87/a3bd8eda-d692-4b9c-88d6-bc06ca7ae9ed.jpg"
         ///                 },
         ///                 {
         ///                     "sucesso": true,
         ///                     "mensagem": "Imagem carregada com sucesso",
         ///                     "id": "a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e",
-        ///                     "arquivo": "/images/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.jpg"
+        ///                     "arquivo": "/images/item/289fbf37-eb30-4a18-ab28-ee394aa10e87/a4e6a2dd-6431-4ca1-9aea-4b7d1734d13e.jpg"
         ///                 }
         ///             ]
         ///         }
@@ -453,7 +453,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpPost("imagem")]
         public IActionResult CarregarImagem([FromBody]ItemImagemRequest request)
         {
-            _appService.CarregarImagem(request.ItemId, request.NomeImagem, request.ImagemBase64, _caminho, out int statusCode, out object dadosRetorno);
+            _appService.CarregarImagem(request.ItemId, request.NomeImagem, request.ImagemBase64, Path.Combine(_caminho, "item"), out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
 
@@ -814,7 +814,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         [HttpDelete("imagem/{id:guid}")]
         public IActionResult ApagarImagem(Guid id)
         {
-            _appService.RemoverImagem(id, _caminho, out int statusCode, out object dadosRetorno);
+            _appService.RemoverImagem(id, Path.Combine(_caminho, "item"), out int statusCode, out object dadosRetorno);
             return StatusCode(statusCode, dadosRetorno);
         }
 
