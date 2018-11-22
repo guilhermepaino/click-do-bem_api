@@ -83,6 +83,10 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
 
             try
             {
+
+                if (File.Exists(nomeCompleto))
+                    File.Delete(nomeCompleto);
+
                 byte[] bytes = Convert.FromBase64String(imagemBase64);
                 File.WriteAllBytes(nomeCompleto, bytes);
             }
