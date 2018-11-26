@@ -188,7 +188,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                               s.Titulo,
                               s.Descricao,
                               s.Categoria,
-                              s.Pontuacao,
+                              s.Pontuacao Peso,
                               s.ValorFaixa,
                               s.GerenciadaRh
                             FROM
