@@ -334,7 +334,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Titulo = req.Titulo,
                 Descricao = req.Descricao,
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
-                Categoria = new CategoriaDto() { Id = req.CategoriaId },
+                Categoria = new CategoriaDto() { Id = req.CategoriaId.Value },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
                 Campanha = (req.CampanhaId.HasValue ? new CampanhaDto() { Id = req.CampanhaId.Value } : null),
                 Anonimo = req.Anonimo
@@ -741,7 +741,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Titulo = req.Titulo,
                 Descricao = req.Descricao,
                 TipoItem = new TipoItemDto() { Descricao = (req.TipoItem.Equals(1) ? "Necessidade" : "Doação") },
-                Categoria = new CategoriaDto() { Id = req.CategoriaId },
+                Categoria = new CategoriaDto() { Id = req.CategoriaId.Value },
                 Usuario = new UsuarioDto() { Id = _appUser.Id },
                 Campanha = (req.CampanhaId.HasValue ? new CampanhaDto() { Id = req.CampanhaId.Value } : null),
                 Anonimo = req.Anonimo
