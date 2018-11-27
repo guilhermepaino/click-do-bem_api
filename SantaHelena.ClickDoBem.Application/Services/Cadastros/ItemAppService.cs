@@ -151,7 +151,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
 
                     if (item.Anonimo && !_usuario.Perfis.Contains("Admin") && !item.Usuario.Id.Equals(usuarioId))
                     {
-                        item.Usuario.Nome = "** ANONIMO **";
+                        item.Usuario.Nome = "** ANÔNIMO **";
                         item.Usuario.UsuarioDados.Logradouro = "-";
                         item.Usuario.UsuarioDados.Numero = "-";
                         item.Usuario.UsuarioDados.Complemento = "-";
