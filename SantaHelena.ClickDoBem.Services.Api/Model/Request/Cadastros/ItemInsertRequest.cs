@@ -37,7 +37,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         /// <summary>
         /// Id da categoria (obrigatório)
         /// </summary>
-        [Required(ErrorMessage = "O Id da categoria deve ser informado")]
+        [Required(ErrorMessage = "A categoria deve ser informada")]
         public Guid? CategoriaId { get; set; }
 
         /// <summary>
