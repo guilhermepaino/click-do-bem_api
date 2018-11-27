@@ -332,6 +332,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 INNER JOIN Item i ON im.DoacaoId = i.Id
                                 INNER JOIN Usuario u ON i.UsuarioId = u.Id
                                 INNER JOIN Categoria c ON i.CategoriaId = c.Id
+                                WHERE i.Anonimo = 0
                                 GROUP BY u.Id, u.Nome
                             ) s
                             ORDER BY s.Pontuacao DESC, s.QtdDoacoes ASC, s.Nome ASC
@@ -351,6 +352,7 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 INNER JOIN Item i ON im.DoacaoId = i.Id
                                 INNER JOIN Categoria c ON i.CategoriaId = c.Id
                                 LEFT JOIN Campanha cmp ON i.CampanhaId = cmp.Id
+                                WHERE i.Anonimo = 0
                                 GROUP BY i.CampanhaId, cmp.Descricao, cmp.DataInicial, cmp.DataFinal
                             ) s
                             ORDER BY (CASE WHEN s.CampanhaId IS NULL THEN -999 ELSE s.Pontuacao END) DESC, s.QtdDoacoes ASC, 2 ASC
