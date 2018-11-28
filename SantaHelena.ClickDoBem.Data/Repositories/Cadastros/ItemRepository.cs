@@ -34,16 +34,14 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 im.Id,
                                 im.Data,
                                 tm.Descricao TipoMatch,
-                                (CASE WHEN di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN 
-                                    '** ANÔNIMO **'
-                                ELSE
-                                    du.Nome
-                                END) NomeDoador,
-                                (CASE WHEN ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN 
-                                    '** ANÔNIMO **'
-                                ELSE
-                                    nu.Nome
-                                END) NomeReceptor,
+                                (CASE WHEN di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN  '** ANÔNIMO **' ELSE du.Nome END) NomeDoador,
+                                (CASE WHEN di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN '--' ELSE dud.TelefoneFixo END) TelefoneDoador,
+                                (CASE WHEN di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN '--' ELSE dud.TelefoneCelular END) CelularDoador,
+                                (CASE WHEN di.Anonimo = 1 AND du.Id <> @puid AND {adm} = 0 THEN '--' ELSE dud.Email END) EmailDoador,
+                                (CASE WHEN ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN  '** ANÔNIMO **' ELSE nu.Nome END) NomeReceptor,
+                                (CASE WHEN ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN '--' ELSE nud.TelefoneFixo END) TelefoneReceptor,
+                                (CASE WHEN ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN '--' ELSE nud.TelefoneCelular END) CelularReceptor,
+                                (CASE WHEN ni.Anonimo = 1 AND nu.Id <> @puid AND {adm} = 0 THEN '--' ELSE nud.Email END) EmailReceptor,
                                 (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN ni.Titulo ELSE di.Titulo END) Titulo,
                                 (CASE WHEN im.TipoMatchId = 'b69eed4f-d87c-11e8-abfa-0e0e947bb2d6' THEN ni.Descricao ELSE di.Descricao END) Descricao,
                                 dc.Descricao Categoria,
@@ -55,9 +53,11 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                             FROM ItemMatch im
                             INNER JOIN Item di ON im.DoacaoId = di.Id
                             INNER JOIN Usuario du ON di.UsuarioId = du.Id
+                            INNER JOIN UsuarioDados dud ON du.Id = dud.UsuarioId
                             INNER JOIN Categoria dc ON di.CategoriaId = dc.Id
                             INNER JOIN Item ni ON im.NecessidadeId = ni.Id
                             INNER JOIN Usuario nu ON ni.UsuarioId = nu.Id
+                            INNER JOIN UsuarioDados nud ON nu.Id = nud.UsuarioId
                             INNER JOIN TipoMatch tm ON im.TipoMatchId = tm.Id
                             LEFT JOIN
                             (
