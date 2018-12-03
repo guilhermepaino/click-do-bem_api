@@ -1008,7 +1008,7 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
                 TipoItemId = tipoItemOposto.Id,
                 CategoriaId = itemAlvo.CategoriaId,
                 UsuarioId = _usuario.Id,
-                Anonimo = itemAlvo.Anonimo,
+                Anonimo = false,
                 ValorFaixaId = valorFaixaIdOposta,
                 GeradoPorMatch = true
             };
