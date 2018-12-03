@@ -29,6 +29,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SantaHelena.ClickDoBem.Services.Api", "SantaHelena.ClickDoBem.Services.Api\SantaHelena.ClickDoBem.Services.Api.csproj", "{9DE7201B-AD15-4324-B5B2-2D36FC3FE58A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9-DockerScripts", "9-DockerScripts", "{2FE02BE2-E5B2-4C68-A57E-2E0415862595}"
+	ProjectSection(SolutionItems) = preProject
+		dev-api.deploy.sh = dev-api.deploy.sh
+		hml-api.deploy.sh = hml-api.deploy.sh
+		prd-api.delpoy.sh = prd-api.delpoy.sh
+		reset-container.sh = reset-container.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
