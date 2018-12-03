@@ -184,7 +184,13 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                               s.DataInclusao,
                               s.DataEfetivacao,
                               s.Doador,
+                              s.TelefoneDoador,
+                              s.CelularDoador,
+                              s.EmailDoador,
                               s.Receptor,
+                              s.TelefoneReceptor,
+                              s.CelularReceptor,
+                              s.EmailReceptor,
                               s.Titulo,
                               s.Descricao,
                               s.Categoria,
@@ -199,7 +205,13 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 i.DataInclusao,
                                 im.Data DataEfetivacao,
                                 u.Nome Doador,
+                                ud.TelefoneFixo TelefoneDoador,
+                                ud.TelefoneCelular CelularDoador,
+                                ud.Email EmailDoador,
                                 un.Nome Receptor,
+                                und.TelefoneFixo TelefoneReceptor,
+                                und.TelefoneCelular CelularReceptor,
+                                und.Email EmailReceptor,
                                 i.Titulo,
                                 i.Descricao,
                                 c.Descricao Categoria,
@@ -210,8 +222,10 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                   INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
                                   INNER JOIN Categoria c ON i.CategoriaId = c.Id
                                   INNER JOIN Usuario u ON i.UsuarioId = u.Id
+                                  INNER JOIN UsuarioDados ud ON u.Id = ud.UsuarioId
                                   LEFT JOIN ItemMatch im ON i.Id = im.DoacaoId
                                   LEFT JOIN Usuario un ON im.UsuarioId = un.Id
+                                  LEFT JOIN UsuarioDados und ON un.Id = und.UsuarioId
                                   LEFT JOIN ValorFaixa vf ON im.ValorFaixaId = vf.Id
                               WHERE 
                                 ti.Descricao = 'Doação' 
@@ -228,7 +242,13 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                 i.DataInclusao,
                                 im.Data DataEfetivacao,
                                 ud.Nome Doador,
+                                udd.TelefoneFixo TelefoneDoador,
+                                udd.TelefoneCelular CelularDoador,
+                                udd.Email EmailDoador,
                                 u.Nome Receptor,
+                                udn.TelefoneFixo TelefoneReceptor,
+                                udn.TelefoneCelular CelularReceptor,
+                                udn.Email EmailReceptor,
                                 i.Titulo,
                                 i.Descricao,
                                 c.Descricao Categoria,
@@ -239,8 +259,10 @@ namespace SantaHelena.ClickDoBem.Data.Repositories.Cadastros
                                   INNER JOIN TipoItem ti ON i.TipoItemId = ti.Id
                                   INNER JOIN Categoria c ON i.CategoriaId = c.Id
                                   INNER JOIN Usuario u ON i.UsuarioId = u.Id
+                                  INNER JOIN UsuarioDados udn ON u.Id = udn.UsuarioId
                                   LEFT JOIN ItemMatch im ON i.Id = im.NecessidadeId
                                   LEFT JOIN Usuario ud ON im.UsuarioId = ud.Id
+                                  LEFT JOIN UsuarioDados udd ON ud.Id = udd.UsuarioId
                                   LEFT JOIN ValorFaixa vf ON im.ValorFaixaId = vf.Id
                               WHERE 
                                 ti.Descricao = 'Necessidade' 
