@@ -639,34 +639,24 @@
                  Resposta (array)
                  [
                      {
-                         "id": "guid",
-                         "dataInclusao": "YYYY-MM-DDThh:mm:ss",
-                         "dataAlteracao": "YYYY-MM-DDThh:mm:ss",
+                         "tipoItem": "string",
+                         "dataInclusao": "YYYY-MM-DDTHH:MM:SS",
+                         "dataEfetivacao": "YYYY-MM-DDTHH:MM:SS",
+                         "doador": "string",
+                         "telefoneDoador": "string",
+                         "celularDoador": "string",
+                         "emailDoador": "string",
+                         "receptor": "string",
+                         "telefoneReceptor": "string",
+                         "celularReceptor": "string",
+                         "emailReceptor": "string",
                          "titulo": "string",
                          "descricao": "string",
-                         "tipoItem": "string",
-                         "categoria": {
-                             "id": "guid",
-                             "descricao": "string",
-                             "pontuacao": int,
-                             "gerenciadaRh": bool
-                         },
-                         "usuario": {
-                             "id": "guid",
-                             "nome": "string",
-                             "cpfCnpj": "string"
-                         },
-                         "valorFaixa": {
-                             "id": "guid",
-                             "descricao": "string",
-                         },
-                         "anonimo": bool,
-                         "imagens":
-                         [
-                             "id": "guid",
-                             "nomeImagem": "string",
-                             "arquivo": "string"
-                         ]
+                         "categoria": "string",
+                         "peso": int,
+                         "valorFaixa": "string",
+                         "gerenciadaRh": boolean
+                         
                      }
                  ]
                  
