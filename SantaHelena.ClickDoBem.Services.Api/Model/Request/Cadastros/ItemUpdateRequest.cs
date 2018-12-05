@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
@@ -15,6 +16,11 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         /// </summary>
         [Key]
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Lista de Ids de imagens a serem excluídas
+        /// </summary>
+        public IEnumerable<Guid> ImgExcluir { get; set; }
 
     }
 

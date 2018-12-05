@@ -11,6 +11,8 @@ using SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros;
 using System.IO;
 using SantaHelena.ClickDoBem.Application.Dto.Cadastros;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Cadastros;
+using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
+using System;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 {
@@ -29,6 +31,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
         protected readonly IUsuarioAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IAppUser _usuario;
         private readonly string _caminho;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
@@ -43,10 +46,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         public ColaboradorController
         (
             IUsuarioAppService appService,
-            IHostingEnvironment hostingEnvironment
+            IHostingEnvironment hostingEnvironment,
+            IAppUser usuario
         )
         {
             _appService = appService;
+            _usuario = usuario;
             _hostingEnvironment = hostingEnvironment;
             _caminho = Directory.GetDirectories(_hostingEnvironment.WebRootPath).Where(x => x.EndsWith("tmp")).SingleOrDefault();
         }
@@ -89,7 +94,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// <param name="req">Modelo de requisição de cadastro de usuário</param>
         /// <response code="200">Cadastro realizado com sucesso</response>
         /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpPost]
@@ -162,12 +167,12 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <response code="200">Processamento do arquivo realizado com sucesso</response>
         /// <response code="400">Falha na requisição (arquivo inválido ou tamanho zero)</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Ocorreu alguma falha no processamento da request</response>
         [HttpPost("upload"), DisableRequestSizeLimit]
         [AllowAnonymous]
         public IActionResult Upload()
-        { 
+        {
 
             IFormFile file = null;
 
@@ -180,7 +185,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
             if (file.Length.Equals(0))
                 return BadRequest(new { sucesso = false, mensagem = "Arquivo enviado é inválido (tamanho zero)!" });
 
-            
+
             ArquivoDocumentoDto adt = _appService.ImportarArquivoColaborador(file, _caminho, out int statusCode);
             ArquivoDocumentoResponse result = new ArquivoDocumentoResponse()
             {
@@ -188,7 +193,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
                 Detalhe = adt.Detalhe,
                 Sucesso = adt.Sucesso
             };
-            if(adt.Linhas != null)
+            if (adt.Linhas != null)
                 adt.Linhas
                     .ToList()
                     .ForEach(l =>
@@ -198,6 +203,162 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
 
             return StatusCode(statusCode, result);
 
+        }
+
+        /// <summary>
+        /// Alterar os dados de um colaborador
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     ColaboradorUpdateRequest
+        ///     
+        ///     Exemplo:
+        ///     {
+        ///         "id": "guid",
+        ///         "nome": "JOAO DA SILVA",
+        ///         "dataNascimento": "1976-11-13",
+        ///         "endereco": {
+        ///             "logradouro": "RUA DOS BOBOS",
+        ///             "numero": "0",
+        ///             "complemento": "BLOCO A - APTO 00",
+        ///             "bairro": "PARQUE DOS DESORIENTADOS",
+        ///             "cidade": "ARARAQUARA",
+        ///             "uf": "SP",
+        ///             "cep": "16123789"
+        ///         },
+        ///         "telefoneFixo": "",
+        ///         "telefoneCelular": "(16)91234-1234",
+        ///         "email": "usuario.teste@s2it.com.br"
+        ///     }
+        /// 
+        /// </remarks>
+        /// <param name="request">Modelo de requisição de alteração de usuário</param>
+        /// <response code="200">Cadastro realizado com sucesso</response>
+        /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPut]
+        public IActionResult Editar([FromBody]ColaboradorUpdateRequest request)
+        {
+
+            if (!ModelState.IsValid)
+                return Response<ColaboradorUpdateRequest>(request);
+
+            if (!request.Id.Equals(_usuario.Id) && !_usuario.Perfis.Contains("Admin"))
+                return BadRequest(new { Sucesso = false, Mensagem = "Não é permitido alterar dados de outro usuário" });
+
+            UsuarioDto dto = new UsuarioDto()
+            {
+                Id = request.Id,
+                Nome = request.Nome,
+                UsuarioDados = new UsuarioDadosDto()
+                {
+                    DataNascimento = request.DataNascimento,
+                    Logradouro = request.Endereco.Logradouro,
+                    Numero = request.Endereco.Numero,
+                    Complemento = request.Endereco.Complemento,
+                    Bairro = request.Endereco.Bairro,
+                    Cidade = request.Endereco.Cidade,
+                    UF = request.Endereco.Uf,
+                    CEP = request.Endereco.Cep,
+                    TelefoneFixo = request.TelefoneFixo,
+                    TelefoneCelular = request.TelefoneCelular,
+                    Email = request.Email
+                }
+            };
+
+            _appService.AlterarColaborador(dto, out int statusCode, out object dados);
+
+            return StatusCode(statusCode, dados);
+
+        }
+
+        /// <summary>
+        /// Listar todos os registros de usuários
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     url: [URI]/api/versao/colaborador
+        ///     
+        ///     Exemplo:
+        ///     [
+        ///         {
+        ///             "id": "guid",
+        ///             "nome": "JOAO DA SILVA",
+        ///             "dataNascimento": "1976-11-13",
+        ///             "endereco": {
+        ///                 "logradouro": "RUA DOS BOBOS",
+        ///                 "numero": "0",
+        ///                 "complemento": "BLOCO A - APTO 00",
+        ///                 "bairro": "PARQUE DOS DESORIENTADOS",
+        ///                 "cidade": "ARARAQUARA",
+        ///                 "uf": "SP",
+        ///                 "cep": "16123789"
+        ///             },
+        ///             "telefoneFixo": "",
+        ///             "telefoneCelular": "(16)91234-1234",
+        ///             "email": "usuario.teste@s2it.com.br"
+        ///         }
+        ///     ]
+        /// 
+        /// </remarks>
+        /// <response code="200">Retorno de dados com sucesso</response>
+        /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet]
+        public IActionResult Listar()
+        {
+            return Ok(_appService.ObterTodos());
+        }
+
+        /// <summary>
+        /// Pesquisar usuário pelo Id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     url: [URI]/api/versao/colaborador/2ef307a6-c4a5-11e8-8776-0242ac110006
+        ///     
+        ///     Exemplo:
+        ///     {
+        ///         "id": "guid",
+        ///         "nome": "JOAO DA SILVA",
+        ///         "dataNascimento": "1976-11-13",
+        ///         "endereco": {
+        ///             "logradouro": "RUA DOS BOBOS",
+        ///             "numero": "0",
+        ///             "complemento": "BLOCO A - APTO 00",
+        ///             "bairro": "PARQUE DOS DESORIENTADOS",
+        ///             "cidade": "ARARAQUARA",
+        ///             "uf": "SP",
+        ///             "cep": "16123789"
+        ///         },
+        ///         "telefoneFixo": "",
+        ///         "telefoneCelular": "(16)91234-1234",
+        ///         "email": "usuario.teste@s2it.com.br"
+        ///     }
+        /// 
+        /// </remarks>
+        /// <response code="200">Retorno de dados com sucesso</response>
+        /// <response code="400">Falha na requisição, detalhes na mensagem (exemplo: Usuário já cadastrado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="404">Registro de pré-cadastro não encontrado, detalhes no campo mensagem</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpGet("{id:guid}")]
+        public IActionResult Pesquisar(Guid id)
+        {
+            return Ok(_appService.ObterPorId(id));
         }
 
         #endregion

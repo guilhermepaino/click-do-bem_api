@@ -44,6 +44,11 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
             services.AddScoped<ITipoItemRepository, TipoItemRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IItemImagemRepository, ItemImagemRepository>();
+            services.AddScoped<IItemMatchRepository, ItemMatchRepository>();
+            services.AddScoped<ITipoMatchRepository, TipoMatchRepository>();
+            services.AddScoped<IValorFaixaRepository, ValorFaixaRepository>();
+            services.AddScoped<ICampanhaRepository, CampanhaRepository>();
+            services.AddScoped<ICampanhaImagemRepository, CampanhaImagemRepository>();
 
             // Domain
             services.AddScoped<IUsuarioDomainService, UsuarioDomainService>();
@@ -55,12 +60,19 @@ namespace SantaHelena.ClickDoBem.Infra.CrossCutting.IoC
             services.AddScoped<ITipoItemDomainService, TipoItemDomainService>();
             services.AddScoped<IItemDomainService, ItemDomainService>();
             services.AddScoped<IItemImagemDomainService, ItemImagemDomainService>();
+            services.AddScoped<IItemMatchDomainService, ItemMatchDomainService>();
+            services.AddScoped<ITipoMatchDomainService, TipoMatchDomainService>();
+            services.AddScoped<IValorFaixaDomainService, ValorFaixaDomainService>();
+            services.AddScoped<ICampanhaDomainService, CampanhaDomainService>();
+            services.AddScoped<ICampanhaImagemDomainService, CampanhaImagemDomainService>();
 
             // Application
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             services.AddScoped<ICategoriaAppService, CategoriaAppService>();
             services.AddScoped<IItemAppService, ItemAppService>();
             services.AddScoped<ITipoItemAppService, TipoItemAppService>();
+            services.AddScoped<IValorFaixaAppService, ValorFaixaAppService>();
+            services.AddScoped<ICampanhaAppService, CampanhaAppService>();
 
             // Infra.CrossCutting.Common
             services.AddScoped<IAppUser, AppUser>();

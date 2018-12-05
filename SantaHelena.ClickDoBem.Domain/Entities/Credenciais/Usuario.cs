@@ -70,6 +70,8 @@ namespace SantaHelena.ClickDoBem.Domain.Entities.Credenciais
         
         public ICollection<Item> Itens { get; set; }
 
+        public ICollection<ItemMatch> Matches { get; set; }
+
         #endregion
 
         #region Métodos Locais

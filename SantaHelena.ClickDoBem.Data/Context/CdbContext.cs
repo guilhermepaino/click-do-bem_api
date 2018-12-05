@@ -34,7 +34,6 @@ namespace SantaHelena.ClickDoBem.Data.Context
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
 
-
             // Mapping das tabelas
             modelBuilder.ApplyConfiguration(new UsuarioMapping());
             modelBuilder.ApplyConfiguration(new UsuarioLoginMapping());
@@ -45,6 +44,11 @@ namespace SantaHelena.ClickDoBem.Data.Context
             modelBuilder.ApplyConfiguration(new TipoItemMapping());
             modelBuilder.ApplyConfiguration(new ItemMapping());
             modelBuilder.ApplyConfiguration(new ItemImagemMapping());
+            modelBuilder.ApplyConfiguration(new ItemMatchMapping());
+            modelBuilder.ApplyConfiguration(new TipoMatchMapping());
+            modelBuilder.ApplyConfiguration(new ValorFaixaMapping());
+            modelBuilder.ApplyConfiguration(new CampanhaMapping());
+            modelBuilder.ApplyConfiguration(new CampanhaImagemMapping());
 
         }
 
@@ -64,7 +68,7 @@ namespace SantaHelena.ClickDoBem.Data.Context
                         break;
                     case EntityState.Modified:
                         entry.Property("DataAlteracao").CurrentValue = DateTime.Now;
-                        entry.Property("DataAlteracao").IsModified = false;
+                        entry.Property("DataAlteracao").IsModified = true;
                         break;
                 }
             }
@@ -93,6 +97,16 @@ namespace SantaHelena.ClickDoBem.Data.Context
         public virtual DbSet<Item> Item { get; set; }
 
         public virtual DbSet<ItemImagem> ItemImagem { get; set; }
+
+        public virtual DbSet<ItemMatch> ItemMatch { get; set; }
+
+        public virtual DbSet<TipoMatch> TipoMatch { get; set; }
+
+        public virtual DbSet<ValorFaixa> ValorFaixa { get; set; }
+
+        public virtual DbSet<Campanha> Campanha { get; set; }
+
+        public virtual DbSet<CampanhaImagem> CampanhaImagem { get; set; }
 
         #endregion
 

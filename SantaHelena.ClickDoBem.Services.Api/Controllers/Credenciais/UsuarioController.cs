@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using SantaHelena.ClickDoBem.Application.Dto.Credenciais;
 using SantaHelena.ClickDoBem.Application.Interfaces.Credenciais;
+using SantaHelena.ClickDoBem.Domain.Core.Interfaces;
 using SantaHelena.ClickDoBem.Services.Api.Identity;
 using SantaHelena.ClickDoBem.Services.Api.Model.Request.Credenciais;
 using SantaHelena.ClickDoBem.Services.Api.Model.Response.Credenciais;
@@ -31,6 +36,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
 
         protected readonly IUsuarioAppService _appService;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IAppUser _usuario;
         protected readonly JwtTokenOptions _jwtTokenOptions;
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
@@ -46,12 +52,100 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         (
             IUsuarioAppService appService,
             IHostingEnvironment hostingEnvironment,
-            IOptions<JwtTokenOptions> jwtTokenOptions
+            IOptions<JwtTokenOptions> jwtTokenOptions,
+            IAppUser usuario
         )
         {
             _jwtTokenOptions = jwtTokenOptions.Value;
             _appService = appService;
             _hostingEnvironment = hostingEnvironment;
+            _usuario = usuario;
+
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            Configuration = builder.Build();
+
+        }
+
+        #endregion
+
+        #region Propriedades
+
+        /// <summary>
+        /// Propriedade de configuração
+        /// </summary>
+        public IConfigurationRoot Configuration { get; set; }
+
+        #endregion
+
+        #region Métodos Locais
+
+        /// <summary>
+        /// Gerar token
+        /// </summary>
+        /// <returns>string contendo o token</returns>
+        protected string GeraToken(UsuarioDto usuarioDto, IList<string> perfis, out DateTime? validade)
+        {
+            IList<Claim> claimnsUsuario = new List<Claim>();
+
+            claimnsUsuario.Add(new Claim(ClaimTypes.Hash, usuarioDto.Id.ToString()));
+            claimnsUsuario.Add(new Claim(ClaimTypes.Surname, usuarioDto.UsuarioLogin.Login));
+            claimnsUsuario.Add(new Claim(ClaimTypes.Name, usuarioDto.Nome));
+
+            foreach (string p in usuarioDto.UsuarioPerfil)
+            {
+                claimnsUsuario.Add(new Claim(ClaimTypes.Role, p));
+                perfis.Add(p);
+            }
+
+            JwtSecurityToken jwt = new JwtSecurityToken(
+                 issuer: _jwtTokenOptions.Issuer,
+                 audience: _jwtTokenOptions.Audience,
+                 claims: claimnsUsuario,
+                 notBefore: _jwtTokenOptions.NotBefore,
+                 expires: _jwtTokenOptions.Expiration,
+                 signingCredentials: _jwtTokenOptions.SigningCredentials);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(jwt);
+            validade = jwt.ValidTo;
+
+            return token;
+
+        }
+
+        /// <summary>
+        /// Obter o cpf do token
+        /// </summary>
+        /// <param name="token">token enviado</param>
+        /// <param name="cpf">Variável de saída do cpf</param>
+        /// <param name="validade">Variável de saída da data de validade do token</param>
+        protected void ObterCpfToken(string token, out string cpf, out DateTime validade)
+        {
+
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            SecurityToken tokenSecure = handler.ReadToken(token) as SecurityToken;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtTokenSecurity:SecretKey"]);
+
+            TokenValidationParameters validations = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = false,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+
+            ClaimsPrincipal claims = handler.ValidateToken(token, validations, out tokenSecure);
+            Claim surname = claims.Claims.Where(c => c.Type.Equals(ClaimTypes.Surname)).FirstOrDefault();
+            cpf = surname.Value.ToString();
+            validade = tokenSecure.ValidTo;
+
         }
 
         #endregion
@@ -79,8 +173,37 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         ///         "perfis" : [
         ///             "Admin",
         ///             "Colaborador"
-        ///         ]
-        ///     }
+        ///         ],
+        ///         "usuario": {
+        ///             "id": "guid",
+        ///             "dataInclusao": "2018-10-08T12:18:36",
+        ///             "dataAlteracao": null,
+        ///             "cpfCnpj": "00000000000",
+        ///             "nome": "string",
+        ///             "usuarioLogin": {
+        ///                 "login": "string",
+        ///                 "senha": "*ENCRYPTED*"
+        ///             },
+        ///             "usuarioDados": {
+        ///                 "id": "guid",
+        ///                 "dataInclusao": "2018-10-08T12:18:36",
+        ///                 "dataAlteracao": null,
+        ///                 "dataNascimento": "AAAA-MM-DD",
+        ///                 "logradouro": "string",
+        ///                 "numero": "string",
+        ///                 "complemento": "string",
+        ///                 "bairro": "string",
+        ///                 "cidade": "string",
+        ///                 "uf": "string",
+        ///                 "cep": "string",
+        ///                 "telefoneCelular": "string",
+        ///                 "telefoneFixo": "string",
+        ///                 "email": "email@provedor"
+        ///             },
+        ///             "usuarioPerfil": [
+        ///                 "Colaborador"
+        ///             ]
+        ///         }
         ///     
         /// </remarks>
         /// <param name="request">Informações da requisição</param>
@@ -93,7 +216,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         {
 
             string token = null;
-            DateTime? validade = null;
+            DateTime? validade;
             int statusCode = StatusCodes.Status403Forbidden;
             IList<string> perfis = new List<string>();
 
@@ -104,30 +227,148 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
 
                 statusCode = StatusCodes.Status200OK;
 
-                IList<Claim> claimnsUsuario = new List<Claim>();
+                token = GeraToken(usuarioDto, perfis, out validade);
 
-                claimnsUsuario.Add(new Claim(ClaimTypes.Hash, usuarioDto.Id.ToString()));
-                claimnsUsuario.Add(new Claim(ClaimTypes.Surname, usuarioDto.UsuarioLogin.Login));
-                claimnsUsuario.Add(new Claim(ClaimTypes.Name, usuarioDto.Nome));
-
-                foreach (string p in usuarioDto.UsuarioPerfil)
-                {
-                    claimnsUsuario.Add(new Claim(ClaimTypes.Role, p));
-                    perfis.Add(p);
-                }
-
-                JwtSecurityToken jwt = new JwtSecurityToken(
-                     issuer: _jwtTokenOptions.Issuer,
-                     audience: _jwtTokenOptions.Audience,
-                     claims: claimnsUsuario,
-                     notBefore: _jwtTokenOptions.NotBefore,
-                     expires: _jwtTokenOptions.Expiration,
-                     signingCredentials: _jwtTokenOptions.SigningCredentials);
-
-                token = new JwtSecurityTokenHandler().WriteToken(jwt);
-                validade = DateTime.Now.AddMilliseconds((int)_jwtTokenOptions.ValidFor.TotalSeconds);
             }
-            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade, perfis));
+            else
+            {
+                validade = null;
+            }
+            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade, perfis, usuarioDto));
+        }
+        
+
+        /// <summary>
+        /// Realizar a recuperação da senha do colaborador
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     {
+        ///         "cpfCnpj": "string",
+        ///         "dataNascimento": "AAAA-MM-DD",
+        ///         "novaSenha": "string",
+        ///         "confirmarSenha": "string"
+        ///     }
+        ///     
+        ///     Resposta
+        ///     {
+        ///         "sucesso" : boolean,
+        ///         "mensagem": "texto com o resultado da operação"
+        ///     }
+        ///     
+        /// </remarks>
+        [HttpPost("esquecisenha")]
+        [AllowAnonymous]
+        public IActionResult EsqueciSenha([FromBody] EsqueciSenhaRequest request)
+        {
+            if (!ModelState.IsValid)
+                return Response<EsqueciSenhaRequest>(request);
+
+            bool sucesso = _appService.EsqueciSenha(request.CpfCnpj, request.DataNascimento, request.NovaSenha, request.ConfirmarSenha, out int statusCode, out string mensagem);
+            return StatusCode(statusCode, new { Sucesso = sucesso, Mensagem = mensagem });
+        }
+
+        /// <summary>
+        /// Realizar a troca de senha do colaborador
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        /// 
+        ///     Requisição
+        ///     {
+        ///         "documento": "string",
+        ///         "senhaAtual": "hashMD5",
+        ///         "novaSenha": "string",
+        ///         "confirmarSenha": "string"
+        ///     }
+        ///     
+        ///     Resposta
+        ///     {
+        ///         "sucesso": boolean,
+        ///         "mensagem": "texto com o resultado da operação"
+        ///     }
+        /// 
+        /// </remarks>
+        [HttpPost("trocarsenha")]
+        public IActionResult AlterarSenha([FromBody] TrocaSenhaRequest request)
+        {
+
+            if (!ModelState.IsValid)
+                return Response<TrocaSenhaRequest>(request);
+
+            bool sucesso = _appService.TrocarSenha(_usuario, request.SenhaAtual, request.NovaSenha, request.ConfirmarSenha, out int statusCode, out string mensagem);
+            return StatusCode(statusCode, new { Sucesso = sucesso, Mensagem = mensagem });
+
+
+        }
+
+        /// <summary>
+        /// Realizar a atualização (refresh) de um token expirado
+        /// </summary>
+        /// <remarks>
+        /// Contrato
+        ///
+        ///     Requisição
+        ///     {
+        ///        "token": "string",
+        ///     }
+        ///     
+        ///     Resposta
+        ///     { 
+        ///         "sucesso" : "true",
+        ///         "mensagem" : {
+        ///             "token": "string"
+        ///         }
+        ///     }
+        ///     
+        /// </remarks>
+        /// <param name="request">Informações da requisição</param>
+        /// <response code="200">Sucesso na geraçãod de novo token</response>
+        /// <response code="403">Falha na autenticação/Acesso Negado</response>
+        /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        public IActionResult AtualizarToken([FromBody]RefreshTokenRequest request)
+        {
+
+            int statusCode = StatusCodes.Status403Forbidden;
+            DateTime? validade;
+            IList<string> perfis = new List<string>();
+            string token = null;
+
+            ObterCpfToken(request.Token, out string cpf, out DateTime validadeTokenAntigo);
+            if (validadeTokenAntigo.AddDays(10) < DateTime.UtcNow)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new
+                {
+                    Sucesso = false,
+                    Mensagem = "Data de renovação de token expirada"
+                });
+            }
+
+            bool autenticado = _appService.Autenticar(cpf, out string mensagem, out UsuarioDto usuarioDto);
+            if (usuarioDto == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new
+                {
+                    Sucesso = false,
+                    Mensagem = mensagem
+                });
+            }
+
+            if (autenticado)
+            {
+                statusCode = StatusCodes.Status200OK;
+                token = GeraToken(usuarioDto, perfis, out validade);
+            }
+            else
+            {
+                validade = null;
+            }
+            return StatusCode(statusCode, new AutenticacaoResponse(autenticado, mensagem, token, validade, perfis, usuarioDto));
+
         }
 
         /// <summary>
@@ -176,7 +417,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// </remarks>
         /// <returns>Lista dos registros cadastrados</returns>
         /// <response code="200">Retorna a lista de registros cadastrados</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet]
         public IActionResult Listar([FromQuery]string perfil)
@@ -213,7 +454,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Credenciais
         /// </remarks>
         /// <returns>Situação de cadastro do documento</returns>
         /// <response code="200">Sucesso na busca</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet("verificadocumento/{documento}")]
         [AllowAnonymous]

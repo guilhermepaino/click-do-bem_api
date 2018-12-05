@@ -14,6 +14,7 @@ using System.Net.Http.Headers;
 using System.IO;
 using SantaHelena.ClickDoBem.Domain.Core.Tools;
 using SantaHelena.ClickDoBem.Domain.Core.Enums;
+using SantaHelena.ClickDoBem.Domain.Core.Security;
 
 namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 {
@@ -28,7 +29,9 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
         protected readonly IUnitOfWork _uow;
         protected readonly IUsuarioDomainService _dmn;
+        protected readonly IUsuarioDadosDomainService _dadosDomain;
         protected readonly IDocumentoHabilitadoDomainService _docHabDomain;
+        protected readonly IUsuarioLoginDomainService _loginDomain;
 
         #endregion
 
@@ -41,12 +44,16 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
         (
             IUnitOfWork uow,
             IUsuarioDomainService dmn,
-            IDocumentoHabilitadoDomainService docHabDomain
+            IDocumentoHabilitadoDomainService docHabDomain,
+            IUsuarioLoginDomainService loginDomain,
+            IUsuarioDadosDomainService dadosDomain
         )
         {
             _uow = uow;
             _dmn = dmn;
             _docHabDomain = docHabDomain;
+            _loginDomain = loginDomain;
+            _dadosDomain = dadosDomain;
         }
 
         #endregion
@@ -65,12 +72,15 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                 Nome = dto.Nome
             };
 
-            usuario.UsuarioLogin = new UsuarioLogin()
+            if (dto.UsuarioLogin != null)
             {
-                UsuarioId = usuario.Id,
-                Login = dto.UsuarioLogin.Login,
-                Senha = dto.UsuarioLogin.Senha
-            };
+                usuario.UsuarioLogin = new UsuarioLogin()
+                {
+                    UsuarioId = usuario.Id,
+                    Login = dto.UsuarioLogin.Login,
+                    Senha = dto.UsuarioLogin.Senha
+                };
+            }
 
             usuario.UsuarioDados = new UsuarioDados()
             {
@@ -96,17 +106,22 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
 
         protected void ConverterDtoPerfilEmEntidadePerfil(Usuario usuario, IEnumerable<string> perfisDto)
         {
-
-            if (perfisDto.Count() > 0)
+            if (perfisDto != null)
             {
-                perfisDto
-                    .ToList()
-                    .ForEach(p =>
-                    {
-                        usuario.Perfis.Add(new UsuarioPerfil() { UsuarioId = usuario.Id, Perfil = p });
-                    });
+
+                if (perfisDto.Count() > 0)
+                {
+                    perfisDto
+                        .ToList()
+                        .ForEach(p =>
+                        {
+                            usuario.Perfis.Add(new UsuarioPerfil() { UsuarioId = usuario.Id, Perfil = p });
+                        });
+
+                }
 
             }
+
         }
 
         protected override UsuarioDto ConverterEntidadeEmDto(Usuario usuario)
@@ -210,6 +225,36 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             }
             mensagem = "Usuário autenticado";
             return true;
+
+        }
+
+        /// <summary>
+        /// Autenticar usuário através do documento
+        /// </summary>
+        /// <param name="documento">Número do documento</param>
+        /// <param name="mensagem">Mensagem de saída do resultado da autenticação</param>
+        /// <param name="usuarioDto">Objeto Dto para saida do usuário</param>
+        public bool Autenticar(string documento, out string mensagem, out UsuarioDto usuarioDto)
+        {
+
+            Usuario usr = _dmn.ObterPorDocumento(documento);
+            DocumentoHabilitado doc = _docHabDomain.ObterPorDocumento(documento);
+            usuarioDto = ConverterEntidadeEmDto(usr);
+            if (usr == null || doc == null)
+            {
+                mensagem = "Usuário e/ou senha inválido!";
+                return false;
+            }
+
+            if (!doc.Ativo)
+            {
+                mensagem = "Usuário inativo!";
+                return false;
+            }
+
+            mensagem = "Usuário autenticado";
+            return true;
+
         }
 
         /// <summary>
@@ -274,6 +319,58 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
                         statusCode = StatusCodes.Status200OK;
 
                     }
+
+                }
+
+            }
+
+        }
+
+        /// <summary>
+        /// Alterar o cadastro de um colaborador
+        /// </summary>
+        /// <param name="dto">Objeto Data-Transport</param>
+        /// <param name="statusCode">Variável de saído do código de status</param>
+        /// <param name="dados">Variável de saída da mensagem</param>
+        public void AlterarColaborador(UsuarioDto dto, out int statusCode, out object dados)
+        {
+
+            // Verificar se o usuário já está cadastrado
+            Usuario usuario = _dmn.ObterPorId(dto.Id);
+            if (usuario == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                dados = new { sucesso = false, mensagem = "Usuário não encontrado" };
+            }
+            else
+            {
+
+                usuario.Nome = dto.Nome;
+                usuario.UsuarioDados.DataNascimento = dto.UsuarioDados.DataNascimento;
+                usuario.UsuarioDados.Logradouro = dto.UsuarioDados.Logradouro;
+                usuario.UsuarioDados.Numero = dto.UsuarioDados.Numero;
+                usuario.UsuarioDados.Complemento = dto.UsuarioDados.Complemento;
+                usuario.UsuarioDados.Bairro = dto.UsuarioDados.Bairro;
+                usuario.UsuarioDados.Cidade = dto.UsuarioDados.Cidade;
+                usuario.UsuarioDados.UF = dto.UsuarioDados.UF;
+                usuario.UsuarioDados.CEP = dto.UsuarioDados.CEP;
+                usuario.UsuarioDados.TelefoneFixo = dto.UsuarioDados.TelefoneFixo;
+                usuario.UsuarioDados.TelefoneCelular = dto.UsuarioDados.TelefoneCelular;
+                usuario.UsuarioDados.Email = dto.UsuarioDados.Email;
+
+                if (!usuario.EstaValido())
+                {
+                    dados = new { sucesso = false, mensagem = usuario.ValidationResult.ToString() };
+                    statusCode = StatusCodes.Status400BadRequest;
+                }
+                else
+                {
+
+                    _dmn.Atualizar(usuario);
+                    _uow.Efetivar();
+
+                    dados = new { sucesso = true, mensagem = "Registro alterado com sucesso" };
+                    statusCode = StatusCodes.Status200OK;
 
                 }
 
@@ -460,7 +557,150 @@ namespace SantaHelena.ClickDoBem.Application.Services.Credenciais
             _dmn.VerificarSituacaoDocumento(documento, out situacao, out cadastrado);
         }
 
+        /// <summary>
+        /// Realizar a recuperação de senha
+        /// </summary>
+        /// <param name="cpfCnpj">Número do cpf/cpf do usuário</param>
+        /// <param name="dataNascimento">Data de nascimento do usuário</param>
+        /// <param name="novaSenha">Nova senha</param>
+        /// <param name="confirmarSenha">Confirmação de senha</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="mensagem">Variável de saída de mensagem com o resultado da operação</param>
+        /// <returns></returns>
+        public bool EsqueciSenha(string cpfCnpj, DateTime? dataNascimento, string novaSenha, string confirmarSenha, out int statusCode, out string mensagem)
+        {
+
+            statusCode = StatusCodes.Status400BadRequest;
+            mensagem = "Dados Inválidos";
+
+            // Localizando usuario
+            Usuario usuario = _dmn.ObterPorDocumento(cpfCnpj);
+            DocumentoHabilitado doc = _docHabDomain.ObterPorDocumento(cpfCnpj);
+            if (usuario == null || doc == null)
+                return false;
+
+            if (usuario.UsuarioDados == null)
+                return false;
+
+            if (dataNascimento.Value != usuario.UsuarioDados.DataNascimento)
+                return false;
+
+            try
+            {
+
+                if (!doc.Ativo)
+                {
+                    mensagem = "Documento não encontrado ou inativo! Entre em contato com o RH";
+                    return false;
+                }
+
+                UsuarioLogin login = _loginDomain.ObterPorId(usuario.Id);
+                if (login == null)
+                    return false;
+
+                login.Senha = MD5.ByteArrayToString(MD5.HashMD5(novaSenha));
+                _loginDomain.Atualizar(login);
+                _uow.Efetivar();
+
+                statusCode = StatusCodes.Status200OK;
+                mensagem = "Senha recuperada com sucesso";
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+                mensagem = $"Falha na troca de senha [{ex.Message} - {ex.StackTrace}]";
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Realizar a troca de senha do usuário
+        /// </summary>
+        /// <param name="usuarioLogado">Id do usuário</param>
+        /// <param name="senhaAtual">Senha atual (MD5)</param>
+        /// <param name="novaSenha">Nova senha</param>
+        /// <param name="confirmarSenha">Confirmação de senha</param>
+        /// <param name="statusCode">Variável de saída de StatusCode</param>
+        /// <param name="mensagem">Variável de saída de mensagem com o resultado da operação</param>
+        public bool TrocarSenha(IAppUser usuarioLogado, string senhaAtual, string novaSenha, string confirmarSenha, out int statusCode, out string mensagem)
+        {
+
+            // Localizando usuario
+            Usuario usuario = _dmn.ObterPorLogin(usuarioLogado.Login, senhaAtual);
+
+            if (usuario == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                mensagem = "Usuário e/ou senha inválidos!";
+                return false;
+            }
+
+            if (usuario.UsuarioDados == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                mensagem = "Dados do usuário não localizado";
+                return false;
+            }
+
+            DocumentoHabilitado doc = _docHabDomain.ObterPorDocumento(usuario.CpfCnpj);
+            if (doc == null)
+            {
+                statusCode = StatusCodes.Status400BadRequest;
+                mensagem = "Dados do usuário não localizado";
+                return false;
+            }
+            else
+            {
+                if (!doc.Ativo)
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    mensagem = "Documento não encontrado ou inativo! Entre em contato com o RH";
+                    return false;
+                }
+                 
+            }
+
+            try
+            {
+
+                UsuarioLogin login = _loginDomain.ObterPorId(usuario.Id);
+                if (login == null)
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    mensagem = "Dados de login não localizado";
+                    return false;
+                }
+
+                if (novaSenha.Equals(usuario.UsuarioDados.DataNascimento.Value.ToString("ddMMyyyy")))
+                {
+                    statusCode = StatusCodes.Status400BadRequest;
+                    mensagem = "A senha não pode ser igual a data de nascimento";
+                    return false;
+                }
+
+                login.Senha = MD5.ByteArrayToString(MD5.HashMD5(novaSenha));
+                _loginDomain.Atualizar(login);
+                _uow.Efetivar();
+
+                statusCode = StatusCodes.Status200OK;
+                mensagem = "Senha alterada com sucesso";
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+                mensagem = $"Falha na troca de senha [{ex.Message} - {ex.StackTrace}]";
+                return false;
+            }
+
+        }
+
         #endregion
 
     }
+
 }

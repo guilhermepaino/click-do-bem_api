@@ -2,7 +2,7 @@
 {
 
     /// <summary>
-    /// Request de Upload de Imagens
+    /// Request de upload de imagens de itens
     /// </summary>
     public class SimpleImagemRequest
     {
@@ -15,8 +15,6 @@
         /// <summary>
         /// Expressão string do arquivo (Base64)
         /// </summary>
-        /// <seealso cref="https://pt.wikipedia.org/wiki/Base64"/>
-        /// <seealso cref="https://www.4devs.com.br/codificar_decodificar_base64"/>
         public string ImagemBase64 { get; set; }
 
     }

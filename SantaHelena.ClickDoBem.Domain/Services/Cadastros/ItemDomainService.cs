@@ -17,6 +17,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
 
         protected readonly IUnitOfWork _uow;
         protected readonly IItemImagemDomainService _imgDomain;
+        protected readonly IAppUser _usuario;
 
         #endregion
 
@@ -30,11 +31,13 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
         (
             IUnitOfWork uow,
             IItemRepository repository,
-            IItemImagemDomainService imgDomain
+            IItemImagemDomainService imgDomain,
+            IAppUser usuario
         ) : base(repository)
         {
             _uow = uow;
             _imgDomain = imgDomain;
+            _usuario = usuario;
         }
 
         #endregion
@@ -42,14 +45,22 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
         #region Métodos públicos
 
         /// <summary>
+        /// Obter todos os registros
+        /// </summary>
+        /// <param name="incluirMatches">Flag indicando se vai incluir os itens de matches</param>
+        public IEnumerable<Item> ObterTodos(bool incluirMatches) => _repository.ObterTodos(incluirMatches);
+
+        /// <summary>
         /// Obter registros de necessidades
         /// </summary>
-        public IEnumerable<Item> ObterNecessidades() => _repository.ObterNecessidades();
+        /// <param name="incluirMatches">Flag indicando se vai incluir os itens de matches</param>
+        public IEnumerable<Item> ObterNecessidades(bool incluirMatches) => _repository.ObterNecessidades(incluirMatches);
 
         /// <summary>
         /// Obter registros de doações
         /// </summary>
-        public IEnumerable<Item> ObterDoacoes() => _repository.ObterDoacoes();
+        /// <param name="incluirMatches">Flag indicando se vai incluir os itens de matches</param>
+        public IEnumerable<Item> ObterDoacoes(bool incluirMatches) => _repository.ObterDoacoes(incluirMatches);
 
         /// <summary>
         /// Pesquisar itens com base nos filtros informados
@@ -60,6 +71,32 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
         /// <param name="categoriaId">Id da categoria</param>
         public IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId)
             => _repository.Pesquisar(dataInicial, dataFinal, tipoItemId, categoriaId);
+
+        /// <summary>
+        /// Listar os matches realizados com base nos filtros informados
+        /// </summary>
+        /// <param name="dataInicial">Data inicial do período</param>
+        /// <param name="dataFinal">Data final do período</param>
+        /// <param name="categoriaId">Id da categoria</param>
+        /// <param name="efetivados">Boolean indicando se é para listar efetivados ou não efetivados (null = lista todos)</param>
+        public IEnumerable<ItemMatchReportDto> ListarMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados)
+            => _repository.ListarMatches(_usuario.Id, dataInicial, dataFinal, categoriaId, efetivados);
+
+        /// <summary>
+        /// Listar os matches realizados do usuário logado
+        /// </summary>
+        public IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId)
+            => _repository.ListarMatches(usuarioId);
+
+        /// <summary>
+        /// Pesquisar itens livres para matches com base nos filtros informados
+        /// </summary>
+        /// <param name="dataInicial">Data inicial do período</param>
+        /// <param name="dataFinal">Data final do período</param>
+        /// <param name="tipoItemId">Id do tipo de item</param>
+        /// <param name="categoriaId">Id da categoria</param>
+        public IEnumerable<Item> PesquisarParaMatches(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId)
+            => _repository.PesquisarParaMatche(dataInicial, dataFinal, categoriaId);
 
         /// <summary>
         /// Carrega uma imagem para um item
@@ -92,9 +129,9 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                 ItemId = item.Id,
                 NomeOriginal = nomeImagem
             };
-            string arquivo = $"{imagem.Id.ToString()}.png";
+            string arquivo = $"{imagem.Id.ToString()}.jpg";
             string nomeCompleto = Path.Combine(pastaItem, arquivo);
-            string caminhoUrl = $"/images/{item.Id.ToString()}/{imagem.Id.ToString()}.png";
+            string caminhoUrl = $"/images/item/{item.Id.ToString()}/{imagem.Id.ToString()}.jpg";
             imagem.Caminho = caminhoUrl;
 
             try
@@ -112,8 +149,20 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                 return false;
             }
 
-            byte[] bytes = Convert.FromBase64String(imagemBase64);
-            File.WriteAllBytes(nomeCompleto, bytes);
+            try
+            {
+                byte[] bytes = Convert.FromBase64String(imagemBase64);
+                File.WriteAllBytes(nomeCompleto, bytes);
+            }
+            catch (Exception ex)
+            {
+                dadosRetorno = new
+                {
+                    Sucesso = false,
+                    Mensagem = $"Falha ao converter Base64 em Imagem - {ex.Message} - {ex.StackTrace}"
+                };
+                return false;
+            }
 
             try
             {
@@ -160,7 +209,6 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
             {
 
                 ItemImagem imagem = _imgDomain.ObterPorId(id);
-                //string pastaItem = Path.Combine(caminho, imagem.ItemId.ToString());
 
                 if (imagem == null)
                 {
@@ -172,8 +220,7 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                     return false;
                 }
 
-                string caminhoImagem = $"{imagem.ItemId.ToString()}\\{imagem.Id.ToString()}.png";
-                string nomeCompleto = Path.Combine(caminho, caminhoImagem);
+                string nomeCompleto = Path.Combine(caminho, imagem.ItemId.ToString(), $"{imagem.Id.ToString()}{imagem.Caminho.Substring(imagem.Caminho.LastIndexOf("."))}");
                 if (!Directory.Exists(caminho))
                 {
                     dadosRetorno = new
@@ -197,6 +244,8 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
                     else
                     {
                         File.Delete(nomeCompleto);
+                        _imgDomain.Excluir(id);
+                        _uow.Efetivar();
                         dadosRetorno = new
                         {
                             Sucesso = true,
@@ -217,6 +266,16 @@ namespace SantaHelena.ClickDoBem.Domain.Services.Cadastros
             }
 
         }
+
+        /// <summary>
+        /// Obter o ranking individual
+        /// </summary>
+        public IEnumerable<RankingIndividualReportDto> RankingIndividual() => _repository.RankingIndividual();
+
+        /// <summary>
+        /// Obter o ranking de campanhas
+        /// </summary>
+        public IEnumerable<RankingCampanhaReportDto> RankingCampanha() => _repository.RankingCampanha();
 
         #endregion
 

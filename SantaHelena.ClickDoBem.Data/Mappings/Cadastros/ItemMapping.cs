@@ -43,6 +43,12 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
             builder.Property(c => c.Anonimo)
                .HasColumnType("bit");
 
+            builder.Property(c => c.GeradoPorMatch)
+                .HasColumnType("bit");
+
+            builder.Property(c => c.ValorFaixaId)
+                .HasColumnType("char(36)");
+
             builder.HasOne(o => o.TipoItem)
                 .WithMany(d => d.Itens)
                 .HasForeignKey(f => f.TipoItemId)
@@ -61,12 +67,25 @@ namespace SantaHelena.ClickDoBem.Data.Mappings.Cadastros
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Item_Usuario");
 
+            builder.HasOne(o => o.ValorFaixa)
+                .WithMany(o => o.Itens)
+                .HasForeignKey(d => d.ValorFaixaId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Item_ValorFaixa");
+
+            builder.HasOne(o => o.Campanha)
+                .WithMany(d => d.Itens)
+                .HasForeignKey(f => f.CampanhaId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Item_Campanha");
+
             builder.HasIndex(i => i.DataInclusao).HasName("IX_Item_DtInclusao");
             builder.HasIndex(i => i.DataAlteracao).HasName("IX_Item_DtAlteracao");
             builder.HasIndex(i => i.Descricao).HasName("IX_Item_Descricao");
             builder.HasIndex(i => i.TipoItemId).HasName("IX_Item_TipoItemId");
             builder.HasIndex(i => i.CategoriaId).HasName("IX_Item_CategoriaId");
             builder.HasIndex(i => i.UsuarioId).HasName("IX_Item_UsuarioId");
+            builder.HasIndex(i => i.ValorFaixaId).HasName("IX_Item_ValorFaixa");
 
             builder.Ignore(c => c.ValidationResult);
             builder.Ignore(c => c.CascadeMode);

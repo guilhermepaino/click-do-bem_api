@@ -38,12 +38,22 @@ namespace SantaHelena.ClickDoBem.Services.Api.Model.Request.Cadastros
         /// Id da categoria (obrigatório)
         /// </summary>
         [Required(ErrorMessage = "A categoria deve ser informada")]
-        public string Categoria { get; set; }
+        public Guid? CategoriaId { get; set; }
 
         /// <summary>
         /// Flag indicando se o item deve ser anônimo
         /// </summary>
         public bool Anonimo { get; set; }
+
+        /// <summary>
+        /// Id da faixa de valor estimado do item (obrigatório para necessidades)
+        /// </summary>
+        public Guid? ValorFaixaId { get; set; }
+
+        /// <summary>
+        /// Id da campanha
+        /// </summary>
+        public Guid? CampanhaId { get; set; }
 
         /// <summary>
         /// Lista de Imagens do item

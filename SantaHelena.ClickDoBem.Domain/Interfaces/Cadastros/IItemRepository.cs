@@ -8,8 +8,15 @@ namespace SantaHelena.ClickDoBem.Domain.Interfaces.Cadastros
 {
     public interface IItemRepository : IMySqlRepositoryBase<Item>
     {
-        IEnumerable<Item> ObterNecessidades();
-        IEnumerable<Item> ObterDoacoes();
+        IEnumerable<Item> ObterTodos(bool incluirMatches);
+        IEnumerable<Item> ObterNecessidades(bool incluirMatches);
+        IEnumerable<Item> ObterDoacoes(bool incluirMatches);
         IEnumerable<ItemListaReportDto> Pesquisar(DateTime? dataInicial, DateTime? dataFinal, Guid? tipoItemId, Guid? categoriaId);
+        IEnumerable<Item> PesquisarParaMatche(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId);
+        IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId, DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, bool? efetivados);
+        IEnumerable<ItemMatchReportDto> ListarMatches(Guid usuarioId);
+        IEnumerable<RankingIndividualReportDto> RankingIndividual();
+        IEnumerable<RankingCampanhaReportDto> RankingCampanha();
+
     }
 }

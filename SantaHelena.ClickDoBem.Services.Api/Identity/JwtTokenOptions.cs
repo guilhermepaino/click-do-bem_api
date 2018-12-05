@@ -1,7 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SantaHelena.ClickDoBem.Services.Api.Identity
@@ -43,9 +41,9 @@ namespace SantaHelena.ClickDoBem.Services.Api.Identity
         public DateTime IssuedAt => DateTime.UtcNow;
 
         /// <summary>
-        /// Set the timespan the token will be valid for (default is 120 min)
+        /// Set the timespan the token will be valid for
         /// </summary>
-        public TimeSpan ValidFor { get; set; } = TimeSpan.FromDays(3000);
+        public TimeSpan ValidFor { get; set; } = TimeSpan.FromHours(4);
 
         /// <summary>
         /// "jti" (JWT ID) Claim (default ID is a GUID)

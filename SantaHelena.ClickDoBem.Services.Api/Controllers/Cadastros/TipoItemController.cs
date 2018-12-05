@@ -71,7 +71,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Controllers.Cadastros
         /// </remarks>
         /// <returns>Lista dos registros cadastrados</returns>
         /// <response code="200">Retorna a lista de registros cadastrados</response>
-        /// <response code="401">Acesso-Negado (Token inválido ou expirado)</response>
+        /// <response code="403">Acesso-Negado (Token inválido ou expirado)</response>
         /// <response code="500">Se ocorrer alguma falha no processamento da request</response>
         [HttpGet]
         public IActionResult Listar()
