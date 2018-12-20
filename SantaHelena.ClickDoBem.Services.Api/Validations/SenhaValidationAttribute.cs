@@ -26,7 +26,7 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
         /// <summary>
         /// Cria uma nova instância do atributo
         /// </summary>
-        public SenhaValidationAttribute() : base("A senha não atende a complexidade de senha.\r\n\r\nPossuir entre 6 caracteres e 8 caracteres, não poderá ser igual a data de nascimento, pode conter apenas letras e números, as letras e números não podem ser sequenciais")
+        public SenhaValidationAttribute() : base("A senha não atende aos requisitos de complexidade.\r\n\r\nPossuir entre 6 caracteres e 8 caracteres, não poderá ser igual a data de nascimento, pode conter apenas letras e números")
         {
         }
 
@@ -37,38 +37,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
         public SenhaValidationAttribute(string propriedadeDataNascimento) : this()
         {
             _nomePropriedadeDataNascimento = propriedadeDataNascimento;
-        }
-
-        #endregion
-
-        #region Métodos Locais
-
-        /// <summary>
-        /// Verifica se os caracteres estão em sequência
-        /// </summary>
-        /// <param name="expressao">Expressão a ser testada</param>
-        protected bool PossuiSequencia(string expressao)
-        {
-
-            for (int p = 0; p < expressao.Length; p++)
-            {
-
-                if ((p + 1).Equals(expressao.Length))
-                    break;
-
-                char caractere1 = expressao.Substring(p, 1).ToCharArray().First();
-                char caractere2 = expressao.Substring((p + 1), 1).ToCharArray().First();
-
-                int codigo1 = caractere1;
-                int codigo2 = caractere2;
-
-                if (codigo2.Equals(codigo1 + 1) || codigo1.Equals(codigo2))
-                    return true;
-
-            }
-
-            return false;
-
         }
 
         #endregion
@@ -112,10 +80,6 @@ namespace SantaHelena.ClickDoBem.Services.Api.Validations
             string senhaCaracteresValidos = Misc.LimparTexto(senha, "0123456789").ToLower();
             if (!senhaCaracteresValidos.ToLower().Equals(senha.ToLower()))
                 return new ValidationResult("A senha deve conter apenas letras e/ou números");
-
-            // Números e letras não podem ser sequenciais.
-            if (PossuiSequencia(senha))
-                return new ValidationResult("A senha não pode conter letras ou números na sequência (ex: AB, BC, 12, 23, etc).");
 
             return ValidationResult.Success;
 
