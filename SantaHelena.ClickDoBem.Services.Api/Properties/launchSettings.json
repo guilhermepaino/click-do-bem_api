@@ -46,6 +46,19 @@
         "MYSQL_USER": "shdev",
         "MYSQL_PASSWORD": "sh.click"
       }
+    },
+    "Kestrel-SH-AWS-HML": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5010",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MYSQL_SERVER": "sh-clickdobem.cs9qmxdrrnhg.us-east-1.rds.amazonaws.com",
+        "MYSQL_DATABASE": "clickdobemhml",
+        "MYSQL_USER": "shhml",
+        "MYSQL_PASSWORD": "sh.click.hml"
+      }
     }
   }
 }
