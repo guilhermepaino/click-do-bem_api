@@ -1001,9 +1001,12 @@ namespace SantaHelena.ClickDoBem.Application.Services.Cadastros
             }
 
             // Criando item oposto (relacionado)
+            string itemOpostoDescricao = $"[{tipoItemOpostoDescricao.ToUpper()}] {itemAlvo.Titulo}";
+            if (itemOpostoDescricao.Length > 50)
+                itemOpostoDescricao = itemOpostoDescricao.Substring(0, 50);
             Item itemOposto = new Item()
             {
-                Titulo = $"[{tipoItemOpostoDescricao.ToUpper()}] {itemAlvo.Titulo}".Substring(0, 50),
+                Titulo = itemOpostoDescricao,
                 Descricao = itemAlvo.Descricao,
                 TipoItemId = tipoItemOposto.Id,
                 CategoriaId = itemAlvo.CategoriaId,
